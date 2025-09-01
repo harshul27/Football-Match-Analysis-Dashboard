@@ -626,3 +626,30 @@ elif tab == "📈 Data Analysis":
 # Footer with deployment instructions
 st.markdown("---")
 st.markdown("""
+### 💡 Data Sources:
+All match data, player statistics, and tactical analysis based on the August 23, 2025 Premier League fixture between AFC Bournemouth and Wolverhampton Wanderers.
+""")
+
+# Sidebar additional info
+st.sidebar.markdown("---")
+st.sidebar.markdown("""
+### 📈 Match Stats Summary
+- **Final Score:** 1-0 to Bournemouth
+- **xG:** 1.78 - 0.37
+- **Possession:** 59% - 41%
+- **Shots:** 14 - 6
+- **Key Moment:** Toti red card (49')
+""")
+
+st.sidebar.markdown("""
+### 🎯 Key Players
+**Bournemouth:**
+- Tavernier (Goal scorer)
+- Semenyo (Hit post)
+- Adams (Playmaker)
+
+**Wolves:**
+- José Sá (Goalkeeper)
+- Toti (Red card)
+- Lemina (Most passes)
+""")
