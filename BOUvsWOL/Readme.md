@@ -2,6 +2,7 @@
 
 ## Overview
 This repository contains a Streamlit app that provides an interactive dashboard for analyzing the Premier League match between AFC Bournemouth and Wolverhampton Wanderers, played on 23 August 2025. The app showcases team statistics, player performance insights, and key match events in a simple and accessible format.
+Streamlit Link: https://bouvswol-id2vapptd6g8bm4be3trkhf.streamlit.app/
 
 ## Match Context
 - Fixture: AFC Bournemouth vs Wolverhampton Wanderers  
