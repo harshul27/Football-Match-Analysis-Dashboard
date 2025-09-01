@@ -624,7 +624,7 @@ elif tab == "📈 Data Analysis":
     st.plotly_chart(fig_discipline, use_container_width=True)
 
 
-### 💡 Data Sources:
+## Data Sources:
 All match data, player statistics, and tactical analysis based on the August 23, 2025 Premier League fixture between AFC Bournemouth and Wolverhampton Wanderers.
 """)
 
