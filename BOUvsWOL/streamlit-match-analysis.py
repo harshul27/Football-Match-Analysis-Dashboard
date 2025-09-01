@@ -486,8 +486,6 @@ with st.expander("🔍 About This Analysis"):
     The analysis combines real match data with modern data visualization techniques to provide 
     comprehensive insights into team performance, tactical analysis, and key match moments.
     """)
-
-print("✅ Verified match analysis application ready for deployment!")header("Match Overview")
     
     # Key statistics - Updated with verified data
     col1, col2, col3, col4 = st.columns(4)
