@@ -623,44 +623,6 @@ elif tab == "📈 Data Analysis":
     
     st.plotly_chart(fig_discipline, use_container_width=True)
 
-# Footer with deployment instructions
-st.markdown("---")
-st.markdown("""
-### 🚀 Deployment Instructions
-
-To deploy this Streamlit app:
-
-1. **Install required packages:**
-```bash
-pip install streamlit pandas plotly
-```
-
-2. **Save this code as `match_analysis.py`**
-
-3. **Run locally:**
-```bash
-streamlit run match_analysis.py
-```
-
-4. **Deploy to Streamlit Cloud:**
-   - Push code to GitHub repository
-   - Connect repository to [share.streamlit.io](https://share.streamlit.io)
-   - Deploy automatically
-
-5. **Alternative deployment options:**
-   - Heroku
-   - AWS
-   - Google Cloud Platform
-   - Azure
-
-### 📊 Features Included:
-
-- **Interactive pitch visualizations** with player positions and shot locations
-- **Real-time data tooltips** showing detailed statistics
-- **Multiple analysis tabs** (Overview, Tactical, Data Analysis)
-- **Advanced metrics** including xG development and match momentum
-- **Responsive design** that works on desktop and mobile
-- **Professional styling** with team colors and branding
 
 ### 💡 Data Sources:
 All match data, player statistics, and tactical analysis based on the August 23, 2025 Premier League fixture between AFC Bournemouth and Wolverhampton Wanderers.
