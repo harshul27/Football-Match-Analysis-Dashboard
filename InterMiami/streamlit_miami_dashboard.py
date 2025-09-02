@@ -16,6 +16,11 @@ st.set_page_config(
 # Custom CSS for styling
 st.markdown("""
 <style>
+    /* Global Styles for improved contrast */
+    body {
+        color: #2c3e50; /* A dark, readable gray */
+    }
+
     .main-header {
         background: linear-gradient(135deg, #FF1493, #FF69B4, #000000);
         color: white;
@@ -25,17 +30,8 @@ st.markdown("""
         text-align: center;
     }
     
-    .metric-card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        border-left: 4px solid #FF1493;
-        margin-bottom: 1rem;
-    }
-    
     .section-header {
-        color: #333;
+        color: #2c3e50; /* Ensuring section headers are dark and visible */
         border-bottom: 3px solid #FF1493;
         padding-bottom: 0.5rem;
         margin-bottom: 1.5rem;
@@ -63,6 +59,15 @@ st.markdown("""
         padding: 1rem;
         margin: 0.5rem 0;
         border-radius: 5px;
+    }
+
+    /* Override Streamlit's default metric font color if needed */
+    [data-testid="stMetricValue"] {
+        color: #2c3e50; /* Darker color for metric values */
+    }
+    
+    [data-testid="stMetricLabel"] {
+        color: #555; /* A slightly lighter dark color for labels */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -234,7 +239,8 @@ with tabs[0]:
             yaxis_title="Expected Goals",
             yaxis2=dict(overlaying='y', side='right', title='Possession %'),
             height=400,
-            hovermode='x unified'
+            hovermode='x unified',
+            font=dict(color="#2c3e50") # Added for better contrast
         )
         
         st.plotly_chart(fig, use_container_width=True)
@@ -256,7 +262,8 @@ with tabs[0]:
         
         fig_pie.update_layout(
             title="Season Results",
-            height=300
+            height=300,
+            font=dict(color="#2c3e50") # Added for better contrast
         )
         
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -325,7 +332,8 @@ with tabs[1]:
         xaxis_title="Metrics",
         yaxis_title="Values",
         height=500,
-        xaxis_tickangle=-45
+        xaxis_tickangle=-45,
+        font=dict(color="#2c3e50") # Added for better contrast
     )
     
     st.plotly_chart(fig_comparison, use_container_width=True)
@@ -339,8 +347,8 @@ with tabs[1]:
         st.markdown(f"""
         <div style="background: #FEF2F2; border-left: 4px solid #EF4444; padding: 1.5rem; text-align: center; border-radius: 10px;">
             <h2 style="color: #EF4444; margin: 0; font-size: 2.5rem;">14.7</h2>
-            <p style="margin: 0; font-weight: bold;">Miami PPDA</p>
-            <p style="margin: 0; font-size: 0.8rem;">Passes Allowed Per Def. Action</p>
+            <p style="margin: 0; font-weight: bold; color: #333;">Miami PPDA</p>
+            <p style="margin: 0; font-size: 0.8rem; color: #444;">Passes Allowed Per Def. Action</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -348,8 +356,8 @@ with tabs[1]:
         st.markdown(f"""
         <div style="background: #FFFBEB; border-left: 4px solid #F59E0B; padding: 1.5rem; text-align: center; border-radius: 10px;">
             <h2 style="color: #F59E0B; margin: 0; font-size: 2.5rem;">12.8</h2>
-            <p style="margin: 0; font-weight: bold;">League Average</p>
-            <p style="margin: 0; font-size: 0.8rem;">League Standard</p>
+            <p style="margin: 0; font-weight: bold; color: #333;">League Average</p>
+            <p style="margin: 0; font-size: 0.8rem; color: #444;">League Standard</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -357,8 +365,8 @@ with tabs[1]:
         st.markdown(f"""
         <div style="background: #F0FDF4; border-left: 4px solid #10B981; padding: 1.5rem; text-align: center; border-radius: 10px;">
             <h2 style="color: #10B981; margin: 0; font-size: 2.5rem;">9.6</h2>
-            <p style="margin: 0; font-weight: bold;">Elite Teams</p>
-            <p style="margin: 0; font-size: 0.8rem;">Top Quartile</p>
+            <p style="margin: 0; font-weight: bold; color: #333;">Elite Teams</p>
+            <p style="margin: 0; font-size: 0.8rem; color: #444;">Top Quartile</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -400,11 +408,16 @@ with tabs[1]:
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 80]
+                range=[0, 80],
+                tickfont=dict(color='#444')
+            ),
+            angularaxis=dict(
+                tickfont=dict(color='#444')
             )
         ),
         showlegend=True,
-        height=500
+        height=500,
+        font=dict(color="#2c3e50") # Added for better contrast
     )
     
     st.plotly_chart(fig_radar, use_container_width=True)
@@ -430,6 +443,11 @@ with tabs[1]:
             title="Field Territory Distribution"
         )
         
+        fig_territory.update_layout(
+            font=dict(color="#2c3e50"), # Added for better contrast
+            xaxis=dict(tickfont=dict(color="#2c3e50")),
+            yaxis=dict(tickfont=dict(color="#2c3e50"))
+        )
         st.plotly_chart(fig_territory, use_container_width=True)
     
     with col2:
@@ -511,7 +529,12 @@ with tabs[2]:
         line=dict(dash='dash', color='gray')
     ))
     
-    fig_scatter.update_layout(height=500)
+    fig_scatter.update_layout(
+        height=500,
+        font=dict(color="#2c3e50"), # Added for better contrast
+        xaxis=dict(tickfont=dict(color="#2c3e50")),
+        yaxis=dict(tickfont=dict(color="#2c3e50"))
+    )
     st.plotly_chart(fig_scatter, use_container_width=True)
     
     # Movement Analysis
@@ -524,23 +547,23 @@ with tabs[2]:
         <div style="border: 2px solid {effectiveness_color}; border-radius: 10px; padding: 1rem; margin: 1rem 0; background: white;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <div>
-                    <h4 style="margin: 0; font-size: 1.2rem;">{player['player']} ({player['position']})</h4>
-                    <p style="margin: 0; color: #666; font-size: 0.9rem;">{player['zone']}</p>
+                    <h4 style="margin: 0; font-size: 1.2rem; color: #333;">{player['player']} ({player['position']})</h4>
+                    <p style="margin: 0; color: #444; font-size: 0.9rem;">{player['zone']}</p>
                 </div>
                 <div style="text-align: right;">
                     <h3 style="margin: 0; color: {effectiveness_color}; font-size: 1.8rem;">{player['effectiveness']}%</h3>
-                    <p style="margin: 0; color: #666; font-size: 0.8rem;">Effectiveness</p>
+                    <p style="margin: 0; color: #444; font-size: 0.8rem;">Effectiveness</p>
                 </div>
             </div>
             <div style="display: flex; justify-content: space-around; margin-bottom: 1rem;">
                 <div style="text-align: center; background: #F3F4F6; padding: 0.5rem; border-radius: 5px;">
-                    <strong>{player['touches']}</strong><br><small>Touches</small>
+                    <strong style="color: #2c3e50;">{player['touches']}</strong><br><small style="color: #444;">Touches</small>
                 </div>
                 <div style="text-align: center; background: #F3F4F6; padding: 0.5rem; border-radius: 5px;">
-                    <strong>{player['progressive']}</strong><br><small>Progressive</small>
+                    <strong style="color: #2c3e50;">{player['progressive']}</strong><br><small style="color: #444;">Progressive</small>
                 </div>
                 <div style="text-align: center; background: #F3F4F6; padding: 0.5rem; border-radius: 5px;">
-                    <strong>{player['regains']}</strong><br><small>Regains</small>
+                    <strong style="color: #2c3e50;">{player['regains']}</strong><br><small style="color: #444;">Regains</small>
                 </div>
             </div>
             <div style="width: 100%; background: #E5E7EB; border-radius: 10px; height: 8px;">
@@ -570,7 +593,8 @@ with tabs[3]:
         )
         fig_patterns.update_layout(
             xaxis_tickangle=-45,
-            height=400
+            height=400,
+            font=dict(color="#2c3e50") # Added for better contrast
         )
         st.plotly_chart(fig_patterns, use_container_width=True)
     
@@ -585,6 +609,11 @@ with tabs[3]:
             title="Pattern Frequency vs Success Rate",
             labels={'frequency': 'Uses per Game', 'success': 'Success Rate %'}
         )
+        fig_frequency.update_layout(
+            font=dict(color="#2c3e50"), # Added for better contrast
+            xaxis=dict(tickfont=dict(color="#2c3e50")),
+            yaxis=dict(tickfont=dict(color="#2c3e50"))
+        )
         st.plotly_chart(fig_frequency, use_container_width=True)
     
     # Detailed Pattern Analysis
@@ -598,7 +627,7 @@ with tabs[3]:
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <div>
                     <h4 style="margin: 0; font-size: 1.2rem; color: #333;">{pattern['pattern']}</h4>
-                    <p style="margin: 0.5rem 0; color: #666; font-size: 0.9rem;">Active in: {pattern['zones']}</p>
+                    <p style="margin: 0.5rem 0; color: #444; font-size: 0.9rem;">Active in: {pattern['zones']}</p>
                 </div>
                 <div style="background: {success_color}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">
                     {pattern['success']}% Success
@@ -658,7 +687,8 @@ with tabs[3]:
         xaxis_title="Formation",
         yaxis_title="Percentage",
         barmode='group',
-        height=400
+        height=400,
+        font=dict(color="#2c3e50") # Added for better contrast
     )
     
     st.plotly_chart(fig_formation, use_container_width=True)
@@ -758,7 +788,10 @@ with tabs[3]:
     fig_evolution.update_yaxes(title_text="Possession %", secondary_y=False)
     fig_evolution.update_yaxes(title_text="Expected Goals", secondary_y=True)
     
-    fig_evolution.update_layout(height=500)
+    fig_evolution.update_layout(
+        height=500,
+        font=dict(color="#2c3e50") # Added for better contrast
+    )
     
     st.plotly_chart(fig_evolution, use_container_width=True)
 
@@ -814,8 +847,8 @@ st.markdown("---")
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #1F2937, #111827); color: white; border-radius: 10px; margin-top: 2rem;">
     <h3 style="margin: 0 0 1rem 0;">Professional Football Analytics Dashboard</h3>
-    <p style="margin: 0;">Advanced tactical analysis beyond basic xG metrics</p>
-    <p style="margin: 1rem 0 0 0; font-size: 0.8rem; opacity: 0.7;">
+    <p style="margin: 0; color: #bbb;">Advanced tactical analysis beyond basic xG metrics</p>
+    <p style="margin: 1rem 0 0 0; font-size: 0.8rem; opacity: 0.7; color: #aaa;">
         Comprehensive data integration • Progressive actions • PPDA analysis • Territory control • Tactical patterns
     </p>
     <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
