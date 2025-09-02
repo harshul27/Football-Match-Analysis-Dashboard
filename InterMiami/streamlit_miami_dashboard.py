@@ -8,7 +8,6 @@ import numpy as np
 # Page configuration
 st.set_page_config(
     page_title="Inter Miami CF - Professional Analytics Dashboard",
-    page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -37,9 +36,10 @@ st.markdown("""
         margin-bottom: 1.5rem;
     }
     
+    /* Updated tactical summary cards for better contrast and clean design */
     .insight-card {
         border-left: 4px solid #10B981;
-        background: #F0FDF4;
+        background: #F8F9FA;
         padding: 1rem;
         margin: 0.5rem 0;
         border-radius: 5px;
@@ -47,7 +47,7 @@ st.markdown("""
     
     .weakness-card {
         border-left: 4px solid #EF4444;
-        background: #FEF2F2;
+        background: #F8F9FA;
         padding: 1rem;
         margin: 0.5rem 0;
         border-radius: 5px;
@@ -55,19 +55,19 @@ st.markdown("""
     
     .recommendation-card {
         border-left: 4px solid #3B82F6;
-        background: #EFF6FF;
+        background: #F8F9FA;
         padding: 1rem;
         margin: 0.5rem 0;
         border-radius: 5px;
     }
 
-    /* Override Streamlit's default metric font color if needed */
+    /* Streamlit overrides for contrast */
     [data-testid="stMetricValue"] {
-        color: #2c3e50; /* Darker color for metric values */
+        color: #2c3e50;
     }
     
     [data-testid="stMetricLabel"] {
-        color: #555; /* A slightly lighter dark color for labels */
+        color: #555;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -153,7 +153,7 @@ season_overview, match_data, player_stats, league_comparison, pressing_metrics, 
 # Header
 st.markdown("""
 <div class="main-header">
-    <h1 style="font-size: 3rem; margin: 0;">⚽ Inter Miami CF</h1>
+    <h1 style="font-size: 3rem; margin: 0;">Inter Miami CF</h1>
     <h2 style="margin: 0.5rem 0;">Professional Tactical Analysis Dashboard</h2>
     <p style="margin: 0; opacity: 0.9;">2025 MLS Season • Updated September 1, 2025</p>
     <div style="display: flex; justify-content: space-around; margin-top: 1.5rem;">
@@ -173,8 +173,8 @@ st.markdown("""
 </div>
 """.format(f"{(season_overview['wins']/season_overview['matches']*100):.1f}%"), unsafe_allow_html=True)
 
-# Navigation Tabs
-tabs = st.tabs(["📊 Season Overview", "🔬 Advanced Metrics", "👥 Player Analytics", "🎯 Tactical Intelligence"])
+# Navigation Tabs - Emojis removed
+tabs = st.tabs(["Season Overview", "Advanced Metrics", "Player Analytics", "Tactical Intelligence"])
 
 # Season Overview Tab
 with tabs[0]:
@@ -240,7 +240,7 @@ with tabs[0]:
             yaxis2=dict(overlaying='y', side='right', title='Possession %'),
             height=400,
             hovermode='x unified',
-            font=dict(color="#2c3e50") # Added for better contrast
+            font=dict(color="#2c3e50")
         )
         
         st.plotly_chart(fig, use_container_width=True)
@@ -263,7 +263,7 @@ with tabs[0]:
         fig_pie.update_layout(
             title="Season Results",
             height=300,
-            font=dict(color="#2c3e50") # Added for better contrast
+            font=dict(color="#2c3e50")
         )
         
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -333,7 +333,7 @@ with tabs[1]:
         yaxis_title="Values",
         height=500,
         xaxis_tickangle=-45,
-        font=dict(color="#2c3e50") # Added for better contrast
+        font=dict(color="#2c3e50")
     )
     
     st.plotly_chart(fig_comparison, use_container_width=True)
@@ -409,15 +409,15 @@ with tabs[1]:
             radialaxis=dict(
                 visible=True,
                 range=[0, 80],
-                tickfont=dict(color='#444')
+                tickfont=dict(color="#444")
             ),
             angularaxis=dict(
-                tickfont=dict(color='#444')
+                tickfont=dict(color="#444")
             )
         ),
         showlegend=True,
         height=500,
-        font=dict(color="#2c3e50") # Added for better contrast
+        font=dict(color="#2c3e50")
     )
     
     st.plotly_chart(fig_radar, use_container_width=True)
@@ -444,7 +444,7 @@ with tabs[1]:
         )
         
         fig_territory.update_layout(
-            font=dict(color="#2c3e50"), # Added for better contrast
+            font=dict(color="#2c3e50"),
             xaxis=dict(tickfont=dict(color="#2c3e50")),
             yaxis=dict(tickfont=dict(color="#2c3e50"))
         )
@@ -474,39 +474,24 @@ with tabs[2]:
     # Player Performance Table
     st.subheader("Player Statistics Overview")
     
-    # Add performance rating colors
-    def get_rating_color(rating):
+    # Updated function to return a solid circle instead of an emoji
+    def get_rating_icon(rating):
         if rating >= 8.5:
-            return "🟢"
+            return '<div style="background-color:#10B981; border-radius:50%; width:15px; height:15px; margin:auto;"></div>'
         elif rating >= 7.5:
-            return "🔵"
+            return '<div style="background-color:#3B82F6; border-radius:50%; width:15px; height:15px; margin:auto;"></div>'
         elif rating >= 7.0:
-            return "🟡"
+            return '<div style="background-color:#F59E0B; border-radius:50%; width:15px; height:15px; margin:auto;"></div>'
         else:
-            return "🔴"
+            return '<div style="background-color:#EF4444; border-radius:50%; width:15px; height:15px; margin:auto;"></div>'
     
     player_display = player_stats.copy()
-    player_display['Rating_Icon'] = player_display['rating'].apply(get_rating_color)
+    player_display['Rating_Icon'] = player_display['rating'].apply(get_rating_icon)
     player_display['Goals/Game'] = (player_display['goals'] / player_display['apps']).round(2)
     player_display['xG Difference'] = (player_display['goals'] - player_display['xG']).round(1)
     
-    st.dataframe(
-        player_display[['name', 'position', 'age', 'apps', 'goals', 'assists', 'xG', 'Goals/Game', 'xG Difference', 'rating', 'Rating_Icon']],
-        column_config={
-            "name": "Player",
-            "position": "Position", 
-            "age": "Age",
-            "apps": "Apps",
-            "goals": "Goals",
-            "assists": "Assists",
-            "xG": "Expected Goals",
-            "Goals/Game": "Goals/Game",
-            "xG Difference": "xG Difference",
-            "rating": "Rating",
-            "Rating_Icon": "Performance"
-        },
-        use_container_width=True
-    )
+    st.markdown(player_display[['name', 'position', 'age', 'apps', 'goals', 'assists', 'xG', 'Goals/Game', 'xG Difference', 'rating', 'Rating_Icon']].to_html(escape=False), unsafe_allow_html=True)
+
     
     # Goals vs Expected Goals Scatter Plot
     st.subheader("Goals vs Expected Goals Analysis")
@@ -531,7 +516,7 @@ with tabs[2]:
     
     fig_scatter.update_layout(
         height=500,
-        font=dict(color="#2c3e50"), # Added for better contrast
+        font=dict(color="#2c3e50"),
         xaxis=dict(tickfont=dict(color="#2c3e50")),
         yaxis=dict(tickfont=dict(color="#2c3e50"))
     )
@@ -594,7 +579,7 @@ with tabs[3]:
         fig_patterns.update_layout(
             xaxis_tickangle=-45,
             height=400,
-            font=dict(color="#2c3e50") # Added for better contrast
+            font=dict(color="#2c3e50")
         )
         st.plotly_chart(fig_patterns, use_container_width=True)
     
@@ -610,7 +595,7 @@ with tabs[3]:
             labels={'frequency': 'Uses per Game', 'success': 'Success Rate %'}
         )
         fig_frequency.update_layout(
-            font=dict(color="#2c3e50"), # Added for better contrast
+            font=dict(color="#2c3e50"),
             xaxis=dict(tickfont=dict(color="#2c3e50")),
             yaxis=dict(tickfont=dict(color="#2c3e50"))
         )
@@ -688,14 +673,14 @@ with tabs[3]:
         yaxis_title="Percentage",
         barmode='group',
         height=400,
-        font=dict(color="#2c3e50") # Added for better contrast
+        font=dict(color="#2c3e50")
     )
     
     st.plotly_chart(fig_formation, use_container_width=True)
     
     st.markdown("---")
     
-    # Tactical Intelligence Summary
+    # Tactical Intelligence Summary - Emojis removed and styling updated
     st.subheader("Tactical Intelligence Summary")
     
     col1, col2, col3 = st.columns(3)
@@ -703,8 +688,8 @@ with tabs[3]:
     with col1:
         st.markdown("""
         <div class="insight-card">
-            <h4 style="color: #059669; margin: 0 0 1rem 0;">🔥 Strengths</h4>
-            <ul style="margin: 0; padding-left: 1rem;">
+            <h4 style="color: #059669; margin: 0 0 1rem 0;">Strengths</h4>
+            <ul style="margin: 0; padding-left: 1rem; color: #444;">
                 <li>High possession control (58.2%)</li>
                 <li>Effective build-up play (78.2%)</li>
                 <li>Strong final third presence</li>
@@ -717,8 +702,8 @@ with tabs[3]:
     with col2:
         st.markdown("""
         <div class="weakness-card">
-            <h4 style="color: #DC2626; margin: 0 0 1rem 0;">⚠️ Weaknesses</h4>
-            <ul style="margin: 0; padding-left: 1rem;">
+            <h4 style="color: #DC2626; margin: 0 0 1rem 0;">Weaknesses</h4>
+            <ul style="margin: 0; padding-left: 1rem; color: #444;">
                 <li>Low pressing intensity (PPDA 14.7)</li>
                 <li>Poor counterpress success (61.7%)</li>
                 <li>Inconsistent shape discipline</li>
@@ -731,8 +716,8 @@ with tabs[3]:
     with col3:
         st.markdown("""
         <div class="recommendation-card">
-            <h4 style="color: #1D4ED8; margin: 0 0 1rem 0;">🎯 Recommendations</h4>
-            <ul style="margin: 0; padding-left: 1rem;">
+            <h4 style="color: #1D4ED8; margin: 0 0 1rem 0;">Recommendations</h4>
+            <ul style="margin: 0; padding-left: 1rem; color: #444;">
                 <li>Increase pressing triggers</li>
                 <li>Improve counterpress coordination</li>
                 <li>Develop alternative patterns</li>
@@ -790,14 +775,14 @@ with tabs[3]:
     
     fig_evolution.update_layout(
         height=500,
-        font=dict(color="#2c3e50") # Added for better contrast
+        font=dict(color="#2c3e50")
     )
     
     st.plotly_chart(fig_evolution, use_container_width=True)
 
-# Sidebar with additional information
+# Sidebar with additional information - Emojis removed
 with st.sidebar:
-    st.markdown("### 📊 Dashboard Controls")
+    st.markdown("### Dashboard Controls")
     
     # Season filter (placeholder for future enhancement)
     season = st.selectbox("Season", ["2025"], index=0)
@@ -806,19 +791,19 @@ with st.sidebar:
     competition = st.selectbox("Competition", ["MLS Regular Season", "All Competitions"], index=0)
     
     # Date range
-    st.markdown("### 📅 Analysis Period")
-    st.info("March 2025 - Current")
+    st.markdown("### Analysis Period")
+    st.markdown("<div style='background-color:#F0FDF4; padding:0.5rem; border-radius:5px; border-left: 4px solid #10B981;'>March 2025 - Current</div>", unsafe_allow_html=True)
     
     st.markdown("---")
     
-    st.markdown("### 🎯 Key Insights")
-    st.success("**Strong Possession Game** - 58.2% average possession indicates good ball control")
-    st.warning("**Pressing Concerns** - PPDA of 14.7 suggests passive defensive approach")
-    st.info("**Messi Effect** - 17 goals in 19 apps demonstrates exceptional individual impact")
+    st.markdown("### Key Insights")
+    st.markdown("<div style='background-color:#F0FDF4; padding:0.5rem; border-radius:5px; border-left: 4px solid #10B981;'>**Strong Possession Game** - 58.2% average possession indicates good ball control</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#FEF2F2; padding:0.5rem; border-radius:5px; border-left: 4px solid #EF4444;'>**Pressing Concerns** - PPDA of 14.7 suggests passive defensive approach</div>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#EFF6FF; padding:0.5rem; border-radius:5px; border-left: 4px solid #3B82F6;'>**Messi Effect** - 17 goals in 19 apps demonstrates exceptional individual impact</div>", unsafe_allow_html=True)
     
     st.markdown("---")
     
-    st.markdown("### 📈 Data Sources")
+    st.markdown("### Data Sources")
     st.caption("""
     - MLS Official Match Data
     - SofaScore Advanced Stats  
@@ -828,7 +813,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    st.markdown("### ℹ️ Metrics Glossary")
+    st.markdown("### Metrics Glossary")
     
     with st.expander("PPDA"):
         st.write("Passes Allowed Per Defensive Action - measures pressing intensity. Lower values indicate more aggressive pressing.")
@@ -852,9 +837,9 @@ st.markdown("""
         Comprehensive data integration • Progressive actions • PPDA analysis • Territory control • Tactical patterns
     </p>
     <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-        <span>⚡ Real-time Updates</span>
-        <span>📊 Advanced Analytics</span>
-        <span>🎯 Tactical Intelligence</span>
+        <span style="color:#FFD700;">Real-time Updates</span>
+        <span style="color:#FFD700;">Advanced Analytics</span>
+        <span style="color:#FFD700;">Tactical Intelligence</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
