@@ -780,9 +780,9 @@ with tabs[3]:
     
     st.plotly_chart(fig_evolution, use_container_width=True)
 
-# Sidebar with additional information - Emojis removed
+# Sidebar with additional information - Restored to original look
 with st.sidebar:
-    st.markdown("### Dashboard Controls")
+    st.markdown("### 📊 Dashboard Controls")
     
     # Season filter (placeholder for future enhancement)
     season = st.selectbox("Season", ["2025"], index=0)
@@ -791,19 +791,19 @@ with st.sidebar:
     competition = st.selectbox("Competition", ["MLS Regular Season", "All Competitions"], index=0)
     
     # Date range
-    st.markdown("### Analysis Period")
-    st.markdown("<div style='background-color:#F0FDF4; padding:0.5rem; border-radius:5px; border-left: 4px solid #10B981;'>March 2025 - Current</div>", unsafe_allow_html=True)
+    st.markdown("### 📅 Analysis Period")
+    st.info("March 2025 - Current")
     
     st.markdown("---")
     
-    st.markdown("### Key Insights")
-    st.markdown("<div style='background-color:#F0FDF4; padding:0.5rem; border-radius:5px; border-left: 4px solid #10B981;'>**Strong Possession Game** - 58.2% average possession indicates good ball control</div>", unsafe_allow_html=True)
-    st.markdown("<div style='background-color:#FEF2F2; padding:0.5rem; border-radius:5px; border-left: 4px solid #EF4444;'>**Pressing Concerns** - PPDA of 14.7 suggests passive defensive approach</div>", unsafe_allow_html=True)
-    st.markdown("<div style='background-color:#EFF6FF; padding:0.5rem; border-radius:5px; border-left: 4px solid #3B82F6;'>**Messi Effect** - 17 goals in 19 apps demonstrates exceptional individual impact</div>", unsafe_allow_html=True)
+    st.markdown("### 🎯 Key Insights")
+    st.success("**Strong Possession Game** - 58.2% average possession indicates good ball control")
+    st.warning("**Pressing Concerns** - PPDA of 14.7 suggests passive defensive approach")
+    st.info("**Messi Effect** - 17 goals in 19 apps demonstrates exceptional individual impact")
     
     st.markdown("---")
     
-    st.markdown("### Data Sources")
+    st.markdown("### 📈 Data Sources")
     st.caption("""
     - MLS Official Match Data
     - SofaScore Advanced Stats  
@@ -813,7 +813,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    st.markdown("### Metrics Glossary")
+    st.markdown("### ℹ️ Metrics Glossary")
     
     with st.expander("PPDA"):
         st.write("Passes Allowed Per Defensive Action - measures pressing intensity. Lower values indicate more aggressive pressing.")
