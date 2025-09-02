@@ -825,37 +825,3 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
-
-# Add deployment instructions in a comment
-"""
-STREAMLIT DEPLOYMENT INSTRUCTIONS:
-
-1. Save this code as 'app.py'
-
-2. Create a requirements.txt file with:
-   streamlit
-   plotly
-   pandas
-   numpy
-
-3. Deploy to Streamlit Cloud:
-   - Push to GitHub repository
-   - Connect to Streamlit Cloud (share.streamlit.io)
-   - Deploy directly from repository
-
-4. Alternative deployment options:
-   - Heroku: Add Procfile with "web: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0"
-   - Docker: Use official Streamlit Docker image
-   - Local: Run with 'streamlit run app.py'
-
-5. Environment considerations:
-   - No additional API keys required for this static data version
-   - For live data integration, add appropriate data source APIs
-   - Consider caching with @st.cache_data for better performance
-
-6. Customization options:
-   - Replace static data with live API connections
-   - Add user authentication if needed
-   - Implement data filters and date ranges
-   - Add export functionality for reports
-"""
