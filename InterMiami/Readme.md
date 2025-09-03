@@ -1,5 +1,6 @@
 # Inter Miami CF Analytics Dashboard
 
+Dashboard link: https://football-match-analysis-dashboard-q8jubsksxnqjdroplolrak.streamlit.app/
 A professional tactical analysis dashboard showcasing advanced football metrics and interactive visualizations tailored for Inter Miami CF.
 
 ## Features
