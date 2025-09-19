@@ -1,4 +1,12 @@
-streamlit==1.38.0
-plotly==5.24.1
-pandas==2.2.2
-numpy==1.26.4
+# Core app dependencies
+streamlit>=1.32.0
+plotly>=5.20.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# (Optional) for better visuals and data handling
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# (Optional) for data requests / APIs
+requests>=2.31.0
