@@ -152,7 +152,4 @@ with tab7:
         "Upgrade to XGBoost or ensemble for greater accuracy with more data."
     )
 
-# ---- requirements.txt ----
-st.markdown("""
----
-## requirements.txt for best experience
+
