@@ -35,6 +35,10 @@ st.markdown("""
         border-radius: 10px;
         border-left: 4px solid #002859; /* Navy blue border */
         margin-bottom: 1rem;
+        color: #000; /* All text within this card is black */
+    }
+    .metric-card h1, .metric-card h3, .metric-card p {
+        color: #000; /* Ensure all text elements are black */
     }
     .insight-box {
         background: linear-gradient(135deg, #e6f7ff 0%, #b3e0ff 100%); /* Lighter blue to pale blue */
@@ -42,9 +46,10 @@ st.markdown("""
         border-radius: 10px;
         border-left: 4px solid #002859; /* Navy blue border */
         margin: 1rem 0;
+        color: #000; /* All text within this card is black */
     }
-    .st-emotion-cache-1kyx3m4 { /* Specific Streamlit metric text color override */
-        color: #000;
+    .insight-box strong {
+        color: #002859; /* Bold text for headings is navy blue */
     }
 </style>
 """, unsafe_allow_html=True)
