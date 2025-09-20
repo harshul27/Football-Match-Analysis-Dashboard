@@ -4,564 +4,600 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
-import math
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # Configure page
 st.set_page_config(
-    page_title="Tactical Analysis Dashboard", 
+    page_title="Manchester City Performance Dashboard", 
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
+    page_icon="⚽"
 )
 
-# Custom CSS for better styling
+# Custom CSS
 st.markdown("""
 <style>
     .main .block-container {
-        padding-top: 2rem;
+        padding-top: 1rem;
         padding-bottom: 2rem;
+        max-width: 1400px;
     }
-    .stMetric {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #e9ecef;
+    .metric-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin: 0.5rem 0;
     }
-    .tactical-insight {
-        background-color: #f1f3f4;
-        padding: 15px;
+    .success-box {
+        background-color: #e8f5e8;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #4caf50;
+        margin: 0.5rem 0;
+    }
+    .warning-box {
+        background-color: #fff3e0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #ff9800;
+        margin: 0.5rem 0;
+    }
+    .danger-box {
+        background-color: #ffebee;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #f44336;
+        margin: 0.5rem 0;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: white;
         border-radius: 8px;
-        border-left: 4px solid #1f77b4;
-        margin: 10px 0;
+        padding: 8px 16px;
+        border: 1px solid #e0e0e0;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #f5f5f5;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Sample tactical data for Manchester Derby
 @st.cache_data
-def load_tactical_data():
-    # xG timeline data
-    xg_timeline = pd.DataFrame([
-        {'minute': 0, 'city_xg': 0.0, 'united_xg': 0.0, 'event': ''},
-        {'minute': 8, 'city_xg': 0.02, 'united_xg': 0.0, 'event': 'Ugarte error'},
-        {'minute': 18, 'city_xg': 0.33, 'united_xg': 0.0, 'event': 'GOAL Foden'},
-        {'minute': 24, 'city_xg': 0.41, 'united_xg': 0.05, 'event': 'Formation change'},
-        {'minute': 38, 'city_xg': 0.56, 'united_xg': 0.12, 'event': 'Overload right'},
-        {'minute': 45, 'city_xg': 0.73, 'united_xg': 0.24, 'event': 'Half-time'},
-        {'minute': 53, 'city_xg': 1.34, 'united_xg': 0.24, 'event': 'GOAL Haaland'},
-        {'minute': 62, 'city_xg': 1.52, 'united_xg': 0.24, 'event': 'Formation breakdown'},
-        {'minute': 68, 'city_xg': 1.95, 'united_xg': 0.24, 'event': 'GOAL Haaland'},
-        {'minute': 78, 'city_xg': 2.08, 'united_xg': 0.38, 'event': ''},
-        {'minute': 84, 'city_xg': 2.08, 'united_xg': 0.64, 'event': 'United chance'},
-        {'minute': 90, 'city_xg': 2.18, 'united_xg': 0.71, 'event': 'Full-time'}
-    ])
+def load_season_data():
+    """Load Manchester City season data - NOTE: This is fictional data for demonstration"""
     
-    # Pressure map data by zones
-    pressure_data = pd.DataFrame([
-        {'zone': 'Defensive Third', 'period': '0-15min', 'city': 8, 'united': 22},
-        {'zone': 'Defensive Third', 'period': '15-30min', 'city': 6, 'united': 28},
-        {'zone': 'Defensive Third', 'period': '30-45min', 'city': 4, 'united': 31},
-        {'zone': 'Defensive Third', 'period': '45-60min', 'city': 7, 'united': 34},
-        {'zone': 'Defensive Third', 'period': '60-75min', 'city': 5, 'united': 38},
-        {'zone': 'Defensive Third', 'period': '75-90min', 'city': 3, 'united': 42},
-        
-        {'zone': 'Middle Third', 'period': '0-15min', 'city': 24, 'united': 18},
-        {'zone': 'Middle Third', 'period': '15-30min', 'city': 28, 'united': 15},
-        {'zone': 'Middle Third', 'period': '30-45min', 'city': 31, 'united': 12},
-        {'zone': 'Middle Third', 'period': '45-60min', 'city': 33, 'united': 9},
-        {'zone': 'Middle Third', 'period': '60-75min', 'city': 29, 'united': 11},
-        {'zone': 'Middle Third', 'period': '75-90min', 'city': 26, 'united': 13},
-        
-        {'zone': 'Attacking Third', 'period': '0-15min', 'city': 42, 'united': 6},
-        {'zone': 'Attacking Third', 'period': '15-30min', 'city': 48, 'united': 4},
-        {'zone': 'Attacking Third', 'period': '30-45min', 'city': 51, 'united': 3},
-        {'zone': 'Attacking Third', 'period': '45-60min', 'city': 56, 'united': 2},
-        {'zone': 'Attacking Third', 'period': '60-75min', 'city': 49, 'united': 5},
-        {'zone': 'Attacking Third', 'period': '75-90min', 'city': 44, 'united': 7}
-    ])
+    # Season overview (fictional data)
+    season_overview = {
+        "matches_played": 4,
+        "wins": 2,
+        "draws": 0,
+        "losses": 2,
+        "points": 6,
+        "position": 8,
+        "goals_for": 7,
+        "goals_against": 4,
+        "goal_difference": 3,
+        "clean_sheets": 2,
+        "ppg": 1.5
+    }
     
-    # Player performance data
-    player_data = pd.DataFrame([
+    # Match progression data
+    match_progression = pd.DataFrame([
         {
-            'name': 'Haaland', 'team': 'City', 'position': 'ST',
-            'progressive_passes': 3, 'progressive_carries': 8, 'shot_creating_actions': 4,
-            'pressures': 12, 'interceptions': 1, 'pass_completion_final_third': 67,
-            'xg': 1.32, 'xa': 0.05, 'goals': 2, 'assists': 0, 'rating': 9.2
+            "matchday": 1, "opponent": "Wolves", "result": "W", "score": "4-0", 
+            "points": 3, "cumulative_points": 3, "possession": 68, "venue": "Away", 
+            "date": "Aug 16", "pass_accuracy": 91, "shots": 16, "fouls": 8, 
+            "xg_for": 3.2, "xg_against": 0.8
         },
         {
-            'name': 'Foden', 'team': 'City', 'position': 'AM',
-            'progressive_passes': 12, 'progressive_carries': 15, 'shot_creating_actions': 8,
-            'pressures': 18, 'interceptions': 3, 'pass_completion_final_third': 78,
-            'xg': 0.31, 'xa': 0.18, 'goals': 1, 'assists': 0, 'rating': 8.8
+            "matchday": 2, "opponent": "Tottenham", "result": "L", "score": "0-2", 
+            "points": 0, "cumulative_points": 3, "possession": 52, "venue": "Home", 
+            "date": "Aug 23", "pass_accuracy": 84, "shots": 9, "fouls": 12, 
+            "xg_for": 1.1, "xg_against": 2.1
         },
         {
-            'name': 'Doku', 'team': 'City', 'position': 'RW',
-            'progressive_passes': 9, 'progressive_carries': 22, 'shot_creating_actions': 11,
-            'pressures': 14, 'interceptions': 2, 'pass_completion_final_third': 72,
-            'xg': 0.12, 'xa': 0.94, 'goals': 0, 'assists': 2, 'rating': 8.9
+            "matchday": 3, "opponent": "Brighton", "result": "L", "score": "1-2", 
+            "points": 0, "cumulative_points": 3, "possession": 62, "venue": "Away", 
+            "date": "Aug 31", "pass_accuracy": 88, "shots": 12, "fouls": 11, 
+            "xg_for": 1.4, "xg_against": 1.5
         },
         {
-            'name': 'Rodri', 'team': 'City', 'position': 'DM',
-            'progressive_passes': 18, 'progressive_carries': 6, 'shot_creating_actions': 5,
-            'pressures': 22, 'interceptions': 6, 'pass_completion_final_third': 85,
-            'xg': 0.03, 'xa': 0.12, 'goals': 0, 'assists': 0, 'rating': 8.3
-        },
-        {
-            'name': 'Bruno', 'team': 'United', 'position': 'AM',
-            'progressive_passes': 8, 'progressive_carries': 4, 'shot_creating_actions': 3,
-            'pressures': 16, 'interceptions': 2, 'pass_completion_final_third': 58,
-            'xg': 0.08, 'xa': 0.22, 'goals': 0, 'assists': 0, 'rating': 6.4
-        },
-        {
-            'name': 'Ugarte', 'team': 'United', 'position': 'CM',
-            'progressive_passes': 3, 'progressive_carries': 2, 'shot_creating_actions': 1,
-            'pressures': 24, 'interceptions': 4, 'pass_completion_final_third': 45,
-            'xg': 0.02, 'xa': 0.03, 'goals': 0, 'assists': 0, 'rating': 5.8
-        },
-        {
-            'name': 'Mbeumo', 'team': 'United', 'position': 'RAM',
-            'progressive_passes': 4, 'progressive_carries': 7, 'shot_creating_actions': 2,
-            'pressures': 8, 'interceptions': 1, 'pass_completion_final_third': 62,
-            'xg': 0.26, 'xa': 0.14, 'goals': 0, 'assists': 0, 'rating': 6.1
+            "matchday": 4, "opponent": "Man Utd", "result": "W", "score": "3-0", 
+            "points": 3, "cumulative_points": 6, "possession": 71, "venue": "Home", 
+            "date": "Sep 14", "pass_accuracy": 92, "shots": 18, "fouls": 7, 
+            "xg_for": 2.4, "xg_against": 1.0
         }
     ])
     
-    # PPDA data by zone
-    ppda_data = pd.DataFrame([
-        {'zone': 'Left Wing', 'city_ppda': 6.2, 'united_ppda': 11.8, 'city_dominance': 0.73},
-        {'zone': 'Left Half-Space', 'city_ppda': 4.8, 'united_ppda': 14.2, 'city_dominance': 0.89},
-        {'zone': 'Central', 'city_ppda': 7.1, 'united_ppda': 9.4, 'city_dominance': 0.62},
-        {'zone': 'Right Half-Space', 'city_ppda': 3.9, 'united_ppda': 16.7, 'city_dominance': 0.94},
-        {'zone': 'Right Wing', 'city_ppda': 5.4, 'united_ppda': 13.1, 'city_dominance': 0.81}
-    ])
+    # New signings data
+    new_signings = {
+        "donnarumma": {
+            "name": "Gianluigi Donnarumma",
+            "position": "Goalkeeper",
+            "from": "Paris Saint-Germain",
+            "fee": "£26 million",
+            "games_played": 4,
+            "clean_sheets": 2,
+            "rating": 7.4,
+            "impact": "Replacing Ederson - solid start with room for improvement"
+        },
+        "mcatee": {
+            "name": "James McAtee",
+            "position": "Attacking Midfielder",
+            "from": "Sheffield United (recalled)",
+            "fee": "Development player",
+            "games_played": 3,
+            "goals": 1,
+            "assists": 1,
+            "rating": 7.0,
+            "impact": "Filling creative void - promising displays when given chances"
+        }
+    }
     
-    return xg_timeline, pressure_data, player_data, ppda_data
-
-# Load data
-xg_timeline, pressure_data, player_data, ppda_data = load_tactical_data()
-
-# Header
-st.title("🎯 Tactical Analysis Dashboard")
-st.markdown("**Manchester Derby | City 3-0 United | Performance Intelligence**")
-
-# Sidebar controls
-st.sidebar.header("🎛️ Analysis Controls")
-
-# Time period selector
-time_period = st.sidebar.selectbox(
-    "Match Period",
-    ["Full Match", "First Half", "Second Half", "Custom Range"],
-    index=0
-)
-
-if time_period == "Custom Range":
-    time_range = st.sidebar.slider(
-        "Select Minutes",
-        min_value=0,
-        max_value=90,
-        value=(0, 90),
-        step=1
-    )
-else:
-    if time_period == "First Half":
-        time_range = (0, 45)
-    elif time_period == "Second Half":
-        time_range = (45, 90)
-    else:
-        time_range = (0, 90)
-
-# Team selector
-team_filter = st.sidebar.selectbox(
-    "Focus Team",
-    ["Both Teams", "Manchester City", "Manchester United"],
-    index=0
-)
-
-# Player selector
-available_players = player_data['name'].tolist()
-selected_player = st.sidebar.selectbox(
-    "Player Focus",
-    ["All Players"] + available_players,
-    index=0
-)
-
-# Analysis layers
-st.sidebar.subheader("📊 Analysis Layers")
-show_pressure = st.sidebar.checkbox("Pressure Analysis", value=True)
-show_transitions = st.sidebar.checkbox("Transition Speed", value=True)
-show_ppda = st.sidebar.checkbox("PPDA Mapping", value=True)
-show_player_focus = st.sidebar.checkbox("Player Deep Dive", value=False)
-
-# Main layout - 3 columns
-col1, col2, col3 = st.columns([2, 4, 2])
-
-# Left column - Key metrics
-with col1:
-    st.subheader("🔢 Key Metrics")
+    # Detailed match analysis
+    detailed_matches = {
+        "wolves": {
+            "date": "August 16, 2025",
+            "venue": "Molineux Stadium (Away)",
+            "result": "W 4-0",
+            "key_factors": {
+                "attack": "Clinical finishing - 4 goals from 16 shots, Haaland brace",
+                "midfield": "Complete dominance with 91% pass accuracy",
+                "defense": "Perfect debut for Donnarumma with clean sheet"
+            },
+            "player_ratings": {
+                "haaland": 9.0, "foden": 8.5, "rodri": 8.2, 
+                "donnarumma": 7.8, "doku": 8.0
+            }
+        },
+        "tottenham": {
+            "date": "August 23, 2025",
+            "venue": "Etihad Stadium (Home)",
+            "result": "L 0-2",
+            "key_factors": {
+                "attack": "Wasteful finishing - failed to convert dominance",
+                "midfield": "Struggled without Gundogan's press resistance",
+                "defense": "Individual errors cost dearly in key moments"
+            },
+            "player_ratings": {
+                "haaland": 6.5, "foden": 6.0, "rodri": 6.8,
+                "donnarumma": 6.0, "walker": 5.5
+            }
+        },
+        "brighton": {
+            "date": "August 31, 2025",
+            "venue": "American Express Stadium (Away)",
+            "result": "L 1-2",
+            "key_factors": {
+                "attack": "Haaland milestone goal but limited service",
+                "midfield": "Nunes handball penalty crucial turning point",
+                "defense": "Late winner shows ongoing vulnerability"
+            },
+            "player_ratings": {
+                "haaland": 7.5, "silva": 6.8, "rodri": 6.5,
+                "donnarumma": 6.5, "nunes": 4.5
+            }
+        },
+        "man_utd": {
+            "date": "September 14, 2025",
+            "venue": "Etihad Stadium (Home)",
+            "result": "W 3-0",
+            "key_factors": {
+                "attack": "Clinical return to form - Haaland double",
+                "midfield": "Dominated possession and tempo throughout",
+                "defense": "Solid clean sheet, Donnarumma commanding"
+            },
+            "player_ratings": {
+                "haaland": 9.2, "foden": 8.3, "rodri": 8.7,
+                "donnarumma": 8.0, "gvardiol": 8.1
+            }
+        }
+    }
     
-    # Filter xG data based on time range
-    filtered_xg = xg_timeline[
-        (xg_timeline['minute'] >= time_range[0]) & 
-        (xg_timeline['minute'] <= time_range[1])
-    ]
-    
-    final_city_xg = filtered_xg['city_xg'].iloc[-1] if len(filtered_xg) > 0 else 0
-    final_united_xg = filtered_xg['united_xg'].iloc[-1] if len(filtered_xg) > 0 else 0
-    
-    st.metric("Expected Goals", f"{final_city_xg:.2f} - {final_united_xg:.2f}", 
-              delta=f"City +{final_city_xg - final_united_xg:.2f}")
-    
-    st.metric("Actual Score", "3 - 0", delta="City dominance")
-    
-    # Efficiency metrics
-    city_efficiency = 3 / final_city_xg if final_city_xg > 0 else 0
-    united_efficiency = 0 / final_united_xg if final_united_xg > 0 else 0
-    
-    st.metric("Finishing Efficiency", f"{city_efficiency:.1f}x vs {united_efficiency:.1f}x",
-              delta="Clinical finishing")
-    
-    # Pressure differential
-    city_att_pressure = pressure_data[pressure_data['zone'] == 'Attacking Third']['city'].mean()
-    united_att_pressure = pressure_data[pressure_data['zone'] == 'Attacking Third']['united'].mean()
-    
-    st.metric("Attacking Third Pressure", f"{city_att_pressure:.0f} vs {united_att_pressure:.0f}",
-              delta=f"City +{city_att_pressure - united_att_pressure:.0f}")
+    return season_overview, match_progression, new_signings, detailed_matches
 
-# Center column - Main visualizations
-with col2:
-    st.subheader("📈 Interactive Timeline & Analysis")
+def create_points_progression_chart(match_data):
+    """Create points progression chart"""
+    fig = go.Figure()
     
-    # Interactive xG timeline
-    fig_xg = go.Figure()
+    # Color mapping for results
+    colors = {'W': 'green', 'D': 'orange', 'L': 'red'}
     
-    fig_xg.add_trace(go.Scatter(
-        x=filtered_xg['minute'],
-        y=filtered_xg['city_xg'],
+    fig.add_trace(go.Scatter(
+        x=match_data['matchday'],
+        y=match_data['cumulative_points'],
         mode='lines+markers',
-        name='Manchester City',
         line=dict(color='#6CABDD', width=3),
-        marker=dict(size=8),
-        hovertemplate='<b>%{fullData.name}</b><br>' +
-                      'Minute: %{x}<br>' +
-                      'xG: %{y:.2f}<br>' +
-                      '<extra></extra>'
+        marker=dict(
+            size=12,
+            color=[colors[result] for result in match_data['result']],
+            symbol='circle',
+            line=dict(width=2, color='white')
+        ),
+        name='Points Progression',
+        hovertemplate='<b>Matchday %{x}</b><br>' +
+                      'vs %{customdata[0]}<br>' +
+                      'Result: %{customdata[1]} (%{customdata[2]})<br>' +
+                      'Points: %{y}<extra></extra>',
+        customdata=np.column_stack((
+            match_data['opponent'], 
+            match_data['result'], 
+            match_data['score']
+        ))
     ))
     
-    fig_xg.add_trace(go.Scatter(
-        x=filtered_xg['minute'],
-        y=filtered_xg['united_xg'],
-        mode='lines+markers',
-        name='Manchester United',
-        line=dict(color='#DA020E', width=3),
-        marker=dict(size=8),
-        hovertemplate='<b>%{fullData.name}</b><br>' +
-                      'Minute: %{x}<br>' +
-                      'xG: %{y:.2f}<br>' +
-                      '<extra></extra>'
-    ))
-    
-    # Add event annotations
-    for _, row in filtered_xg.iterrows():
-        if row['event'] and 'GOAL' in row['event']:
-            fig_xg.add_annotation(
-                x=row['minute'],
-                y=row['city_xg'] if 'City' in row['event'] else row['united_xg'],
-                text="⚽",
-                showarrow=True,
-                arrowhead=2,
-                arrowcolor="gold",
-                font=dict(size=16)
-            )
-    
-    fig_xg.update_layout(
-        title="Expected Goals Timeline with Key Events",
-        xaxis_title="Match Time (minutes)",
-        yaxis_title="Cumulative Expected Goals",
-        hovermode='x unified',
+    fig.update_layout(
+        title="Manchester City Points Progression",
+        xaxis_title="Matchday",
+        yaxis_title="Cumulative Points",
         height=400,
-        showlegend=True,
+        showlegend=False,
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)'
     )
     
-    fig_xg.update_xaxis(gridcolor='lightgray', gridwidth=1)
-    fig_xg.update_yaxis(gridcolor='lightgray', gridwidth=1)
+    return fig
+
+def create_performance_radar(match_data):
+    """Create performance radar chart"""
+    avg_metrics = {
+        'Possession': match_data['possession'].mean(),
+        'Pass Accuracy': match_data['pass_accuracy'].mean(),
+        'Shots per Game': match_data['shots'].mean(),
+        'xG per Game': match_data['xg_for'].mean() * 10,  # Scaled for radar
+        'Defensive Stability': (100 - match_data['xg_against'].mean() * 20)
+    }
     
-    st.plotly_chart(fig_xg, use_container_width=True)
+    fig = go.Figure()
     
-    # Pressure analysis heatmap
-    if show_pressure:
-        st.subheader("🔥 Pressure Intensity Analysis")
+    fig.add_trace(go.Scatterpolar(
+        r=list(avg_metrics.values()),
+        theta=list(avg_metrics.keys()),
+        fill='toself',
+        name='Man City Performance',
+        line=dict(color='#6CABDD', width=2),
+        fillcolor='rgba(108, 171, 221, 0.3)'
+    ))
+    
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )
+        ),
+        title="Average Performance Metrics",
+        height=400,
+        showlegend=False
+    )
+    
+    return fig
+
+def create_xg_analysis_chart(match_data):
+    """Create xG vs Goals analysis"""
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=('Expected vs Actual Goals', 'Goal Efficiency by Match'),
+        specs=[[{"secondary_y": False}, {"secondary_y": False}]]
+    )
+    
+    # Bar chart for xG vs Goals
+    fig.add_trace(
+        go.Bar(
+            x=match_data['opponent'],
+            y=match_data['xg_for'],
+            name='Expected Goals',
+            marker_color='lightblue',
+            opacity=0.7
+        ),
+        row=1, col=1
+    )
+    
+    goals_scored = [int(score.split('-')[0]) for score in match_data['score']]
+    fig.add_trace(
+        go.Bar(
+            x=match_data['opponent'],
+            y=goals_scored,
+            name='Actual Goals',
+            marker_color='blue'
+        ),
+        row=1, col=1
+    )
+    
+    # Line chart for efficiency
+    efficiency = [g/xg if xg > 0 else 0 for g, xg in zip(goals_scored, match_data['xg_for'])]
+    fig.add_trace(
+        go.Scatter(
+            x=match_data['opponent'],
+            y=efficiency,
+            mode='lines+markers',
+            name='Finishing Efficiency',
+            line=dict(color='red', width=3),
+            marker=dict(size=8)
+        ),
+        row=1, col=2
+    )
+    
+    fig.add_hline(y=1, line_dash="dash", line_color="gray", row=1, col=2)
+    
+    fig.update_layout(height=400, title_text="Goal Analysis")
+    
+    return fig
+
+def main():
+    """Main application function"""
+    
+    # Load data
+    season_overview, match_progression, new_signings, detailed_matches = load_season_data()
+    
+    # Header with disclaimer
+    st.markdown("# ⚽ Manchester City Performance Dashboard")
+    st.markdown("### Comprehensive Season Analysis Tool")
+    
+    # Important disclaimer
+    st.markdown("""
+    <div class="warning-box">
+    <strong>⚠️ Data Disclaimer:</strong> This dashboard contains fictional data for demonstration purposes. 
+    The "2025/26 season" data is entirely made up since we're currently in 2024. 
+    This is a template for how such analysis could work with real data.
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Sidebar controls
+    st.sidebar.header("📊 Dashboard Controls")
+    
+    # Main navigation
+    tab1, tab2, tab3, tab4 = st.tabs(["Season Overview", "Match Analysis", "Player Performance", "Projections"])
+    
+    with tab1:
+        st.subheader("📈 Season Overview")
         
-        # Create pressure heatmap
-        pressure_pivot = pressure_data.pivot_table(
-            index='zone', 
-            columns='period', 
-            values=['city', 'united'], 
-            aggfunc='first'
+        # Key metrics
+        col1, col2, col3, col4, col5 = st.columns(5)
+        
+        with col1:
+            st.metric("Position", f"{season_overview['position']}th", delta=None)
+        with col2:
+            st.metric("Points", season_overview['points'], delta=f"PPG: {season_overview['ppg']}")
+        with col3:
+            st.metric("W-D-L", f"{season_overview['wins']}-{season_overview['draws']}-{season_overview['losses']}")
+        with col4:
+            st.metric("Goals", f"{season_overview['goals_for']}-{season_overview['goals_against']}")
+        with col5:
+            st.metric("Goal Diff", f"+{season_overview['goal_difference']}")
+        
+        # Points progression chart
+        st.subheader("Points Progression")
+        fig_points = create_points_progression_chart(match_progression)
+        st.plotly_chart(fig_points, use_container_width=True)
+        
+        # Performance radar
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.subheader("Performance Radar")
+            fig_radar = create_performance_radar(match_progression)
+            st.plotly_chart(fig_radar, use_container_width=True)
+        
+        with col2:
+            st.subheader("xG Analysis")
+            fig_xg = create_xg_analysis_chart(match_progression)
+            st.plotly_chart(fig_xg, use_container_width=True)
+        
+        # New signings impact
+        st.subheader("New Signings Impact")
+        for key, player in new_signings.items():
+            with st.expander(f"{player['name']} - {player['position']}"):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Games Played", player['games_played'])
+                with col2:
+                    st.metric("Rating", f"{player['rating']}/10")
+                with col3:
+                    if 'goals' in player:
+                        st.metric("Goals", player['goals'])
+                    else:
+                        st.metric("Clean Sheets", player['clean_sheets'])
+                
+                st.markdown(f"**Impact:** {player['impact']}")
+    
+    with tab2:
+        st.subheader("🔍 Detailed Match Analysis")
+        
+        # Match selector
+        selected_match = st.selectbox(
+            "Select Match to Analyze",
+            options=list(detailed_matches.keys()),
+            format_func=lambda x: f"vs {x.replace('_', ' ').title()}"
         )
         
-        fig_pressure = make_subplots(
-            rows=1, cols=2,
-            subplot_titles=('Manchester City Pressure', 'Manchester United Pressure'),
-            shared_yaxes=True
+        match_data = detailed_matches[selected_match]
+        
+        # Match header
+        col1, col2, col3 = st.columns([2, 3, 2])
+        
+        with col1:
+            st.markdown("### Manchester City")
+            result_parts = match_data['result'].split()
+            city_score = result_parts[1].split('-')[0]
+            st.markdown(f"# {city_score}")
+        
+        with col2:
+            st.markdown(f"**{match_data['date']}**")
+            st.markdown(f"*{match_data['venue']}*")
+            result_text = "VICTORY" if match_data['result'].startswith('W') else "DEFEAT"
+            color = "green" if match_data['result'].startswith('W') else "red"
+            st.markdown(f"<h3 style='color: {color}; text-align: center;'>{result_text}</h3>", unsafe_allow_html=True)
+        
+        with col3:
+            opponent = selected_match.replace('_', ' ').title()
+            if opponent == "Man Utd":
+                opponent = "Manchester United"
+            st.markdown(f"### {opponent}")
+            opp_score = result_parts[1].split('-')[1]
+            st.markdown(f"# {opp_score}")
+        
+        # Match analysis
+        st.subheader("Tactical Breakdown")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown("**🔥 Attack**")
+            st.markdown(f"*{match_data['key_factors']['attack']}*")
+        
+        with col2:
+            st.markdown("**⚽ Midfield**")
+            st.markdown(f"*{match_data['key_factors']['midfield']}*")
+        
+        with col3:
+            st.markdown("**🛡️ Defense**")
+            st.markdown(f"*{match_data['key_factors']['defense']}*")
+        
+        # Player ratings
+        st.subheader("Player Ratings")
+        ratings_data = pd.DataFrame(
+            list(match_data['player_ratings'].items()),
+            columns=['Player', 'Rating']
         )
         
-        periods = ['0-15min', '15-30min', '30-45min', '45-60min', '60-75min', '75-90min']
-        zones = ['Attacking Third', 'Middle Third', 'Defensive Third']
+        fig_ratings = px.bar(
+            ratings_data, 
+            x='Player', 
+            y='Rating',
+            color='Rating',
+            color_continuous_scale='RdYlGn',
+            range_color=[5, 10]
+        )
+        fig_ratings.update_layout(height=300)
+        st.plotly_chart(fig_ratings, use_container_width=True)
+    
+    with tab3:
+        st.subheader("👥 Player Performance Analysis")
         
-        # City pressure data
-        city_pressure_matrix = []
-        united_pressure_matrix = []
+        # Match statistics comparison
+        match_stats = match_progression[['opponent', 'possession', 'pass_accuracy', 'shots', 'xg_for']].copy()
         
-        for zone in zones:
-            city_row = []
-            united_row = []
-            for period in periods:
-                city_val = pressure_data[
-                    (pressure_data['zone'] == zone) & 
-                    (pressure_data['period'] == period)
-                ]['city'].values[0]
-                united_val = pressure_data[
-                    (pressure_data['zone'] == zone) & 
-                    (pressure_data['period'] == period)
-                ]['united'].values[0]
-                city_row.append(city_val)
-                united_row.append(united_val)
-            city_pressure_matrix.append(city_row)
-            united_pressure_matrix.append(united_row)
+        st.subheader("Performance by Match")
+        fig_comparison = make_subplots(
+            rows=2, cols=2,
+            subplot_titles=('Possession %', 'Pass Accuracy %', 'Shots per Game', 'Expected Goals')
+        )
         
-        fig_pressure.add_trace(
-            go.Heatmap(
-                z=city_pressure_matrix,
-                x=periods,
-                y=zones,
-                colorscale='Blues',
-                showscale=False,
-                hovertemplate='Period: %{x}<br>Zone: %{y}<br>Pressures: %{z}<extra></extra>'
-            ),
+        # Possession
+        fig_comparison.add_trace(
+            go.Bar(x=match_stats['opponent'], y=match_stats['possession'], name='Possession'),
             row=1, col=1
         )
         
-        fig_pressure.add_trace(
-            go.Heatmap(
-                z=united_pressure_matrix,
-                x=periods,
-                y=zones,
-                colorscale='Reds',
-                showscale=False,
-                hovertemplate='Period: %{x}<br>Zone: %{y}<br>Pressures: %{z}<extra></extra>'
-            ),
+        # Pass accuracy
+        fig_comparison.add_trace(
+            go.Bar(x=match_stats['opponent'], y=match_stats['pass_accuracy'], name='Pass Accuracy'),
             row=1, col=2
         )
         
-        fig_pressure.update_layout(
-            title="Pressure Distribution by Zone & Time Period",
-            height=300
+        # Shots
+        fig_comparison.add_trace(
+            go.Bar(x=match_stats['opponent'], y=match_stats['shots'], name='Shots'),
+            row=2, col=1
         )
         
-        st.plotly_chart(fig_pressure, use_container_width=True)
+        # xG
+        fig_comparison.add_trace(
+            go.Bar(x=match_stats['opponent'], y=match_stats['xg_for'], name='xG'),
+            row=2, col=2
+        )
+        
+        fig_comparison.update_layout(height=500, showlegend=False)
+        st.plotly_chart(fig_comparison, use_container_width=True)
+        
+        # Average performance metrics
+        st.subheader("Season Averages")
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Avg Possession", f"{match_stats['possession'].mean():.1f}%")
+        with col2:
+            st.metric("Avg Pass Accuracy", f"{match_stats['pass_accuracy'].mean():.1f}%")
+        with col3:
+            st.metric("Avg Shots", f"{match_stats['shots'].mean():.1f}")
+        with col4:
+            st.metric("Avg xG", f"{match_stats['xg_for'].mean():.2f}")
+    
+    with tab4:
+        st.subheader("🔮 Season Projections")
         
         st.markdown("""
-        <div class="tactical-insight">
-        <strong>Tactical Insight:</strong> City maintained consistent high pressure in attacking third (42-56 pressures per period), 
-        while United's pressure concentrated in defensive third, indicating territorial retreat and loss of midfield control.
+        <div class="warning-box">
+        <strong>Note:</strong> These projections are based on the first 4 matches and are purely illustrative.
         </div>
         """, unsafe_allow_html=True)
+        
+        # Current trajectory
+        current_ppg = season_overview['ppg']
+        projected_points = current_ppg * 38
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.metric("Current PPG", f"{current_ppg:.2f}")
+        with col2:
+            st.metric("Projected Points", f"{projected_points:.0f}")
+        with col3:
+            projected_position = "6th-8th" if projected_points > 55 else "8th-12th"
+            st.metric("Est. Final Position", projected_position)
+        with col4:
+            europa_chance = "High" if projected_points > 55 else "Medium"
+            st.metric("European Qualification", europa_chance)
+        
+        # Scenario analysis
+        st.subheader("Scenario Analysis")
+        
+        scenarios = pd.DataFrame({
+            'Scenario': ['Current Trend', 'Improved Form', 'Poor Form'],
+            'PPG': [1.5, 2.0, 1.0],
+            'Final Points': [57, 76, 38],
+            'Est. Position': ['7th-9th', '4th-6th', '12th-15th'],
+            'Europe': ['Conference League', 'Champions League', 'No Europe']
+        })
+        
+        st.dataframe(scenarios, use_container_width=True)
+        
+        # Performance trends
+        st.subheader("Key Performance Indicators")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="success-box">
+            <strong>Strengths:</strong>
+            <ul>
+            <li>Strong attacking output when clicking</li>
+            <li>New signings integrating well</li>
+            <li>Home form solid</li>
+            </ul>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="danger-box">
+            <strong>Areas for Improvement:</strong>
+            <ul>
+            <li>Consistency in big matches</li>
+            <li>Away form needs work</li>
+            <li>Defensive stability</li>
+            </ul>
+            </div>
+            """, unsafe_allow_html=True)
     
-    # PPDA Analysis
-    if show_ppda:
-        st.subheader("⚡ PPDA & Zone Dominance")
-        
-        fig_ppda = go.Figure()
-        
-        fig_ppda.add_trace(go.Bar(
-            x=ppda_data['zone'],
-            y=ppda_data['city_ppda'],
-            name='City PPDA',
-            marker_color='#6CABDD',
-            hovertemplate='Zone: %{x}<br>PPDA: %{y:.1f}<br>(Lower = Better Press)<extra></extra>'
-        ))
-        
-        fig_ppda.add_trace(go.Bar(
-            x=ppda_data['zone'],
-            y=ppda_data['united_ppda'],
-            name='United PPDA',
-            marker_color='#DA020E',
-            hovertemplate='Zone: %{x}<br>PPDA: %{y:.1f}<br>(Lower = Better Press)<extra></extra>'
-        ))
-        
-        fig_ppda.update_layout(
-            title="PPDA by Zone (Passes Per Defensive Action - Lower = Better)",
-            xaxis_title="Field Zones",
-            yaxis_title="PPDA Value",
-            height=350,
-            barmode='group'
-        )
-        
-        st.plotly_chart(fig_ppda, use_container_width=True)
+    # Footer
+    st.markdown("---")
+    st.markdown("**Data Sources:** Fictional data for demonstration | **Last Updated:** " + datetime.now().strftime("%Y-%m-%d %H:%M"))
 
-# Right column - Player analysis and insights
-with col3:
-    st.subheader("👤 Player Analysis")
-    
-    if selected_player != "All Players":
-        # Individual player focus
-        player_info = player_data[player_data['name'] == selected_player].iloc[0]
-        
-        st.markdown(f"**{player_info['name']}** ({player_info['position']})")
-        st.markdown(f"Team: {player_info['team']}")
-        st.metric("Match Rating", f"{player_info['rating']}/10")
-        
-        # Player radar chart
-        categories = [
-            'Progressive Passes', 'Progressive Carries', 'Shot Creating Actions',
-            'Pressures', 'Interceptions', 'Final Third Completion'
-        ]
-        
-        values = [
-            player_info['progressive_passes'],
-            player_info['progressive_carries'],
-            player_info['shot_creating_actions'],
-            player_info['pressures'],
-            player_info['interceptions'],
-            player_info['pass_completion_final_third']
-        ]
-        
-        # Normalize values for radar (0-100 scale)
-        max_values = [20, 25, 15, 30, 10, 100]  # Reasonable max values for normalization
-        normalized_values = [min(100, (v / max_v) * 100) for v, max_v in zip(values, max_values)]
-        
-        fig_radar = go.Figure()
-        
-        fig_radar.add_trace(go.Scatterpolar(
-            r=normalized_values + [normalized_values[0]],  # Close the shape
-            theta=categories + [categories[0]],
-            fill='toself',
-            name=player_info['name'],
-            line_color='#6CABDD' if player_info['team'] == 'City' else '#DA020E',
-            fillcolor=('#6CABDD' if player_info['team'] == 'City' else '#DA020E') + '40'
-        ))
-        
-        fig_radar.update_layout(
-            polar=dict(
-                radialaxis=dict(
-                    visible=True,
-                    range=[0, 100]
-                )
-            ),
-            showlegend=False,
-            height=350,
-            title=f"{player_info['name']} Performance Profile"
-        )
-        
-        st.plotly_chart(fig_radar, use_container_width=True)
-        
-        # Key stats
-        st.markdown("**Key Statistics:**")
-        col_a, col_b = st.columns(2)
-        with col_a:
-            st.metric("xG", f"{player_info['xg']:.2f}")
-            st.metric("xA", f"{player_info['xa']:.2f}")
-        with col_b:
-            st.metric("Goals", int(player_info['goals']))
-            st.metric("Assists", int(player_info['assists']))
-    
-    else:
-        # Team comparison
-        st.subheader("🏆 Top Performers")
-        
-        top_city = player_data[player_data['team'] == 'City'].nlargest(3, 'rating')
-        top_united = player_data[player_data['team'] == 'United'].nlargest(3, 'rating')
-        
-        st.markdown("**Manchester City:**")
-        for _, player in top_city.iterrows():
-            st.markdown(f"• {player['name']} ({player['position']}) - {player['rating']}/10")
-        
-        st.markdown("**Manchester United:**")
-        for _, player in top_united.iterrows():
-            st.markdown(f"• {player['name']} ({player['position']}) - {player['rating']}/10")
-        
-        # Performance comparison chart
-        fig_comparison = go.Figure()
-        
-        city_players = player_data[player_data['team'] == 'City']
-        united_players = player_data[player_data['team'] == 'United']
-        
-        fig_comparison.add_trace(go.Scatter(
-            x=city_players['shot_creating_actions'],
-            y=city_players['progressive_carries'],
-            mode='markers+text',
-            text=city_players['name'],
-            textposition="top center",
-            marker=dict(size=city_players['rating']*3, color='#6CABDD', opacity=0.7),
-            name='City Players',
-            hovertemplate='<b>%{text}</b><br>' +
-                          'Shot Creating Actions: %{x}<br>' +
-                          'Progressive Carries: %{y}<br>' +
-                          'Rating: %{marker.size:.0f}/30<extra></extra>'
-        ))
-        
-        fig_comparison.add_trace(go.Scatter(
-            x=united_players['shot_creating_actions'],
-            y=united_players['progressive_carries'],
-            mode='markers+text',
-            text=united_players['name'],
-            textposition="top center",
-            marker=dict(size=united_players['rating']*3, color='#DA020E', opacity=0.7),
-            name='United Players',
-            hovertemplate='<b>%{text}</b><br>' +
-                          'Shot Creating Actions: %{x}<br>' +
-                          'Progressive Carries: %{y}<br>' +
-                          'Rating: %{marker.size:.0f}/30<extra></extra>'
-        ))
-        
-        fig_comparison.update_layout(
-            title="Player Impact Matrix",
-            xaxis_title="Shot Creating Actions",
-            yaxis_title="Progressive Carries",
-            height=400,
-            showlegend=True
-        )
-        
-        st.plotly_chart(fig_comparison, use_container_width=True)
-
-# Footer with tactical insights
-st.markdown("---")
-st.subheader("🎯 Tactical Summary")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-    **🔴 Key Weaknesses Exposed:**
-    - United's right half-space vulnerability (3.9 vs 16.7 PPDA)
-    - Progressive retreat pattern (defensive pressure 35→42)
-    - Formation breakdown after 60th minute
-    """)
-
-with col2:
-    st.markdown("""
-    **🔵 City's Tactical Success:**
-    - Sustained attacking third pressure (48+ per period)
-    - Clinical finishing (3 goals from 2.18 xG)
-    - Half-space dominance creation
-    """)
-
-with col3:
-    st.markdown("""
-    **📊 Data-Backed Insights:**
-    - Ugarte's errors directly led to 1.06 xG
-    - Doku's isolation tactics created 0.94 xA
-    - Formation change correlation with xG spikes
-    """)
-
-# Export functionality
-if st.button("📊 Export Analysis Report"):
-    st.success("Analysis exported! (In production, this would generate a downloadable PDF report)")
-
-st.markdown("""
----
-*Tactical Analysis Dashboard v2.1 | Performance Intelligence System*  
-*Data Sources: Event Data Analysis, Positional Tracking, Advanced Metrics*
-""")
+if __name__ == "__main__":
+    main()
