@@ -18,29 +18,29 @@ st.markdown("""
 <style>
     .main-header {
         font-size: 3rem;
-        color: #1e40af;
+        color: #002859; /* Navy blue */
         text-align: center;
         margin-bottom: 1rem;
         font-weight: bold;
     }
     .sub-header {
         font-size: 1.5rem;
-        color: #0ea5e9;
+        color: #6cbadf; /* Sky blue */
         text-align: center;
         margin-bottom: 2rem;
     }
     .metric-card {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        background: linear-gradient(135deg, #f7fbfc 0%, #e8eff3 100%);
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #0ea5e9;
+        border-left: 4px solid #6cbadf; /* Sky blue border */
         margin-bottom: 1rem;
     }
     .insight-box {
-        background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); /* Lighter blue to pale blue */
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #00bcd4;
+        border-left: 4px solid #2196f3; /* Blue border */
         margin: 1rem 0;
     }
 </style>
@@ -228,7 +228,7 @@ if tab_selection == "Overview":
         y=key_players['rating'],
         text=key_players['rating'],
         textposition='auto',
-        marker_color=['#0ea5e9', '#10b981', '#0284c7', '#8b5cf6', '#ef4444']
+        marker_color=['#6cbadf', '#5cb85c', '#337ab7', '#9370db', '#d9534f']
     ))
     
     fig.update_layout(
@@ -245,7 +245,7 @@ if tab_selection == "Overview":
     st.subheader("Match Results Timeline")
     
     # Create result colors
-    colors = ['green' if r == 'W' else 'red' if r == 'L' else 'orange' for r in match_results['result']]
+    colors = ['#5cb85c' if r == 'W' else '#d9534f' if r == 'L' else '#f0ad4e' for r in match_results['result']]
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -253,7 +253,7 @@ if tab_selection == "Overview":
         y=match_results['xg'],
         mode='lines+markers',
         name='xG For',
-        line=dict(color='blue', width=3),
+        line=dict(color='#337ab7', width=3),
         marker=dict(size=10)
     ))
     
@@ -262,7 +262,7 @@ if tab_selection == "Overview":
         y=match_results['xga'],
         mode='lines+markers',
         name='xGA',
-        line=dict(color='red', width=3),
+        line=dict(color='#d9534f', width=3),
         marker=dict(size=10)
     ))
     
@@ -335,7 +335,7 @@ elif tab_selection == "Big 6 Comparison":
         theta=categories,
         fill='toself',
         name='Man City',
-        line_color='#0ea5e9'
+        line_color='#6cbadf'
     ))
     
     fig.add_trace(go.Scatterpolar(
@@ -343,7 +343,7 @@ elif tab_selection == "Big 6 Comparison":
         theta=categories,
         fill='toself',
         name='League Average',
-        line_color='lightgray'
+        line_color='#d3d3d3'
     ))
     
     fig.update_layout(
@@ -427,7 +427,7 @@ elif tab_selection == "UCL vs Napoli":
         y=timeline_data['city_xg_cumulative'],
         mode='lines+markers',
         name='Man City xG',
-        line=dict(color='blue', width=3)
+        line=dict(color='#002859', width=3)
     ))
     
     fig.add_trace(go.Scatter(
@@ -435,7 +435,7 @@ elif tab_selection == "UCL vs Napoli":
         y=timeline_data['napoli_xg_cumulative'],
         mode='lines+markers',
         name='Napoli xG',
-        line=dict(color='lightblue', width=3)
+        line=dict(color='#d3d3d3', width=3)
     ))
     
     # Add event annotations
@@ -475,7 +475,7 @@ elif tab_selection == "Historical Trends":
             title='Points After 5 Games (4-Year Trend)',
             markers=True
         )
-        fig.update_traces(line=dict(width=4, color='blue'))
+        fig.update_traces(line=dict(width=4, color='#002859'))
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
     
@@ -487,14 +487,14 @@ elif tab_selection == "Historical Trends":
             y=historical_data['xg'],
             mode='lines+markers',
             name='Expected Goals',
-            line=dict(color='lightgray', width=3)
+            line=dict(color='#6cbadf', width=3)
         ))
         fig.add_trace(go.Scatter(
             x=historical_data['season'],
             y=historical_data['gf'],
             mode='lines+markers',
             name='Actual Goals',
-            line=dict(color='skyblue', width=3)
+            line=dict(color='#002859', width=3)
         ))
         fig.update_layout(
             title='xG vs Actual Goals Trend',
@@ -752,7 +752,7 @@ elif tab_selection == "Custom Metrics":
             y='Score',
             color='Category',
             title='Performance by Zone',
-            color_discrete_map={'Defense': 'lightgray', 'Midfield': 'lightblue', 'Attack': 'skyblue'}
+            color_discrete_map={'Defense': '#d3d3d3', 'Midfield': '#bbdefb', 'Attack': '#6cbadf'}
         )
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -792,21 +792,21 @@ elif tab_selection == "Custom Metrics":
         name='Man City',
         x=metrics_comparison['Metric'],
         y=metrics_comparison['Man City'],
-        marker_color='skyblue'
+        marker_color='#6cbadf'
     ))
     
     fig.add_trace(go.Bar(
         name='Big 6 Avg',
         x=metrics_comparison['Metric'],
         y=metrics_comparison['Big 6 Average'],
-        marker_color='lightgray'
+        marker_color='#002859'
     ))
     
     fig.add_trace(go.Bar(
         name='League Avg',
         x=metrics_comparison['Metric'],
         y=metrics_comparison['League Average'],
-        marker_color='rgba(128, 128, 128, 0.5)'
+        marker_color='#d3d3d3'
     ))
     
     fig.update_layout(
