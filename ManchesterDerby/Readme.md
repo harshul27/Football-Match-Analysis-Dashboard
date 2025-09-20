@@ -1,110 +1,129 @@
-# Manchester Derby Analytics Dashboard
+# Manchester City Performance Dashboard
 
-A simple and effective Streamlit dashboard analyzing the Manchester City vs Manchester United match (September 14, 2025).
+An interactive Streamlit application for analyzing Manchester City's season performance with comprehensive tactical insights and data visualization.
+
+## ⚠️ Important Disclaimer
+
+**This dashboard contains entirely fictional data for demonstration purposes.** The "2025/26 season" referenced in the code does not exist - we're currently in 2024. This is a template showing how such analysis could work with real data from sources like FBref, ESPN, or official Premier League statistics.
 
 ## Features
 
-- **Match Overview**: xG timeline, key metrics, momentum analysis
-- **Team Statistics**: Comprehensive comparison with visual charts
-- **Player Performance**: Individual ratings and goal/assist tracking
-- **Match Events**: Timeline of key moments throughout the game
+- **Season Overview**: Complete season statistics, points progression, and performance metrics
+- **Match Analysis**: Detailed tactical breakdown of individual matches
+- **Player Performance**: Individual player ratings and performance tracking
+- **Season Projections**: Data-driven predictions and scenario analysis
+- **Interactive Visualizations**: Charts, radars, and comparative analysis tools
 
-## Quick Deploy to Streamlit Cloud
+## Installation & Setup
 
-1. **Fork this repository** to your GitHub account
-2. **Go to** [share.streamlit.io](https://share.streamlit.io)
-3. **Connect your GitHub** and select this repository
-4. **Deploy automatically** - it's ready to go!
+### Local Development
 
-## Local Installation
-
+1. Clone this repository
+2. Install dependencies:
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/manchester-derby-analytics.git
-cd manchester-derby-analytics
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the app
-streamlit run streamlit_app.py
 ```
 
-## Dashboard Sections
+3. Run the application:
+```bash
+streamlit run app.py
+```
 
-### Match Overview
-- Final score and key metrics
-- Expected Goals (xG) timeline chart
-- Match momentum by 15-minute periods
+### Streamlit Cloud Deployment
 
-### Team Statistics  
-- Complete statistical comparison table
-- Interactive metric selection and visualization
-- Key tactical insights for both teams
-
-### Player Performance
-- Individual player analysis with ratings
-- Goals and assists breakdown
-- Visual comparison charts
-
-###  Match Events
-- Chronological timeline of key events
-- Goals, substitutions, and big chances
-- Visual events distribution chart
-
-## Key Match Data
-
-**Final Result:** Manchester City 3-0 Manchester United  
-**Date:** September 14, 2025  
-**Venue:** Etihad Stadium  
-**Attendance:** 55,017  
-
-**Goals:**
-- 18' Phil Foden (assist: Doku)
-- 53' Erling Haaland (assist: Doku)  
-- 78' Erling Haaland
-
-**Expected Goals:** City 2.51 - 0.73 United
-
-## 🛠️ Built With
-
-- **Streamlit** - Web framework
-- **Pandas** - Data manipulation
-- **Matplotlib** - Visualizations
-- **NumPy** - Numerical computing
-- **Seaborn** - Statistical plotting
+1. Fork this repository to your GitHub account
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Connect your GitHub account
+4. Select this repository
+5. Set the main file path to `app.py`
+6. Deploy!
 
 ## Project Structure
 
 ```
-manchester-derby-analytics/
-├── streamlit_app.py    # Main application
-├── requirements.txt    # Dependencies
-└── README.md          # This file
+manchester-city-dashboard/
+│
+├── app.py              # Main Streamlit application
+├── requirements.txt    # Python dependencies
+├── README.md          # Project documentation
+└── .streamlit/        # Streamlit configuration (optional)
+    └── config.toml
 ```
 
-## Dependencies
+## Dashboard Sections
 
-The app uses only essential Python libraries:
-- `streamlit` - Dashboard framework
-- `pandas` - Data handling  
-- `numpy` - Mathematical operations
-- `matplotlib` - Charts and graphs
-- `seaborn` - Enhanced plotting
+### 1. Season Overview
+- League position and points progression
+- Goal statistics and clean sheet records
+- Performance radar charts
+- New signings impact analysis
 
-## Live Demo
+### 2. Match Analysis
+- Individual match breakdowns
+- Tactical analysis by phase (attack, midfield, defense)
+- Player ratings visualization
+- Key moments and turning points
 
-Once deployed on Streamlit Cloud, your dashboard will be available at:
-`https://your-app-name.streamlit.app`
+### 3. Player Performance
+- Individual player statistics
+- Performance comparison across matches
+- Season averages and trends
+- Impact assessment
+
+### 4. Season Projections
+- Points per game projections
+- Final table predictions
+- European qualification chances
+- Scenario analysis (best/worst case)
+
+## Key Technologies
+
+- **Streamlit**: Web application framework
+- **Plotly**: Interactive data visualization
+- **Pandas**: Data manipulation and analysis
+- **NumPy**: Numerical computations
+
+## Data Structure
+
+The application uses structured dictionaries and DataFrames to organize:
+- Season statistics and standings
+- Individual match data and analysis
+- Player performance metrics
+- Historical comparisons
+
+## Customization
+
+To adapt this dashboard for real data:
+
+1. Replace the fictional data in `load_season_data()` function
+2. Connect to real data sources (APIs, databases, CSV files)
+3. Modify metrics and calculations based on actual football statistics
+4. Update team information and player details
+
+## Real Data Integration
+
+For real implementation, consider integrating with:
+- **FBref**: Advanced football statistics
+- **ESPN API**: Match results and basic stats
+- **Official Premier League API**: Live data
+- **Opta/StatsBomb**: Professional football data
 
 ## Contributing
 
-Feel free to fork this project and submit pull requests for improvements!
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add appropriate tests
+5. Submit a pull request
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is for educational and demonstration purposes. Please ensure you have proper licensing for any real football data used.
+
+## Contact
+
+For questions about implementation or customization, please open an issue in the GitHub repository.
 
 ---
 
-**Built with ❤️ for Football Analytics**
+**Note**: This is a demonstration dashboard. For production use with real data, ensure proper data licensing, privacy compliance, and performance optimization.
