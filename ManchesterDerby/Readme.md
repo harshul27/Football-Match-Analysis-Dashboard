@@ -1,6 +1,8 @@
 # Manchester City Performance Dashboard
 
 An interactive Streamlit application for analyzing Manchester City's season performance with comprehensive tactical insights and data visualization.
+### Streamlit Cloud Deployment
+Check it out :https://manchester-city-analysis-dashboard-g8td8oxs6vwtsqh9b37gf9.streamlit.app/
 
 ## Features
 - **Season Overview:** points, goals, xG vs xGA, PPDA, possession, conversion rates.
@@ -24,7 +26,3 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
-
-### Streamlit Cloud Deployment
-Go to [Streamlit Link]([https://share.streamlit.io](https://manchester-city-analysis-dashboard-g8td8oxs6vwtsqh9b37gf9.streamlit.app/))
-
