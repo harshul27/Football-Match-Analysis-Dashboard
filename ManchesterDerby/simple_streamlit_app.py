@@ -37,10 +37,10 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     .insight-box {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #f59e0b;
+        border-left: 4px solid #00bcd4;
         margin: 1rem 0;
     }
 </style>
@@ -122,7 +122,7 @@ def load_data():
 season_summary, historical_data, big6_data, key_players, signings_data, match_results = load_data()
 
 # Header
-st.markdown('<h1 class="main-header">⚽ Manchester City 2025/26</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Manchester City 2025/26</h1>', unsafe_allow_html=True)
 st.markdown('<h2 class="sub-header">Performance Analytics Dashboard</h2>', unsafe_allow_html=True)
 
 # Sidebar
@@ -132,11 +132,11 @@ st.sidebar.title("Navigation")
 # Main navigation
 tab_selection = st.sidebar.selectbox(
     "Select Analysis Section:",
-    ["🏠 Overview", "📊 Big 6 Comparison", "🏆 UCL vs Napoli", "📈 Historical Trends", "👥 Squad & Signings", "🎯 Custom Metrics"]
+    ["Overview", "Big 6 Comparison", "UCL vs Napoli", "Historical Trends", "Squad & Signings", "Custom Metrics"]
 )
 
 # Overview Tab
-if tab_selection == "🏠 Overview":
+if tab_selection == "Overview":
     st.header("Season Overview")
     
     # Key metrics row
@@ -182,7 +182,7 @@ if tab_selection == "🏠 Overview":
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("⚽ Attack Analysis")
+        st.subheader("Attack Analysis")
         attack_metrics = {
             'Goals Scored': 8,
             'Expected Goals (xG)': 7.7,
@@ -201,7 +201,7 @@ if tab_selection == "🏠 Overview":
         """, unsafe_allow_html=True)
     
     with col2:
-        st.subheader("🛡️ Defense Analysis")
+        st.subheader("Defense Analysis")
         defense_metrics = {
             'Goals Conceded': 5,
             'Expected Goals Against (xGA)': 5.5,
@@ -220,7 +220,7 @@ if tab_selection == "🏠 Overview":
         """, unsafe_allow_html=True)
     
     # Key Players Performance
-    st.subheader("⭐ Key Player Performance")
+    st.subheader("Key Player Performance")
     
     fig = go.Figure()
     fig.add_trace(go.Bar(
@@ -228,7 +228,7 @@ if tab_selection == "🏠 Overview":
         y=key_players['rating'],
         text=key_players['rating'],
         textposition='auto',
-        marker_color=['#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444']
+        marker_color=['#0ea5e9', '#10b981', '#0284c7', '#8b5cf6', '#ef4444']
     ))
     
     fig.update_layout(
@@ -242,7 +242,7 @@ if tab_selection == "🏠 Overview":
     st.plotly_chart(fig, use_container_width=True)
     
     # Match Results Timeline
-    st.subheader("📅 Match Results Timeline")
+    st.subheader("Match Results Timeline")
     
     # Create result colors
     colors = ['green' if r == 'W' else 'red' if r == 'L' else 'orange' for r in match_results['result']]
@@ -276,7 +276,7 @@ if tab_selection == "🏠 Overview":
     st.plotly_chart(fig, use_container_width=True)
 
 # Big 6 Comparison Tab
-elif tab_selection == "📊 Big 6 Comparison":
+elif tab_selection == "Big 6 Comparison":
     st.header("Big 6 Comparison")
     
     # Points Comparison
@@ -335,7 +335,7 @@ elif tab_selection == "📊 Big 6 Comparison":
         theta=categories,
         fill='toself',
         name='Man City',
-        line_color='blue'
+        line_color='#0ea5e9'
     ))
     
     fig.add_trace(go.Scatterpolar(
@@ -343,7 +343,7 @@ elif tab_selection == "📊 Big 6 Comparison":
         theta=categories,
         fill='toself',
         name='League Average',
-        line_color='red'
+        line_color='lightgray'
     ))
     
     fig.update_layout(
@@ -367,7 +367,7 @@ elif tab_selection == "📊 Big 6 Comparison":
     """, unsafe_allow_html=True)
 
 # UCL vs Napoli Tab
-elif tab_selection == "🏆 UCL vs Napoli":
+elif tab_selection == "UCL vs Napoli":
     st.header("Champions League: Manchester City 2-0 Napoli")
     st.subheader("Matchday 1 | September 18, 2025")
     
@@ -390,9 +390,9 @@ elif tab_selection == "🏆 UCL vs Napoli":
     with col2:
         st.markdown("### Key Events")
         events = [
-            "21' 🟥 Di Lorenzo (Napoli) Red Card",
-            "56' ⚽ Haaland Goal (Foden assist)",
-            "65' ⚽ Doku Goal"
+            "21' Di Lorenzo (Napoli) Red Card",
+            "56' Haaland Goal (Foden assist)",
+            "65' Doku Goal"
         ]
         
         for event in events:
@@ -461,7 +461,7 @@ elif tab_selection == "🏆 UCL vs Napoli":
     """, unsafe_allow_html=True)
 
 # Historical Trends Tab
-elif tab_selection == "📈 Historical Trends":
+elif tab_selection == "Historical Trends":
     st.header("Historical Performance Analysis")
     
     col1, col2 = st.columns(2)
@@ -487,14 +487,14 @@ elif tab_selection == "📈 Historical Trends":
             y=historical_data['xg'],
             mode='lines+markers',
             name='Expected Goals',
-            line=dict(color='green', width=3)
+            line=dict(color='lightgray', width=3)
         ))
         fig.add_trace(go.Scatter(
             x=historical_data['season'],
             y=historical_data['gf'],
             mode='lines+markers',
             name='Actual Goals',
-            line=dict(color='orange', width=3)
+            line=dict(color='skyblue', width=3)
         ))
         fig.update_layout(
             title='xG vs Actual Goals Trend',
@@ -513,13 +513,13 @@ elif tab_selection == "📈 Historical Trends":
         y='position',
         title='League Position Comparison',
         color='position',
-        color_continuous_scale='RdYlBu_r'  # Red for worse positions, blue for better
+        color_continuous_scale='Blues_r'  # Blue for better positions, light blue for worse
     )
     fig.update_layout(height=300, yaxis=dict(autorange='reversed'))  # Reverse so 1st is at top
     st.plotly_chart(fig, use_container_width=True)
     
     # Season Projections
-    st.subheader("🔮 Season Projections")
+    st.subheader("Season Projections")
     
     col1, col2, col3 = st.columns(3)
     
@@ -562,9 +562,9 @@ elif tab_selection == "📈 Historical Trends":
     """, unsafe_allow_html=True)
 
 # Squad & Signings Tab
-elif tab_selection == "👥 Squad & Signings":
+elif tab_selection == "Squad & Signings":
     st.header("Squad Analysis & New Signings")
-    st.subheader("💰 Total Summer Investment: £164.5 million")
+    st.subheader("Total Summer Investment: £164.5 million")
     
     # Signings Performance
     fig = px.bar(
@@ -583,7 +583,7 @@ elif tab_selection == "👥 Squad & Signings":
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("💸 Transfer Fees vs Performance")
+        st.subheader("Transfer Fees vs Performance")
         
         fig = px.scatter(
             signings_data,
@@ -598,7 +598,7 @@ elif tab_selection == "👥 Squad & Signings":
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        st.subheader("📊 Games Played Distribution")
+        st.subheader("Games Played Distribution")
         
         fig = px.pie(
             signings_data,
@@ -610,15 +610,15 @@ elif tab_selection == "👥 Squad & Signings":
         st.plotly_chart(fig, use_container_width=True)
     
     # Individual player analysis
-    st.subheader("🔍 Individual Analysis")
+    st.subheader("Individual Analysis")
     
     for _, player in signings_data.iterrows():
-        with st.expander(f"{player['name']} - {player['position']} (£{player['fee']}M)"):
+        with st.expander(f"{player['name']} - {player['position']} (L{player['fee']}M)"):
             col1, col2, col3, col4 = st.columns(4)
             
             col1.metric("Rating", f"{player['rating']}")
             col2.metric("Games", f"{player['games']}")
-            col3.metric("Fee", f"£{player['fee']}M")
+            col3.metric("Fee", f"L{player['fee']}M")
             
             if player['position'] == 'GK':
                 col4.metric("Saves", f"{player['performance_metric']}")
@@ -631,14 +631,14 @@ elif tab_selection == "👥 Squad & Signings":
     
     st.markdown("""
     <div class="insight-box">
-        <strong>Transfer Analysis:</strong> Donnarumma's arrival (£26M) addresses goalkeeping depth with solid performances (76% save rate). 
-        Ait-Nouri (£31M) provides attacking threat but defensive positioning needs work. 
-        Reijnders (£46.5M) - the most expensive signing - shows promise but lacks Rodri's progressive passing range.
+        <strong>Transfer Analysis:</strong> Donnarumma's arrival (L26M) addresses goalkeeping depth with solid performances (76% save rate). 
+        Ait-Nouri (L31M) provides attacking threat but defensive positioning needs work. 
+        Reijnders (L46.5M) - the most expensive signing - shows promise but lacks Rodri's progressive passing range.
     </div>
     """, unsafe_allow_html=True)
 
 # Custom Metrics Tab
-elif tab_selection == "🎯 Custom Metrics":
+elif tab_selection == "Custom Metrics":
     st.header("Advanced Analytics & Custom Metrics")
     
     # Calculate PLDI for all teams
@@ -654,7 +654,7 @@ elif tab_selection == "🎯 Custom Metrics":
         'pldi': [calculate_pldi(team) for team in big6_data['team']]
     })
     
-    st.subheader("🎯 Pass Lane Disruption Index (PLDI)")
+    st.subheader("Pass Lane Disruption Index (PLDI)")
     
     col1, col2 = st.columns([2, 1])
     
@@ -665,7 +665,7 @@ elif tab_selection == "🎯 Custom Metrics":
             y='pldi',
             title='PLDI Comparison Across Big 6',
             color='pldi',
-            color_continuous_scale='Purples'
+            color_continuous_scale='Blues'
         )
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -673,7 +673,7 @@ elif tab_selection == "🎯 Custom Metrics":
     with col2:
         st.markdown("""
         ### PLDI Formula
-        **PLDI = (Interceptions + Duels Won × 0.5) / Progressive Passes × 100**
+        **PLDI = (Interceptions + Duels Won x 0.5) / Progressive Passes x 100**
         
         Higher values indicate better disruption of opponent buildup relative to own progressive passing.
         
@@ -683,7 +683,7 @@ elif tab_selection == "🎯 Custom Metrics":
         """)
     
     # Positional Overload Efficiency
-    st.subheader("⚡ Positional Overload Efficiency (POE)")
+    st.subheader("Positional Overload Efficiency (POE)")
     
     col1, col2, col3 = st.columns(3)
     
@@ -715,7 +715,7 @@ elif tab_selection == "🎯 Custom Metrics":
         """, unsafe_allow_html=True)
     
     # Tactical Heatmap
-    st.subheader("🗺️ Tactical Heatmap - Zone Performance")
+    st.subheader("Tactical Heatmap - Zone Performance")
     
     # Create heatmap data
     zones = ['DEF L', 'DEF C', 'DEF R', 'MID L', 'MID C', 'MID R', 'ATT L', 'ATT C', 'ATT R']
@@ -729,7 +729,7 @@ elif tab_selection == "🎯 Custom Metrics":
         labels=dict(x="Left-Center-Right", y="Attack-Midfield-Defense", color="Performance Score"),
         x=['Left', 'Center', 'Right'],
         y=['Attack', 'Midfield', 'Defense'],
-        color_continuous_scale='RdYlBu',
+        color_continuous_scale='Blues',
         title="Zone-Based Performance Heatmap"
     )
     
@@ -752,7 +752,7 @@ elif tab_selection == "🎯 Custom Metrics":
             y='Score',
             color='Category',
             title='Performance by Zone',
-            color_discrete_map={'Defense': 'lightcoral', 'Midfield': 'lightblue', 'Attack': 'lightgreen'}
+            color_discrete_map={'Defense': 'lightgray', 'Midfield': 'lightblue', 'Attack': 'skyblue'}
         )
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -760,24 +760,23 @@ elif tab_selection == "🎯 Custom Metrics":
     with col2:
         st.markdown("### Zone Analysis")
         st.markdown("""
-        **🟢 Excellent (80+)**
+        **Excellent (80+)**
         - MID C: 89.3 (Dominant)
         - ATT Penalty: 81.2
         
-        **🟡 Good (70-79)**  
-        - DEF C: 78.1
+        **Good (70-79)** - DEF C: 78.1
         - MID L/R: 72.4, 71.2
         
-        **🟠 Average (60-69)**
+        **Average (60-69)**
         - ATT L/R: 65.7, 67.1
         - ATT C: 58.9
         
-        **🔴 Poor (<60)**
+        **Poor (<60)**
         - DEF L/R: 45.2, 47.8
         """)
     
     # Advanced Insights
-    st.subheader("🧠 Advanced Analytics Insights")
+    st.subheader("Advanced Analytics Insights")
     
     # Create comparison with league averages
     metrics_comparison = pd.DataFrame({
@@ -800,14 +799,14 @@ elif tab_selection == "🎯 Custom Metrics":
         name='Big 6 Avg',
         x=metrics_comparison['Metric'],
         y=metrics_comparison['Big 6 Average'],
-        marker_color='orange'
+        marker_color='lightgray'
     ))
     
     fig.add_trace(go.Bar(
         name='League Avg',
         x=metrics_comparison['Metric'],
         y=metrics_comparison['League Average'],
-        marker_color='lightgray'
+        marker_color='rgba(128, 128, 128, 0.5)'
     ))
     
     fig.update_layout(
@@ -829,13 +828,13 @@ elif tab_selection == "🎯 Custom Metrics":
 
 # Footer with Executive Summary
 st.markdown("---")
-st.header("📋 Executive Summary")
+st.header("Executive Summary")
 
 col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("""
-    ### 🔍 Key Findings
+    ### Key Findings
     - **6th position** represents significant early-season underperformance
     - **Defensive vulnerability** (5.5 xGA) contrasts with historical solidity  
     - **Haaland's clinical finishing** (5 goals) masks broader conversion issues
@@ -845,7 +844,7 @@ with col1:
 
 with col2:
     st.markdown("""
-    ### ⚡ Tactical Implications  
+    ### Tactical Implications  
     - **Possession dominance** remains but lacks cutting edge
     - **Midfield creativity** depends heavily on Rodri's availability
     - **European form** suggests potential for domestic recovery
