@@ -30,18 +30,21 @@ st.markdown("""
         margin-bottom: 2rem;
     }
     .metric-card {
-        background: linear-gradient(135deg, #f7fbfc 0%, #e8eff3 100%);
+        background: linear-gradient(135deg, #f0f8ff 0%, #d5e6f3 100%); /* Light blue gradient */
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #6cbadf; /* Sky blue border */
+        border-left: 4px solid #002859; /* Navy blue border */
         margin-bottom: 1rem;
     }
     .insight-box {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); /* Lighter blue to pale blue */
+        background: linear-gradient(135deg, #e6f7ff 0%, #b3e0ff 100%); /* Lighter blue to pale blue */
         padding: 1rem;
         border-radius: 10px;
-        border-left: 4px solid #2196f3; /* Blue border */
+        border-left: 4px solid #002859; /* Navy blue border */
         margin: 1rem 0;
+    }
+    .st-emotion-cache-1kyx3m4 { /* Specific Streamlit metric text color override */
+        color: #000;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -228,7 +231,7 @@ if tab_selection == "Overview":
         y=key_players['rating'],
         text=key_players['rating'],
         textposition='auto',
-        marker_color=['#6cbadf', '#5cb85c', '#337ab7', '#9370db', '#d9534f']
+        marker_color=['#002859', '#6cbadf', '#004a8f', '#1c71b1', '#a0c4e2']
     ))
     
     fig.update_layout(
@@ -253,7 +256,7 @@ if tab_selection == "Overview":
         y=match_results['xg'],
         mode='lines+markers',
         name='xG For',
-        line=dict(color='#337ab7', width=3),
+        line=dict(color='#002859', width=3),
         marker=dict(size=10)
     ))
     
@@ -513,9 +516,9 @@ elif tab_selection == "Historical Trends":
         y='position',
         title='League Position Comparison',
         color='position',
-        color_continuous_scale='Blues_r'  # Blue for better positions, light blue for worse
+        color_continuous_scale='Blues_r'
     )
-    fig.update_layout(height=300, yaxis=dict(autorange='reversed'))  # Reverse so 1st is at top
+    fig.update_layout(height=300, yaxis=dict(autorange='reversed'))
     st.plotly_chart(fig, use_container_width=True)
     
     # Season Projections
@@ -531,7 +534,7 @@ elif tab_selection == "Historical Trends":
             <p style="margin: 0;">Based on regression analysis</p>
         </div>
         """, unsafe_allow_html=True)
-        st.progress(0.6)  # 60% confidence
+        st.progress(0.6)
     
     with col2:
         st.markdown("""
@@ -541,7 +544,7 @@ elif tab_selection == "Historical Trends":
             <p style="margin: 0;">Expected final position</p>
         </div>
         """, unsafe_allow_html=True)
-        st.progress(0.75)  # 75% confidence
+        st.progress(0.75)
     
     with col3:
         st.markdown("""
@@ -551,7 +554,7 @@ elif tab_selection == "Historical Trends":
             <p style="margin: 0;">Season total estimate</p>
         </div>
         """, unsafe_allow_html=True)
-        st.progress(0.55)  # 55% confidence
+        st.progress(0.55)
     
     st.markdown("""
     <div class="insight-box">
@@ -613,12 +616,12 @@ elif tab_selection == "Squad & Signings":
     st.subheader("Individual Analysis")
     
     for _, player in signings_data.iterrows():
-        with st.expander(f"{player['name']} - {player['position']} (L{player['fee']}M)"):
+        with st.expander(f"{player['name']} - {player['position']} (£{player['fee']}M)"):
             col1, col2, col3, col4 = st.columns(4)
             
             col1.metric("Rating", f"{player['rating']}")
             col2.metric("Games", f"{player['games']}")
-            col3.metric("Fee", f"L{player['fee']}M")
+            col3.metric("Fee", f"£{player['fee']}M")
             
             if player['position'] == 'GK':
                 col4.metric("Saves", f"{player['performance_metric']}")
@@ -631,9 +634,9 @@ elif tab_selection == "Squad & Signings":
     
     st.markdown("""
     <div class="insight-box">
-        <strong>Transfer Analysis:</strong> Donnarumma's arrival (L26M) addresses goalkeeping depth with solid performances (76% save rate). 
-        Ait-Nouri (L31M) provides attacking threat but defensive positioning needs work. 
-        Reijnders (L46.5M) - the most expensive signing - shows promise but lacks Rodri's progressive passing range.
+        <strong>Transfer Analysis:</strong> Donnarumma's arrival (£26M) addresses goalkeeping depth with solid performances (76% save rate). 
+        Ait-Nouri (£31M) provides attacking threat but defensive positioning needs work. 
+        Reijnders (£46.5M) - the most expensive signing - shows promise but lacks Rodri's progressive passing range.
     </div>
     """, unsafe_allow_html=True)
 
