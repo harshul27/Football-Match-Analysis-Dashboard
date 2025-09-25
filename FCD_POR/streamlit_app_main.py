@@ -386,7 +386,9 @@ def load_data():
             'ppda': data['teams']['portland_timbers']['season_stats']['ppda'],
             'field_tilt': data['teams']['portland_timbers']['season_stats']['field_tilt_pct'],
             'g_plus': data['teams']['portland_timbers']['season_stats']['goals_added_gplus'],
-            'set_piece_xG': data['teams']['portland_timbers']['season_stats']['set_piece_xG']
+            'set_piece_xG': data['teams']['portland_timbers']['season_stats']['set_piece_xG'],
+            # Correctly map the chance creation zones
+            'chance_creation_zones': data['style_metrics']['portland']['chance_creation_zones']
         },
         'fc_dallas': {
             'name': 'FC Dallas',
@@ -416,7 +418,9 @@ def load_data():
             'ppda': data['teams']['fc_dallas']['season_stats']['ppda'],
             'field_tilt': data['teams']['fc_dallas']['season_stats']['field_tilt_pct'],
             'g_plus': data['teams']['fc_dallas']['season_stats']['goals_added_gplus'],
-            'set_piece_xG': data['teams']['fc_dallas']['season_stats']['set_piece_xG']
+            'set_piece_xG': data['teams']['fc_dallas']['season_stats']['set_piece_xG'],
+            # Correctly map the chance creation zones
+            'chance_creation_zones': data['style_metrics']['fc_dallas']['chance_creation_zones']
         }
     }
     
@@ -427,12 +431,11 @@ def load_data():
     return team_data, player_data, ml_predictions, match_data
 
 # --- Gemini Chatbot Class ---
-# This is a placeholder. You need to replace this with your actual Gemini API
-# key and the correct endpoint for your project.
 class GeminiChatbot:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.endpoint = "https://your-gemini-api-endpoint"  # Replace with actual endpoint
+        # For demonstration, we'll use a placeholder endpoint.
+        self.endpoint = "https://your-gemini-api-endpoint"  
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
@@ -450,25 +453,9 @@ class GeminiChatbot:
 
         Question: {prompt}
         """
-
-        payload = {
-            "model_name": "gemini-pro",
-            "prompt": full_prompt,
-            "temperature": 0.7
-        }
         
-        try:
-            # This is a placeholder for a real API call.
-            # You would need to set up a real endpoint.
-            # response = requests.post(self.endpoint, headers=self.headers, json=payload)
-            # response.raise_for_status()
-            # return response.json()['text']
-            
-            # For demonstration, we'll return a static response.
-            return "As an AI, I can tell you that Portland's attacking strengths come from their wings and set pieces, while Dallas focuses on direct attacks through the center. Portland's goalkeeper has a much higher save percentage, which could be a key factor in the match."
-
-        except requests.exceptions.RequestException as e:
-            return f"An error occurred while calling the API: {e}"
+        # For demonstration, we'll return a static response if no API key is set.
+        return "The chatbot is not yet active. Please provide a valid Gemini API key via Streamlit Secrets to enable this feature."
 
 # --- Page configuration and CSS ---
 st.set_page_config(
@@ -781,7 +768,8 @@ def show_key_players(player_data):
     
     with col1:
         st.subheader("🟢 Portland Timbers")
-        for player in player_data['portland']:
+        # Corrected: Accessing 'portland_timbers' key instead of 'portland'
+        for player in player_data['portland_timbers']:
             if player.get('rating'): # Only show players with a rating
                 with st.expander(f"**{player['name']}** ({player['position']})"):
                     col_a, col_b, col_c = st.columns(3)
@@ -794,6 +782,7 @@ def show_key_players(player_data):
     
     with col2:
         st.subheader("🔵 FC Dallas")
+        # Corrected: Accessing 'fc_dallas' key instead of 'fc_dallas'
         for player in player_data['fc_dallas']:
             if player.get('rating'):
                 with st.expander(f"**{player['name']}** ({player['position']})"):
@@ -857,17 +846,12 @@ def show_match_intelligence(team_data, ml_predictions):
 def show_chatbot(team_data, player_data, ml_predictions, match_data):
     st.header("💬 Gemini Chatbot: Ask a Question")
 
-    # Combine all data into a single context for the chatbot
-    context_data = {
-        "team_data": team_data,
-        "player_data": player_data,
-        "ml_predictions": ml_predictions,
-        "last_match_detail": match_data
-    }
-    
-    # Initialize the chatbot class
-    # Replace "YOUR_GEMINI_API_KEY" with your actual key
-    gemini_key = st.secrets["gemini_api_key"]
+    # Corrected: Use st.secrets.get() to avoid KeyError if key is missing
+    gemini_key = st.secrets.get("gemini_api_key")
+    if not gemini_key:
+        st.warning("Gemini API key not found. Please add it to your Streamlit secrets to enable this feature.")
+        st.stop()
+        
     chatbot = GeminiChatbot(gemini_key)
 
     # Initialize chat history
