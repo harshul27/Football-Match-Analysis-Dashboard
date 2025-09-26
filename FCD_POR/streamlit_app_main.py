@@ -121,28 +121,42 @@ class GeminiChatbot:
         """
 
     def _get_api_response(self, prompt, context_data):
-        if not self.api_key:
+        # A simple flag to avoid making a real API call if no key is available.
+        if not self.api_key or self.api_key == "YOUR_GEMINI_API_KEY":
             return "The AI Analyst is not configured. Please enter your API key in the code to enable this feature."
-
-        # Simulate a tool call to google_search based on user intent
+        
+        # Simulating live data from a "search"
         if "injuries" in prompt.lower() or "news" in prompt.lower():
-            query = f"MLS Portland Timbers vs FC Dallas {prompt}"
             # This is a simulated response from a web search
-            search_response = """
+            response_text = """
             Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
             """
-            
-            full_prompt = f"{self.system_prompt}\n\nContext Data:\n{json.dumps(context_data, indent=2)}\n\nSearch Results:\n{search_response}\n\nQuestion: {prompt}"
-        else:
-            full_prompt = f"{self.system_prompt}\n\nContext Data:\n{json.dumps(context_data, indent=2)}\n\nQuestion: {prompt}"
+            return response_text
+        
+        full_prompt = f"""
+        {self.system_prompt}
+
+        Here is the relevant data about the Portland Timbers and FC Dallas:
+        {json.dumps(context_data, indent=2)}
+
+        Now, answer the following question based on the provided data. Be concise, informative, and do not make up information that isn't in the data.
+
+        Question: {prompt}
+        """
 
         # In a real app, this would be an API call
         # response = requests.post(self.api_url, json={'contents': [{'parts': [{'text': full_prompt}]}]})
         # return response.json()['candidates'][0]['content']['parts'][0]['text']
 
-        return """
-The AI analyst is now active and ready to use. I can tell you that Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing.
-"""
+        # A set of predefined, data-backed responses to avoid repetition
+        responses = [
+            "Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. Portland's goalkeeper has a much higher save percentage, which could be a key factor in the match.",
+            "Analyzing the tactical data, Portland's attack is evenly distributed across the field, with a slight emphasis on wide areas. This contrasts with Dallas, who funnel a much larger percentage of their attacks through the central channel, a clear sign of their reliance on striker Petar Musa.",
+            "Based on the historical trends, Portland has shown a steady improvement in their points per game over the last three seasons, while Dallas has experienced a slight decline. This upward trajectory for Portland makes their current form and home advantage even more significant in this matchup.",
+            "The predictive model gives Portland a 48% chance to win, with a 29% chance of a draw. Key factors driving this prediction include Portland's home advantage and their recent form, which have a combined impact of +23% on their win probability."
+        ]
+
+        return random.choice(responses)
 
 
     def get_response(self, prompt, context_data):
