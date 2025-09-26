@@ -1215,7 +1215,15 @@ st.markdown("""
     <p>Football Tactical Dashboard | Burnley vs Nottingham Forest Analysis</p>
     <p style="font-size: 0.8rem;">Built with Streamlit | Data visualized with Plotly</p>
 </div>
-""", unsafe_allow_html=True);">Postecoglou's Tactical DNA Confirmed</h6>
+    """, unsafe_allow_html=True)
+    
+    # Final verdict
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">Advanced Metrics Verdict</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Postecoglou's Tactical DNA Confirmed</h6>
                 <ul style="font-size: 0.9rem; line-height: 1.6;">
                     <li><strong>Transition Discipline:</strong> Better defensive structure than expected (14.1m avg gap)</li>
                     <li><strong>Build-up Quality:</strong> 15 sequences of 10+ passes vs Burnley's 6</li>
