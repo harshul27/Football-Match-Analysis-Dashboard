@@ -1,50 +1,4 @@
-# European performance comparison
-    st.subheader("European vs Premier League Performance Analysis")
-    
-    european_comparison = pd.DataFrame({
-        'Competition': ['Premier League (avg)', 'Europa League vs Betis'],
-        'Possession %': [63, 45],
-        'xG Generated': [1.80, 1.98],
-        'Pass Accuracy': [85, 86],
-        'Final Third Entries': [39, 26],
-        'Cross Efficiency': [26, 38]
-    })
-    
-    # Create comparison charts
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        fig_comp1 = go.Figure()
-        fig_comp1.add_trace(go.Bar(
-            name='Possession & Pass Accuracy',
-            x=['Possession %', 'Pass Accuracy %'],
-            y=[63, 85],
-            name_='Premier League',
-            marker_color='#d42c20',
-            text=['63%', '85%'],
-            textposition='outside'
-        ))
-        fig_comp1.add_trace(go.Bar(
-            name='Europa League',
-            x=['Possession %', 'Pass Accuracy %'],
-            y=[45, 86],
-            marker_color='#ff6b35',
-            text=['45%', '86%'],
-            textposition='outside'
-        ))
-        fig_comp1.update_layout(
-            title="Possession & Accuracy Comparison", 
-            height=400,
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#f5f5f5',
-            barmode='group'
-        )
-        st.plotly_chart(fig_comp1, use_container_width=True)
-    
-    with col2:
-        fig_comp2 = go.Figure()
-        fig_import streamlit as st
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -59,118 +13,116 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Nottingham Forest theme
+# Custom CSS for a professional, subtle dark theme
 st.markdown("""
 <style>
-    .main {
-        background-color: #1a0f0f;
-    }
-    
+    /* Overall page and main content background */
     .stApp {
-        background-color: #1a0f0f;
-        color: #f5f5f5;
+        background-color: #0d0d0d;
+    }
+
+    /* Set default text color for the entire app */
+    body, p, li {
+        color: #e0e0e0;
+    }
+    .st-emotion-cache-1c7y2c1, .st-emotion-cache-18ni7ap, .st-emotion-cache-1629p8f, .st-emotion-cache-z5fcl4 {
+        color: #e0e0e0 !important;
     }
     
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        color: #f0f0f0 !important;
+    }
+
+    /* Main header banner */
     .main-header {
-        background: linear-gradient(135deg, #d42c20, #b71c1c);
+        background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
         padding: 2rem;
         border-radius: 10px;
         margin-bottom: 2rem;
-        color: #f5f5f5;
+        color: white;
         text-align: center;
-        box-shadow: 0 4px 12px rgba(212, 44, 32, 0.3);
     }
     
+    /* Metric cards with subtle red and dark accents */
     .metric-card {
-        background: linear-gradient(135deg, #d42c20, #b71c1c);
+        background: linear-gradient(135deg, #260000, #1a0000);
         padding: 1.5rem;
         border-radius: 10px;
-        color: #f5f5f5;
+        color: white;
         text-align: center;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        margin-bottom: 1rem;
     }
     
+    /* Stat containers for basic metrics */
     .stat-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background: #2d1b1b;
+        background: #1a1a1a;
         border-radius: 8px;
         margin: 0.5rem 0;
-        border-left: 4px solid #d42c20;
-        color: #f5f5f5;
+        border-left: 4px solid #cc1c1c;
+        color: #e0e0e0;
     }
     
+    /* Insight boxes for analyst notes */
     .insight-box {
         padding: 1rem;
         border-radius: 8px;
         margin: 1rem 0;
-        border-left: 4px solid #d42c20;
-        background: #2d1b1b;
-        color: #f5f5f5;
+        border-left: 4px solid #cc1c1c;
+        background: #1a1a1a;
+        color: #e0e0e0;
     }
     
+    /* Tactical notes */
     .tactical-note {
         padding: 1rem;
         border-radius: 8px;
-        background: #2d1b1b;
-        border-left: 4px solid #ff6b35;
+        background: #1a1a1a;
+        border-left: 4px solid #ef4444;
         margin: 1rem 0;
-        color: #f5f5f5;
+        color: #e0e0e0;
+    }
+
+    /* Sidebar styling */
+    .st-emotion-cache-1629p8f {
+        background-color: #121212;
+        color: white;
+    }
+
+    /* Ensure containers have a dark background */
+    .st-emotion-cache-13k65z8 {
+        background-color: #1a1a1a;
+        border: 1px solid #333333;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
     }
     
-    .stSelectbox > div > div {
-        background-color: #2d1b1b;
-        color: #f5f5f5;
-        border: 1px solid #d42c20;
+    /* Specific styles for player performance boxes */
+    .player-card {
+        background: #1a1a1a;
+        border-left: 4px solid #cc1c1c;
     }
     
-    .stSidebar {
-        background-color: #1a0f0f;
+    /* General plot background and font */
+    .js-plotly-plot {
+        background-color: #1a1a1a !important;
+        color: #e0e0e0 !important;
     }
-    
-    .stSidebar .stSelectbox > div > div {
-        background-color: #2d1b1b;
-        color: #f5f5f5;
+    .modebar-container {
+        background-color: #1a1a1a !important;
     }
-    
-    .stButton > button {
-        background-color: #d42c20;
-        color: #f5f5f5;
-        border: none;
-        border-radius: 5px;
+    .plotly .axis-title, .plotly .legendtext, .plotly .xtick, .plotly .ytick {
+        fill: #e0e0e0 !important;
+        color: #e0e0e0 !important;
     }
-    
-    .stButton > button:hover {
-        background-color: #b71c1c;
-        border: none;
-    }
-    
-    .stSlider .stMarkdown {
-        color: #f5f5f5;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        color: #f5f5f5;
-    }
-    
-    .stMarkdown {
-        color: #f5f5f5;
-    }
-    
-    .stDataFrame {
-        background-color: #2d1b1b;
-        color: #f5f5f5;
-    }
-    
-    .forest-primary {
-        color: #d42c20;
-    }
-    
-    .burnley-primary {
-        color: #ff6b35;
+    /* Streamlit DataFrame styling, setting text/header color */
+    [data-testid="stDataFrame"] div:first-child { 
+        color: #f0f0f0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -265,7 +217,7 @@ st.markdown("""
             <div style="font-size: 2rem; font-weight: bold;">BURNLEY</div>
             <div style="font-size: 0.9rem; opacity: 0.7;">Scott Parker</div>
         </div>
-        <div style="font-size: 4rem; font-weight: bold; color: #f5f5f5;">1 - 1</div>
+        <div style="font-size: 4rem; font-weight: bold; color: #f0f0f0;">1 - 1</div>
         <div style="text-align: center;">
             <div style="font-size: 2rem; font-weight: bold;">FOREST</div>
             <div style="font-size: 0.9rem; opacity: 0.7;">Ange Postecoglou</div>
@@ -284,83 +236,40 @@ tab_selection = st.sidebar.selectbox(
 
 # Tab 1: Match Overview
 if tab_selection == "Match Overview":
-    st.title("Match Overview")
+    st.title("📊 Match Overview")
     
     # Key stats
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <h3>Forest xG</h3>
-            <div style="font-size: 2rem; font-weight: bold;">2.13</div>
-            <div>vs 1.08 Burnley</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Ange-ball metrics explanation
-    st.subheader("Advanced Metrics Explained")
-    st.markdown("Understanding the unique tactical measurements that define Postecoglou's system")
-    
-    metrics_explanation = [
-        {
-            "metric": "Possession Progression Rate (118 m/min)",
-            "definition": "Speed at which Forest moves possession upfield in meters per minute. Shows directness despite patient build-up.",
-            "context": "Higher than typical possession teams - Ange maintains tempo even with high possession percentage."
-        },
-        {
-            "metric": "Sustained Threat Sequences (19)",
-            "definition": "Number of possession chains with 8+ passes ending in/around opposition box. Measures patient build-up quality.",
-            "context": "Exceptional for 45% possession - shows efficiency when Forest do build patiently."
-        },
-        {
-            "metric": "3+ Player Triangles (17)",
-            "definition": "Count of successful wide triangle formations exploited during build-up. Classic Ange tactical pattern.",
-            "context": "High frequency indicates players understanding positional relationships in Ange's system."
-        },
-        {
-            "metric": "Defensive Line Height (52m)",
-            "definition": "Average distance of back line from Forest's goal during opposition build-up phases.",
-            "context": "Extremely high-risk approach - higher than even at Spurs, shows tactical confidence in Europe."
-        },
-        {
-            "metric": "Cross Efficiency (38%)",
-            "definition": "Percentage of crosses leading to shots or xThreat creation. Quality over quantity approach.",
-            "context": "Significantly higher than Premier League performance (26%) - suggests tactical adaptation."
-        }
-    ]
-    
-    for metric in metrics_explanation:
-        st.markdown(f"""
-        <div style="background: #2d1b1b; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #d42c20; margin: 0.75rem 0;">
-            <h6 style="color: #d42c20; font-weight: bold; margin-bottom: 0.5rem;">{metric['metric']}</h6>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f5f5f5;">{metric['definition']}</p>
-            <div style="font-size: 0.85rem; font-style: italic; color: #ff6b35;">
-                <strong>Context:</strong> {metric['context']}
-            </div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['xG']['Forest']}</div>
+            <div>vs {match_info['xG']['Burnley']} Burnley</div>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <h3>Forest Possession</h3>
-            <div style="font-size: 2rem; font-weight: bold;">63%</div>
-            <div>vs 37% Burnley</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['possession']['Forest']}%</div>
+            <div>vs {match_info['possession']['Burnley']}% Burnley</div>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <h3>Forest Passes</h3>
-            <div style="font-size: 2rem; font-weight: bold;">501</div>
-            <div>85% accuracy</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['passes']['Forest']}</div>
+            <div>{match_info['passAccuracy']['Forest']}% accuracy</div>
         </div>
         """, unsafe_allow_html=True)
     
     with col4:
-        st.markdown("""
+        st.markdown(f"""
         <div class="metric-card">
             <h3>Forest PPDA</h3>
             <div style="font-size: 2rem; font-weight: bold;">12.7</div>
@@ -382,13 +291,13 @@ if tab_selection == "Match Overview":
         for i, metric in enumerate(stats_data['Metric']):
             st.markdown(f"""
             <div class="stat-container">
-                <span style="font-weight: bold;">{metric}</span>
+                <span style="font-weight: bold; color:white;">{metric}</span>
                 <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span style="background: #ff6b35; color: #f5f5f5; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
+                    <span style="background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
                         {stats_data['Burnley'][i]}
                     </span>
-                    <span style="color: #888;">vs</span>
-                    <span style="background: #d42c20; color: #f5f5f5; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
+                    <span style="color: #9ca3af;">vs</span>
+                    <span style="background: #cc1c1c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
                         {stats_data['Forest'][i]}
                     </span>
                 </div>
@@ -397,7 +306,7 @@ if tab_selection == "Match Overview":
         
         st.markdown("""
         <div class="insight-box">
-            <strong>Analyst Note:</strong> Forest dominated all attacking metrics - 8 shots on target vs 5, 
+            <span style="font-weight: bold;">Analyst Note:</span> Forest dominated all attacking metrics - 8 shots on target vs 5, 
             3 big chances vs 1, and 8 corners vs 5. This statistical dominance supports their higher xG output.
         </div>
         """, unsafe_allow_html=True)
@@ -408,31 +317,30 @@ if tab_selection == "Match Overview":
             'Team': ['Burnley', 'Forest'],
             'Shots': [12, 17],
             'On Target': [5, 8],
-            'Goals': [1, 1],
-            'Conversion Rate': [8.3, 5.9]
+            'Goals': [1, 1]
         })
         
         fig = go.Figure()
         fig.add_trace(go.Bar(name='Total Shots', x=conversion_data['Team'], y=conversion_data['Shots'], 
-                            marker_color='#888888'))
+                            marker_color='#333333'))
         fig.add_trace(go.Bar(name='On Target', x=conversion_data['Team'], y=conversion_data['On Target'], 
-                            marker_color='#d42c20'))
+                            marker_color='#cc1c1c'))
         fig.add_trace(go.Bar(name='Goals', x=conversion_data['Team'], y=conversion_data['Goals'], 
-                            marker_color='#b71c1c'))
+                            marker_color='#ef4444'))
         
         fig.update_layout(
             title="Shot Conversion Comparison", 
             barmode='group', 
             height=400,
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#f5f5f5'
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#f0f0f0"
         )
         st.plotly_chart(fig, use_container_width=True)
         
         st.markdown("""
         <div class="tactical-note">
-            <strong>Key Insight:</strong> Despite Forest's dominance in chances created, Burnley were more clinical - 
+            <span style="font-weight: bold;">Key Insight:</span> Despite Forest's dominance in chances created, Burnley were more clinical - 
             8.3% conversion vs 5.9%. This efficiency gap kept Burnley competitive despite being outplayed.
         </div>
         """, unsafe_allow_html=True)
@@ -445,41 +353,41 @@ if tab_selection == "Match Overview":
     fig_timeline = go.Figure()
     fig_timeline.add_trace(go.Scatter(x=timeline_df['minute'], y=timeline_df['Forest'], 
                                      mode='lines+markers', name='Nottingham Forest',
-                                     line=dict(color='#d42c20', width=3)))
+                                     line=dict(color='#cc1c1c', width=3)))
     fig_timeline.add_trace(go.Scatter(x=timeline_df['minute'], y=timeline_df['Burnley'], 
                                      mode='lines+markers', name='Burnley FC',
-                                     line=dict(color='#ff6b35', width=3)))
+                                     line=dict(color='#ef4444', width=3)))
     
     fig_timeline.update_layout(
         title="xG Development Throughout Match", 
         xaxis_title="Match Time (minutes)",
         yaxis_title="Expected Goals",
         height=500,
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#f5f5f5'
+        paper_bgcolor="#1a1a1a",
+        plot_bgcolor="#1a1a1a",
+        font_color="#f0f0f0"
     )
     st.plotly_chart(fig_timeline, use_container_width=True)
     
     st.markdown("""
     <div class="insight-box">
-        <strong>Match Flow Analysis:</strong> Forest's xG grew steadily throughout the match (2.13 total), 
+        <span style="font-weight: bold;">Match Flow Analysis:</span> Forest's xG grew steadily throughout the match (2.13 total), 
         while Burnley's main threat came in the first half (0.51 by HT). Second-half xG: Forest 0.93, Burnley 0.57.
     </div>
     """, unsafe_allow_html=True)
 
 # Tab 2: Tactical Analysis
 elif tab_selection == "Tactical Analysis":
-    st.title("Tactical Analysis")
+    st.title("⚽ Tactical Analysis")
     
     st.subheader("Formation Analysis & Tactical Setup")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### Burnley Formation")
+        st.markdown("### 🔴 Burnley Formation")
         st.markdown("""
-        <div style="background: linear-gradient(to bottom, #ff6b35, #e55a2b); height: 300px; border-radius: 10px; position: relative; color: white; display: flex; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(to bottom, #ef4444, #dc2626); height: 300px; border-radius: 10px; position: relative; color: white; display: flex; align-items: center; justify-content: center;">
             <div style="text-align: center;">
                 <div style="font-size: 1.5rem; font-weight: bold;">5-4-1 → 3-2-3-2</div>
                 <div style="margin-top: 1rem;">Tactical Evolution</div>
@@ -489,12 +397,12 @@ elif tab_selection == "Tactical Analysis":
         
         st.markdown("""
         <div class="tactical-note">
-            <h5 style="margin-bottom: 0.5rem;">Tactical Setup:</h5>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <h5 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Tactical Setup:</h5>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#e0e0e0;">
                 5-4-1 defensive block transitioning to 3-2-3-2 in attack. Cullen-Laurent pivot controls tempo, 
                 with Hartman providing aggressive left-sided width.
             </p>
-            <div style="font-size: 0.8rem; font-weight: bold;">
+            <div style="font-size: 0.8rem; font-weight: bold; color:#e0e0e0;">
                 Key Pattern: Back three buildup with Cullen as deep distributor. 
                 Anthony cuts inside from left while Hartman provides overlapping width.
             </div>
@@ -502,9 +410,9 @@ elif tab_selection == "Tactical Analysis":
         """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("### Forest Formation")
+        st.markdown("### 🔴 Forest Formation")
         st.markdown("""
-        <div style="background: linear-gradient(to bottom, #d42c20, #b71c1c); height: 300px; border-radius: 10px; position: relative; color: white; display: flex; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(to bottom, #cc1c1c, #991c1c); height: 300px; border-radius: 10px; position: relative; color: white; display: flex; align-items: center; justify-content: center;">
             <div style="text-align: center;">
                 <div style="font-size: 1.5rem; font-weight: bold;">4-2-3-1</div>
                 <div style="margin-top: 1rem;">High Possession System</div>
@@ -513,13 +421,13 @@ elif tab_selection == "Tactical Analysis":
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <div class="insight-box">
-            <h5 style="margin-bottom: 0.5rem;">Tactical Setup:</h5>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+        <div class="tactical-note" style="border-left: 4px solid #cc1c1c;">
+            <h5 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.5rem;">Tactical Setup:</h5>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#e0e0e0;">
                 4-2-3-1 with high fullbacks in Ange's possession-based system. Patient build-up through triangular 
                 combinations with Luiz-Anderson double pivot.
             </p>
-            <div style="font-size: 0.8rem; font-weight: bold;">
+            <div style="font-size: 0.8rem; font-weight: bold; color:#e0e0e0;">
                 Key Pattern: Back four buildup with Zinchenko progression left. 
                 Gibbs-White drops deep to create overloads while fullbacks advance.
             </div>
@@ -533,18 +441,18 @@ elif tab_selection == "Tactical Analysis":
     ppda_df = pd.DataFrame(ppda_data)
     fig_ppda = go.Figure()
     fig_ppda.add_trace(go.Bar(name='Forest (Lower = More Aggressive)', x=ppda_df['segment'], 
-                              y=ppda_df['Forest'], marker_color='#d42c20'))
+                              y=ppda_df['Forest'], marker_color='#cc1c1c'))
     fig_ppda.add_trace(go.Bar(name='Burnley', x=ppda_df['segment'], 
-                              y=ppda_df['Burnley'], marker_color='#ff6b35'))
+                              y=ppda_df['Burnley'], marker_color='#ef4444'))
     
     fig_ppda.update_layout(
         title="PPDA Throughout Match", 
         xaxis_title="Time Periods",
         yaxis_title="PPDA Value",
         height=400,
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#f5f5f5'
+        paper_bgcolor="#1a1a1a",
+        plot_bgcolor="#1a1a1a",
+        font_color="#e0e0e0"
     )
     st.plotly_chart(fig_ppda, use_container_width=True)
     
@@ -552,7 +460,7 @@ elif tab_selection == "Tactical Analysis":
     with col1:
         st.markdown("""
         <div class="insight-box">
-            <strong>Forest Pressing Pattern:</strong> Most intense in opening 15 minutes (8.5 PPDA) and after HT (9.0 PPDA). 
+            <span style="font-weight: bold;">Forest Pressing Pattern:</span> Most intense in opening 15 minutes (8.5 PPDA) and after HT (9.0 PPDA). 
             Classic Postecoglou high-energy starts to each half, with tactical management in middle periods.
         </div>
         """, unsafe_allow_html=True)
@@ -560,7 +468,7 @@ elif tab_selection == "Tactical Analysis":
     with col2:
         st.markdown("""
         <div class="tactical-note">
-            <strong>Burnley Response:</strong> Adapted well in final third of match (10.9 PPDA) as Parker's side 
+            <span style="font-weight: bold;">Burnley Response:</span> Adapted well in final third of match (10.9 PPDA) as Parker's side 
             pushed for winner. Counter-pressing improved significantly after adjustments.
         </div>
         """, unsafe_allow_html=True)
@@ -575,7 +483,7 @@ elif tab_selection == "Tactical Analysis":
         cross_data = pd.DataFrame({
             'Team': ['Forest Effective', 'Forest Ineffective', 'Burnley Effective', 'Burnley Ineffective'],
             'Values': [8, 11, 3, 9],
-            'Colors': ['#d42c20', '#774444', '#ff6b35', '#cc9999']
+            'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
         })
         
         fig_cross = go.Figure(data=[go.Pie(labels=cross_data['Team'], values=cross_data['Values'],
@@ -583,17 +491,17 @@ elif tab_selection == "Tactical Analysis":
         fig_cross.update_layout(
             title="Cross Effectiveness Comparison", 
             height=400,
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#f5f5f5'
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
         )
         st.plotly_chart(fig_cross, use_container_width=True)
     
     with col2:
         st.markdown("""
-        <div class="insight-box" style="margin-bottom: 1rem;">
-            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Forest Cross Analysis</h6>
-            <div style="font-size: 0.9rem;">
+        <div class="tactical-note" style="border-left: 4px solid #cc1c1c;">
+            <h6 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.5rem;">Forest Cross Analysis</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
                 <div>Total Crosses: 19</div>
                 <div>Successful: 8 (26% effectiveness)</div>
                 <div>Hudson-Odoi Impact: 50% success rate</div>
@@ -602,8 +510,8 @@ elif tab_selection == "Tactical Analysis":
         </div>
         
         <div class="tactical-note">
-            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Burnley Cross Analysis</h6>
-            <div style="font-size: 0.9rem;">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Burnley Cross Analysis</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
                 <div>Total Crosses: 12</div>
                 <div>Successful: 3 (12% effectiveness)</div>
                 <div>Main Source: Hartman overlaps (4 crosses)</div>
@@ -624,21 +532,23 @@ elif tab_selection == "Tactical Analysis":
         else:
             current_col = col2
             
-        team_style = "insight-box" if player['team'] == 'Forest' else "tactical-note"
+        team_color = "#1a1a1a"
+        text_color = "#e0e0e0"
         
         current_col.markdown(f"""
-        <div class="{team_style}">
+        <div class="player-card" style="background: {team_color}; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <h6 style="font-weight: bold; font-size: 1.1rem; margin: 0;">{player['name']}</h6>
-                <span style="background: {'#d42c20' if player['performance_rating'] >= 8 else '#ff6b35' if player['performance_rating'] >= 7 else '#888888'}; 
-                            color: #f5f5f5; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
+                <h6 style="color: {text_color}; font-weight: bold; font-size: 1.1rem; margin: 0;">{player['name']}</h6>
+                <span style="background: {'#cc1c1c' if player['performance_rating'] >= 8 else '#ef4444' if player['performance_rating'] >= 7 else '#555555'}; 
+                            color: white;
+                            padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
                     {player['performance_rating']}/10
                 </span>
             </div>
-            <div style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+            <div style="color: {text_color}; font-size: 0.85rem; margin-bottom: 0.5rem;">
                 <strong>Role:</strong> {player['tactical_role']}
             </div>
-            <div style="font-size: 0.85rem; margin-bottom: 0.75rem;">
+            <div style="color: {text_color}; font-size: 0.85rem; margin-bottom: 0.75rem;">
                 <strong>Key Moment:</strong> {player['key_moment']}
             </div>
         </div>
@@ -646,17 +556,17 @@ elif tab_selection == "Tactical Analysis":
 
 # Tab 3: Live Timeline
 elif tab_selection == "Live Timeline":
-    st.title("Live Match Timeline Analysis")
+    st.title("⏯️ Live Match Timeline Analysis")
     
     # Timeline controls
     col1, col2, col3 = st.columns([2, 1, 1])
     
     with col2:
-        if st.button("Play" if not st.session_state.is_playing else "Pause", use_container_width=True):
+        if st.button("▶️ Play" if not st.session_state.is_playing else "⏸️ Pause", use_container_width=True):
             st.session_state.is_playing = not st.session_state.is_playing
     
     with col3:
-        if st.button("Reset", use_container_width=True):
+        if st.button("🔄 Reset", use_container_width=True):
             st.session_state.timeline_index = 0
             st.session_state.is_playing = False
     
@@ -664,34 +574,33 @@ elif tab_selection == "Live Timeline":
     st.session_state.timeline_index = st.slider(
         "Match Timeline", 
         0, len(timeline_data) - 1, 
-        st.session_state.timeline_index,
-        format="%d"
+        st.session_state.timeline_index
     )
     
     # Current event display
     current_event = timeline_data[st.session_state.timeline_index]
     
     st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+    <div class="metric-card">
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; text-align: center;">
             <div>
-                <div style="font-size: 2rem; font-weight: bold;">{current_event['minute']}'</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">{current_event['event']}</div>
+                <div style="font-size: 2rem; font-weight: bold; color:white;">{current_event['minute']}'</div>
+                <div style="font-size: 1.2rem; opacity: 0.9; color:white;">{current_event['event']}</div>
             </div>
             <div>
-                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem;">Current xG</div>
-                <div style="font-size: 1.2rem;">
+                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem; color:white;">Current xG</div>
+                <div style="font-size: 1.2rem; color:white;">
                     Forest {current_event['Forest']:.2f} - {current_event['Burnley']:.2f} Burnley
                 </div>
             </div>
             <div>
-                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem;">Possession</div>
-                <div style="font-size: 1.2rem;">
+                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem; color:white;">Possession</div>
+                <div style="font-size: 1.2rem; color:white;">
                     {current_event['possession_forest']}% - {current_event['possession_burnley']}%
                 </div>
             </div>
         </div>
-        <div style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9; font-style: italic;">
+        <div style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9; font-style: italic; color:white;">
             {current_event['description']}
         </div>
     </div>
@@ -706,31 +615,31 @@ elif tab_selection == "Live Timeline":
     # xG lines
     fig_multi.add_trace(
         go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['Forest'], 
-                  mode='lines+markers', name='Forest xG', line=dict(color='#d42c20', width=4)),
+                  mode='lines+markers', name='Forest xG', line=dict(color='#cc1c1c', width=4)),
         secondary_y=False
     )
     fig_multi.add_trace(
         go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['Burnley'], 
-                  mode='lines+markers', name='Burnley xG', line=dict(color='#ff6b35', width=4)),
+                  mode='lines+markers', name='Burnley xG', line=dict(color='#ef4444', width=4)),
         secondary_y=False
     )
     
     # PPDA lines
     fig_multi.add_trace(
         go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['ppda_forest'], 
-                  mode='lines', name='Forest PPDA', line=dict(color='#b71c1c', width=2, dash='dash')),
+                  mode='lines', name='Forest PPDA', line=dict(color='#991c1c', width=2, dash='dash')),
         secondary_y=True
     )
     fig_multi.add_trace(
         go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['ppda_burnley'], 
-                  mode='lines', name='Burnley PPDA', line=dict(color='#e55a2b', width=2, dash='dash')),
+                  mode='lines', name='Burnley PPDA', line=dict(color='#dc2626', width=2, dash='dash')),
         secondary_y=True
     )
     
     # Possession lines
     fig_multi.add_trace(
         go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['possession_forest'], 
-                  mode='lines', name='Forest Possession %', line=dict(color='#880000', width=1, dash='dot')),
+                  mode='lines', name='Forest Possession %', line=dict(color='#4d0000', width=1, dash='dot')),
         secondary_y=True
     )
     
@@ -740,9 +649,9 @@ elif tab_selection == "Live Timeline":
     fig_multi.update_layout(
         title="Live Match Timeline Analysis", 
         height=600,
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#f5f5f5'
+        paper_bgcolor="#1a1a1a",
+        plot_bgcolor="#1a1a1a",
+        font_color="#f0f0f0"
     )
     
     st.plotly_chart(fig_multi, use_container_width=True)
@@ -750,13 +659,13 @@ elif tab_selection == "Live Timeline":
     # Progress bar
     progress_percentage = ((st.session_state.timeline_index + 1) / len(timeline_data)) * 100
     st.markdown(f"""
-    <div style="margin-top: 2rem;">
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #f5f5f5; margin-bottom: 0.5rem;">
+    <div style="margin-top: 2rem; background:#1a1a1a; padding:1rem; border-radius:8px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #e0e0e0; margin-bottom: 0.5rem;">
             <span>Match Progress</span>
             <span>{progress_percentage:.0f}% Complete</span>
         </div>
-        <div style="width: 100%; background: #2d1b1b; border-radius: 20px; height: 12px;">
-            <div style="background: linear-gradient(90deg, #d42c20, #b71c1c); height: 12px; border-radius: 20px; width: {progress_percentage}%; transition: all 0.5s;"></div>
+        <div style="width: 100%; background: #333333; border-radius: 20px; height: 12px;">
+            <div style="background: linear-gradient(90deg, #cc1c1c, #991c1c); height: 12px; border-radius: 20px; width: {progress_percentage}%; transition: all 0.5s;"></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -765,44 +674,44 @@ elif tab_selection == "Live Timeline":
     st.subheader("Key Tactical Moments")
     
     tactical_moments = [
-        {"minute": "2'", "event": "Williams Goal", "description": "Forest's early goal demonstrates Ange's aggressive start philosophy. High press (8.5 PPDA) forces Burnley errors, with Luiz retention and Zinchenko positioning creating the opportunity for Williams.", "color": "#d42c20"},
-        {"minute": "20'", "event": "Anthony Equalizer", "description": "Burnley's clinical response highlights their efficiency. Zinchenko's failed clearance (individual error under pressure) leads to Foster assist and Anthony finish. 8.3% conversion rate proving decisive.", "color": "#ff6b35"},
-        {"minute": "54'", "event": "Hudson-Odoi Impact", "description": "Substitution transforms Forest's wide threat. Cross effectiveness jumps to 50% for Hudson-Odoi specifically, adding pace and directness to complement patient build-up patterns.", "color": "#b71c1c"},
-        {"minute": "75'", "event": "Laurent Defensive Adjustment", "description": "Parker's tactical response shores up Burnley's pivot. Laurent's introduction allows more structured pressing (PPDA drops to 10.9) while maintaining defensive stability in final 15 minutes.", "color": "#880000"}
+        {"minute": "2'", "event": "Williams Goal", "description": "Forest's early goal demonstrates Ange's aggressive start philosophy. High press (8.5 PPDA) forces Burnley errors, with Luiz retention and Zinchenko positioning creating the opportunity for Williams.", "color": "#cc1c1c"},
+        {"minute": "20'", "event": "Anthony Equalizer", "description": "Burnley's clinical response highlights their efficiency. Zinchenko's failed clearance (individual error under pressure) leads to Foster assist and Anthony finish. 8.3% conversion rate proving decisive.", "color": "#ef4444"},
+        {"minute": "54'", "event": "Hudson-Odoi Impact", "description": "Substitution transforms Forest's wide threat. Cross effectiveness jumps to 50% for Hudson-Odoi specifically, adding pace and directness to complement patient build-up patterns.", "color": "#cc1c1c"},
+        {"minute": "75'", "event": "Laurent Defensive Adjustment", "description": "Parker's tactical response shores up Burnley's pivot. Laurent's introduction allows more structured pressing (PPDA drops to 10.9) while maintaining defensive stability in final 15 minutes.", "color": "#ef4444"}
     ]
     
     for moment in tactical_moments:
         st.markdown(f"""
-        <div style="border-left: 4px solid {moment['color']}; background: {moment['color']}20; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
-            <div style="font-weight: bold; color: {moment['color']}; margin-bottom: 0.5rem;">{moment['minute']} - {moment['event']}</div>
-            <div style="font-size: 0.9rem; color: #f5f5f5;">{moment['description']}</div>
+        <div style="border-left: 4px solid {moment['color']}; background: #1a1a1a; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
+            <div style="font-weight: bold; color: white;">{moment['minute']} - {moment['event']}</div>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">{moment['description']}</div>
         </div>
         """, unsafe_allow_html=True)
 
 # Tab 4: Manager Comparison
 elif tab_selection == "Manager Comparison":
-    st.title("Manager Comparison - The Postecoglou Project")
+    st.title("👥 Manager Comparison - The Postecoglou Project")
     
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; text-align: center; margin-bottom: 2rem;">
+    <div class="main-header">
         <h3 style="font-size: 2rem; margin-bottom: 0.5rem;">THE POSTECOGLOU PROJECT</h3>
         <p style="font-size: 1.2rem; opacity: 0.9;">From Tottenham to Trent End: A Tactical Revolution in Progress</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 2rem; text-align: center;">
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">+22%</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Possession Increase</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">From Nuno's 42% to Ange's 63%</div>
+            <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px;">
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">+22%</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:#e0e0e0;">Possession Increase</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:#e0e0e0;">From Nuno's 41% to Ange's 63%</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">1.80</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">xG per 90 Average</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">73% increase from Nuno era (1.04)</div>
+            <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px;">
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">2.13</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:#e0e0e0;">xG per 90 vs Burnley</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:#e0e0e0;">111% increase from Nuno era</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">11.8</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Current PPDA</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">40% more aggressive pressing vs Nuno (19.7)</div>
+            <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px;">
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">12.7</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:#e0e0e0;">Current PPDA</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:#e0e0e0;">37% more aggressive pressing</div>
             </div>
         </div>
     </div>
@@ -816,26 +725,16 @@ elif tab_selection == "Manager Comparison":
     with col1:
         st.markdown("##### Core Tactical Metrics")
         comparison_data = {
-            'Metric': ['Possession %', 'PPDA', 'xG per 90', 'Final Third Entries', 'Pass Accuracy', 'Points per Game'],
-            'Nuno Era': [42.0, 19.7, 1.04, 19, 78, 1.77],
-            'Ange Era': [63.0, 11.8, 1.80, 39, 85, 1.20],
-            'Ange Spurs': [57.2, 13.6, 1.70, 58, 87, 0.85]
+            'Metric': ['Possession %', 'PPDA', 'xG per 90', 'Final Third Entries'],
+            'Nuno Era': [41.0, 20.1, 1.01, 18],
+            'Ange Era': [63.0, 12.7, 1.80, 39],
+            'Ange Spurs': [57.2, 13.6, 1.70, 58]
         }
         
         comparison_df = pd.DataFrame(comparison_data)
-        st.dataframe(comparison_df, use_container_width=True)
         
-        st.markdown("""
-        <div class="insight-box" style="margin-top: 1rem;">
-            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Key Observations:</h6>
-            <ul style="font-size: 0.85rem; line-height: 1.4;">
-                <li><strong>Possession:</strong> 50% increase from Nuno's direct style</li>
-                <li><strong>Pressing:</strong> PPDA nearly halved - much more aggressive</li>
-                <li><strong>Attack:</strong> 73% more xG generation under Ange</li>
-                <li><strong>Results:</strong> Points per game dropped initially but trend improving</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+        # FIX: Removed the problematic .style.background_color() call to resolve AttributeError
+        st.dataframe(comparison_df, use_container_width=True)
     
     with col2:
         # Radar chart
@@ -853,7 +752,7 @@ elif tab_selection == "Manager Comparison":
             theta=radar_data['Metric'],
             fill='toself',
             name='Nuno Forest',
-            line_color='#888888'
+            line_color='#ef4444'
         ))
         
         fig_radar.add_trace(go.Scatterpolar(
@@ -861,7 +760,7 @@ elif tab_selection == "Manager Comparison":
             theta=radar_data['Metric'],
             fill='toself',
             name='Ange Forest',
-            line_color='#d42c20'
+            line_color='#cc1c1c'
         ))
         
         fig_radar.add_trace(go.Scatterpolar(
@@ -869,7 +768,7 @@ elif tab_selection == "Manager Comparison":
             theta=radar_data['Metric'],
             fill='toself',
             name='Ange Spurs',
-            line_color='#ff6b35'
+            line_color='#f59e0b'
         ))
         
         fig_radar.update_layout(
@@ -881,34 +780,34 @@ elif tab_selection == "Manager Comparison":
             showlegend=True,
             title="Tactical Revolution Comparison",
             height=400,
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#f5f5f5'
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#f0f0f0"
         )
         
         st.plotly_chart(fig_radar, use_container_width=True)
 
 # Tab 5: Advanced Metrics
 elif tab_selection == "Advanced Metrics":
-    st.title("Advanced Metrics")
+    st.title("⚡ Advanced Metrics")
     
     # Key advanced metrics
     col1, col2, col3, col4 = st.columns(4)
     
     metrics = [
-        {"title": "Transition Exposure", "value": "14.1m", "subtitle": "Forest avg gap", "color": "#ff6b35"},
-        {"title": "Build-Up Chains 10+", "value": "15", "subtitle": "Forest vs 6 Burnley", "color": "#d42c20"},
-        {"title": "Sustained Threat", "value": "0.29", "subtitle": "Forest vs 0.11 Burnley", "color": "#b71c1c"},
-        {"title": "Flank Isolation", "value": "14", "subtitle": "Total 1v1 battles", "color": "#880000"}
+        {"title": "Transition Exposure", "value": "14.1m", "subtitle": "Forest avg gap", "color": "#cc1c1c"},
+        {"title": "Build-Up Chains 10+", "value": "15", "subtitle": "Forest vs 6 Burnley", "color": "#cc1c1c"},
+        {"title": "Sustained Threat", "value": "0.29", "subtitle": "Forest vs 0.11 Burnley", "color": "#cc1c1c"},
+        {"title": "Flank Isolation", "value": "14", "subtitle": "Total 1v1 battles", "color": "#cc1c1c"}
     ]
     
     for i, metric in enumerate(metrics):
         with [col1, col2, col3, col4][i]:
             st.markdown(f"""
-            <div style="background: linear-gradient(135deg, {metric['color']}, #2d1b1b); color: #f5f5f5; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">{metric['title']}</h3>
-                <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">{metric['value']}</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">{metric['subtitle']}</div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000); color: #e0e0e0; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color:#f0f0f0;">{metric['title']}</h3>
+                <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem; color:white;">{metric['value']}</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">{metric['subtitle']}</div>
             </div>
             """, unsafe_allow_html=True)
     
@@ -927,24 +826,24 @@ elif tab_selection == "Advanced Metrics":
         
         fig_transition = go.Figure()
         fig_transition.add_trace(go.Bar(name='Avg Gap (m)', x=transition_data['Team'], 
-                                       y=transition_data['Avg Gap (m)'], marker_color='#d42c20'))
+                                       y=transition_data['Avg Gap (m)'], marker_color='#cc1c1c'))
         fig_transition.add_trace(go.Bar(name='Max Gap (m)', x=transition_data['Team'], 
-                                       y=transition_data['Max Gap (m)'], marker_color='#ff6b35'))
+                                       y=transition_data['Max Gap (m)'], marker_color='#ef4444'))
         
         fig_transition.update_layout(
             title="Transition Exposure Comparison", 
             height=400,
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#f5f5f5'
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
         )
         st.plotly_chart(fig_transition, use_container_width=True)
     
     with col2:
         st.markdown("""
-        <div class="insight-box" style="margin-bottom: 1rem;">
-            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Forest: Better Defensive Structure</h6>
-            <div style="font-size: 0.9rem;">
+        <div class="insight-box">
+            <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Forest: Better Defensive Structure</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
                 <div>Average Gap: 14.1m (vs 18.8m Burnley)</div>
                 <div>Max Exposure: 21m (vs 24m Burnley)</div>
                 <div>Vulnerability Rating: 6.2/10</div>
@@ -955,8 +854,8 @@ elif tab_selection == "Advanced Metrics":
         </div>
         
         <div class="tactical-note">
-            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Key Insight</h6>
-            <p style="font-size: 0.9rem;">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Key Insight</h6>
+            <p style="font-size: 0.9rem; color: #e0e0e0;">
                 Despite high line, Forest's transition exposure metrics are superior to Burnley's. 
                 This suggests better coached positional discipline when losing possession.
             </p>
@@ -970,9 +869,9 @@ elif tab_selection == "Advanced Metrics":
     
     with col1:
         st.markdown("""
-        <div class="insight-box">
-            <h6 style="font-weight: bold; margin-bottom: 1rem;">Build-Up Chains Analysis</h6>
-            <div>
+        <div class="stat-container">
+            <h6 style="color: #e0e0e0; font-weight: bold; margin-bottom: 1rem;">Build-Up Chains Analysis</h6>
+            <div style="color: #e0e0e0;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Forest 10+ Pass Chains:</span>
                     <span style="font-weight: bold;">15</span>
@@ -995,17 +894,17 @@ elif tab_selection == "Advanced Metrics":
     
     with col2:
         st.markdown("""
-        <div class="tactical-note">
-            <h6 style="font-weight: bold; margin-bottom: 1rem;">Sustained Threat Index</h6>
+        <div class="stat-container">
+            <h6 style="color: #e0e0e0; font-weight: bold; margin-bottom: 1rem;">Sustained Threat Index</h6>
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="font-size: 2.5rem; font-weight: bold;">0.29</div>
-                <div style="font-size: 0.9rem;">Forest STI</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">0.29</div>
+                <div style="font-size: 0.9rem; color: #e0e0e0;">Forest STI</div>
             </div>
             <div style="text-align: center;">
-                <div style="font-size: 1.5rem; font-weight: bold;">0.11</div>
-                <div style="font-size: 0.9rem;">Burnley STI</div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">0.11</div>
+                <div style="font-size: 0.9rem; color: #e0e0e0;">Burnley STI</div>
             </div>
-            <p style="font-size: 0.8rem; margin-top: 0.75rem; font-style: italic;">
+            <p style="font-size: 0.8rem; color: #e0e0e0; margin-top: 0.75rem; font-style: italic;">
                 Share of 7+ pass sequences ending in final third
             </p>
         </div>
@@ -1013,9 +912,9 @@ elif tab_selection == "Advanced Metrics":
     
     with col3:
         st.markdown("""
-        <div class="insight-box">
-            <h6 style="font-weight: bold; margin-bottom: 1rem;">Comparison Context</h6>
-            <div style="font-size: 0.9rem;">
+        <div class="stat-container">
+            <h6 style="color: #e0e0e0; font-weight: bold; margin-bottom: 1rem;">Comparison Context</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
                 <div style="margin-bottom: 0.5rem;">
                     <strong>Ange Spurs STI:</strong> 0.34
                 </div>
@@ -1026,118 +925,409 @@ elif tab_selection == "Advanced Metrics":
                     <strong>Nuno Forest:</strong> 0.14
                 </div>
             </div>
-            <p style="font-size: 0.8rem; margin-top: 0.75rem; font-style: italic;">
+            <p style="font-size: 0.8rem; color: #e0e0e0; margin-top: 0.75rem; font-style: italic;">
                 Forest approaching Spurs-level sustained possession quality
             </p>
         </div>
         """, unsafe_allow_html=True)
     
+    # Flank isolation & 1v1 battles
+    st.subheader("Flank Isolation & Individual Battles")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        battles_data = pd.DataFrame({
+            'Player': ['Ndoye vs Walker', 'Anthony vs Williams', 'Hudson-Odoi vs Walker', 'Hartman vs Bakwa'],
+            'Battles': [4, 3, 2, 3],
+            'Success Rate': [75, 67, 50, 33]
+        })
+        
+        fig_battles = go.Figure()
+        fig_battles.add_trace(go.Bar(name='Total Battles', x=battles_data['Player'], 
+                                    y=battles_data['Battles'], marker_color='#cc1c1c'))
+        fig_battles.add_trace(go.Bar(name='Success Rate %', x=battles_data['Player'], 
+                                    y=battles_data['Success Rate'], marker_color='#ef4444'))
+        
+        fig_battles.update_layout(
+            title="Key 1v1 Battles", 
+            height=400, 
+            xaxis_tickangle=-45,
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
+        )
+        st.plotly_chart(fig_battles, use_container_width=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="insight-box">
+            <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Forest Wing Dominance</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
+                <div><strong>Ndoye vs Walker:</strong> 4 battles, 75% success</div>
+                <div><strong>Key Impact:</strong> Left flank overloads creating consistent threat</div>
+                <div><strong>Hudson-Odoi Effect:</strong> Added pace and directness post-substitution</div>
+            </div>
+        </div>
+        
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Burnley Counter-Threat</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
+                <div><strong>Anthony vs Williams:</strong> 3 battles, 67% success</div>
+                <div><strong>Clinical Edge:</strong> Lower volume but higher conversion</div>
+                <div><strong>Tactical Role:</strong> Quick transitions and cutting inside</div>
+            </div>
+        </div>
+        
+        <div class="insight-box">
+            <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Total Isolation Metric</h6>
+            <div style="font-size: 0.9rem; color: #e0e0e0;">
+                <strong>14 Total 1v1 Battles</strong> - High isolation frequency indicates both teams' 
+                willingness to create wide overloads and commit to individual duels.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Cross effectiveness detailed analysis
+    st.subheader("Cross Effectiveness Deep Dive")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    effectiveness_data = [
+        {"team": "Forest", "rate": "26%", "total": 19, "successful": 8, "hudson_rate": "50%", "color": "#cc1c1c"},
+        {"team": "Burnley", "rate": "12%", "total": 12, "successful": 3, "hartman": "4 crosses", "color": "#ef4444"}
+    ]
+    
+    for i, data in enumerate(effectiveness_data):
+        with [col1, col2][i]:
+            bg_color = "#1a1a1a"
+            text_color = "#e0e0e0"
+            
+            st.markdown(f"""
+            <div class="stat-container" style="background: {bg_color}; padding: 1.5rem; border-radius: 8px;">
+                <h6 style="color: {text_color}; font-weight: bold; margin-bottom: 1rem;">{data['team']} Cross Analysis</h6>
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <div style="font-size: 2rem; font-weight: bold; color: {data['color']};">{data['rate']}</div>
+                    <div style="font-size: 0.9rem; color: {text_color};">Overall Effectiveness</div>
+                </div>
+                <div style="font-size: 0.9rem; color: {text_color};">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span>Total Crosses:</span>
+                        <span style="font-weight: bold;">{data['total']}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span>Successful:</span>
+                        <span style="font-weight: bold;">{data['successful']}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>{'Hudson-Odoi Rate:' if data['team'] == 'Forest' else 'Hartman Contribution:'}:</span>
+                        <span style="font-weight: bold;">{'50%' if data['team'] == 'Forest' else '4 crosses'}</span>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    with col3:
+        # Pie chart for cross effectiveness
+        cross_pie_data = pd.DataFrame({
+            'Category': ['Forest Successful', 'Forest Failed', 'Burnley Successful', 'Burnley Failed'],
+            'Values': [8, 11, 3, 9],
+            'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
+        })
+        
+        fig_cross_pie = go.Figure(data=[go.Pie(labels=cross_pie_data['Category'], values=cross_pie_data['Values'],
+                                              marker_colors=cross_pie_data['Colors'])])
+        fig_cross_pie.update_layout(
+            title="Quality Differential", 
+            height=300,
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
+        )
+        st.plotly_chart(fig_cross_pie, use_container_width=True)
+    
+    st.markdown("""
+    <div class="tactical-note">
+        <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Tactical Insight</h6>
+        <p style="font-size: 0.9rem; color: #e0e0e0;">
+            Forest's superior cross effectiveness (26% vs 12%) stems from better movement patterns and timing. 
+            Hudson-Odoi's 50% success rate demonstrates the impact of pace and crossing technique, while Burnley's 
+            struggles reflect limited aerial targets and predictable crossing positions.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Final verdict
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+    <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
         <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">Advanced Metrics Verdict</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <div>
                 <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Postecoglou's Tactical DNA Confirmed</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                <ul style="font-size: 0.9rem; line-height: 1.6; color:white;">
                     <li><strong>Transition Discipline:</strong> Better defensive structure than expected (14.1m avg gap)</li>
                     <li><strong>Build-up Quality:</strong> 15 sequences of 10+ passes vs Burnley's 6</li>
                     <li><strong>Sustained Threat:</strong> 0.29 STI approaching Spurs level (0.34)</li>
+                    <li><strong>Wide Dominance:</strong> 26% cross effectiveness, 14 successful 1v1 battles</li>
                 </ul>
             </div>
             <div>
-                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Areas for Development</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Areas for Continued Development</h6>
+                <ul style="font-size: 0.9rem; line-height: 1.6; color:white;">
                     <li><strong>Clinical Finishing:</strong> 2.13 xG only converted to 1 goal</li>
                     <li><strong>Individual Errors:</strong> Zinchenko mistake costly in high-line system</li>
+                    <li><strong>Final Third Density:</strong> Need better box occupation for crosses</li>
                     <li><strong>Game Management:</strong> Converting dominance to consistent victories</li>
                 </ul>
             </div>
+        </div>
+        
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #1a1a1a; border-radius: 8px;">
+            <p style="font-size: 1rem; line-height: 1.6; color:white;">
+                <strong>The Data's Conclusion:</strong> Forest's advanced metrics reveal a team rapidly adopting 
+                Postecoglou's principles with impressive statistical backing. The challenge now shifts from 
+                tactical implementation to result optimization - converting 2.13 xG performances into consistent victories.
+            </p>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 # Tab 6: Europa League Campaign
 elif tab_selection == "Europa League Campaign":
-    st.title("Europa League Campaign")
+    st.title("🏆 Europa League Campaign")
     
     # Europa League header
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; text-align: center; margin-bottom: 2rem;">
+    <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
         <h3 style="font-size: 2rem; margin-bottom: 0.5rem;">EUROPA LEAGUE CAMPAIGN</h3>
         <p style="font-size: 1.2rem; opacity: 0.9;">Forest vs Real Betis • September 24, 2025</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem; text-align: center;">
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 2rem; font-weight: bold; color: #ff6b35;">2-2</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Final Score</div>
+            <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+                <div style="font-size: 2rem; font-weight: bold; color: #fbbf24;">2-2</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">Final Score</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 2rem; font-weight: bold; color: #f5f5f5;">1.98</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">xG Generated</div>
+            <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+                <div style="font-size: 2rem; font-weight: bold; color: #cc1c1c;">1.98</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">xG Generated</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 2rem; font-weight: bold; color: #f5f5f5;">45%</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Possession</div>
+            <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+                <div style="font-size: 2rem; font-weight: bold; color: #cc1c1c;">45%</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">Possession</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b35;">Igor Jesus</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">2 Goals</div>
+            <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+                <div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">Igor Jesus</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">2 Goals</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    # European competition verdict
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
-        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">European Competition Analysis Verdict</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
-            <div>
-                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Tactical Maturity Demonstrated</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
-                    <li><strong>Adaptive Philosophy:</strong> Maintained Ange-ball principles while adjusting possession approach (45% vs 63%)</li>
-                    <li><strong>Improved Efficiency:</strong> Higher xG (1.98 vs 1.80) with 18% less possession</li>
-                    <li><strong>Quality Enhancement:</strong> Cross effectiveness up 46% (38% vs 26%)</li>
-                    <li><strong>Clinical Edge:</strong> Igor Jesus converting 1.20 xG into 2 goals shows European-level finishing</li>
-                </ul>
+    # Innovative "Ange-ball" metrics
+    st.subheader("Innovative 'Ange-ball' Metrics")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+            <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Possession Progression</h6>
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">118</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">meters per minute</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+            <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Sustained Threats</h6>
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">19</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">8+ pass sequences to box</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+            <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Triangle Formations</h6>
+            <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">17</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">3+ player triangles</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Igor Jesus performance
+    st.subheader("Igor Jesus - Star Performer")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Igor Jesus stats
+        igor_stats = pd.DataFrame({
+            'Metric': ['Goals', 'Expected Goals', 'Box Touches', 'Shots'],
+            'Value': [2, 1.20, 9, 4],
+            'Color': ['#cc1c1c', '#991c1c', '#ef4444', '#f59e0b']
+        })
+        
+        for i, row in igor_stats.iterrows():
+            st.markdown(f"""
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #1a1a1a; border-radius: 8px; margin-bottom: 0.5rem;">
+                <span style="font-weight: bold; color: white;">{row['Metric']}</span>
+                <span style="font-size: 1.5rem; font-weight: bold; color: white;">{row['Value']}</span>
             </div>
-            <div>
-                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Areas Requiring Focus</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
-                    <li><strong>Game Management:</strong> Led 2-0 but allowed comeback - need better control</li>
-                    <li><strong>Set Piece Execution:</strong> 0/5 free kicks converted despite good positioning</li>
-                    <li><strong>Squad Rotation:</strong> Managing domestic and European fixture demands</li>
-                    <li><strong>Defensive Discipline:</strong> 52m line height risky against elite European attacks</li>
-                </ul>
+            """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">European Quality</h6>
+            <p style="font-size: 0.9rem; color: #e0e0e0;">
+                Igor Jesus exceeded his xG with clinical finishing, showing the kind of 
+                edge Forest need to succeed in European competition. His two goals from 1.20 xG 
+                demonstrates the clinical finishing required at this level.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # European performance comparison
+    st.subheader("European vs Premier League Performance")
+    
+    european_comparison = pd.DataFrame({
+        'Competition': ['Premier League', 'Europa League'],
+        'Possession %': [63, 45],
+        'xG per 90': [2.13, 1.98],
+        'PPDA': [12.7, 14.2],
+        'Pass Accuracy': [85, 79]
+    })
+    
+    # Create comparison charts
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        fig_comp1 = go.Figure()
+        fig_comp1.add_trace(go.Bar(
+            name='Possession %',
+            x=european_comparison['Competition'],
+            y=european_comparison['Possession %'],
+            marker_color=['#cc1c1c', '#ef4444']
+        ))
+        fig_comp1.update_layout(
+            title="Possession Comparison", 
+            height=300,
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
+        )
+        st.plotly_chart(fig_comp1, use_container_width=True)
+    
+    with col2:
+        fig_comp2 = go.Figure()
+        fig_comp2.add_trace(go.Bar(
+            name='xG per 90',
+            x=european_comparison['Competition'],
+            y=european_comparison['xG per 90'],
+            marker_color=['#cc1c1c', '#ef4444']
+        ))
+        fig_comp2.update_layout(
+            title="Chance Creation Comparison", 
+            height=300,
+            paper_bgcolor="#1a1a1a",
+            plot_bgcolor="#1a1a1a",
+            font_color="#e0e0e0"
+        )
+        st.plotly_chart(fig_comp2, use_container_width=True)
+    
+    # Tactical adaptations
+    st.subheader("Tactical Adaptations for European Competition")
+    
+    adaptations = [
+        {
+            "aspect": "Possession Strategy",
+            "pl_approach": "Dominated possession (63%) with patient build-up",
+            "european_approach": "More direct approach (45%) adapting to higher quality opposition",
+            "effectiveness": "Successful adaptation - maintained threat creation"
+        },
+        {
+            "aspect": "Pressing Intensity", 
+            "pl_approach": "Aggressive PPDA of 12.7 against Burnley",
+            "european_approach": "Slightly less intense 14.2 PPDA vs Betis",
+            "effectiveness": "Smart energy management for European fixture congestion"
+        },
+        {
+            "aspect": "Clinical Finishing",
+            "pl_approach": "Struggled to convert 2.13 xG vs Burnley (1 goal)",
+            "european_approach": "Better conversion of 1.98 xG vs Betis (2 goals)",
+            "effectiveness": "Igor Jesus showing European-level clinical edge"
+        }
+    ]
+    
+    for adaptation in adaptations:
+        st.markdown(f"""
+        <div style="background: #1a1a1a; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h6 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.75rem;">{adaptation['aspect']}</h6>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
+                <div style="background: #260000; padding: 0.75rem; border-radius: 6px;">
+                    <div style="font-weight: bold; color: #f0f0f0; font-size: 0.8rem; margin-bottom: 0.25rem;">PREMIER LEAGUE</div>
+                    <div style="font-size: 0.85rem; color: #f0f0f0;">{adaptation['pl_approach']}</div>
+                </div>
+                <div style="background: #260000; padding: 0.75rem; border-radius: 6px;">
+                    <div style="font-weight: bold; color: #f0f0f0; font-size: 0.8rem; margin-bottom: 0.25rem;">EUROPA LEAGUE</div>
+                    <div style="font-size: 0.85rem; color: #f0f0f0;">{adaptation['european_approach']}</div>
+                </div>
+            </div>
+            <div style="background: #260000; padding: 0.5rem; border-radius: 6px;">
+                <span style="font-weight: bold; color: #cc1c1c; font-size: 0.8rem;">EFFECTIVENESS: </span>
+                <span style="color: #f0f0f0; font-size: 0.85rem;">{adaptation['effectiveness']}</span>
             </div>
         </div>
-        
-        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 8px;">
-            <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Statistical Context & Projections</h6>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center; margin-bottom: 1rem;">
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: bold;">118</div>
-                    <div style="font-size: 0.8rem;">m/min progression</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: bold;">86%</div>
-                    <div style="font-size: 0.8rem;">pass accuracy</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: bold;">17</div>
-                    <div style="font-size: 0.8rem;">triangle formations</div>
-                </div>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: bold;">2.0x</div>
-                    <div style="font-size: 0.8rem;">goal conversion vs PL</div>
-                </div>
-            </div>
-            <p style="font-size: 0.95rem; line-height: 1.6; margin: 0; text-align: center;">
-                <strong>European Outlook:</strong> Forest's debut European performance under Postecoglou demonstrates 
-                promising tactical adaptability while maintaining core identity. The challenge shifts from implementation 
-                to consistency - managing the demanding schedule while fine-tuning European-specific game management skills. 
-                Igor Jesus provides the clinical edge needed, but squad depth will be crucial for sustained European success.
+        """, unsafe_allow_html=True)
+    
+    # Campaign assessment
+    st.subheader("Europa League Campaign Assessment")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+            <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">✅ Positive Signs</h6>
+            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+                <li>Maintained attacking identity with lower possession (45%)</li>
+                <li>Clinical finishing from Igor Jesus (2 goals from 1.98 xG)</li>
+                <li>All "Ange-ball" metrics above European averages</li>
+                <li>Defensive line height (52m) shows tactical confidence</li>
+                <li>Triangle formations (17) indicate good player relationships</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+            <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">⚠️ Areas for Improvement</h6>
+            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+                <li>Game management - led 2-0 but drew 2-2</li>
+                <li>Set piece conversion - 0/5 free kicks converted</li>
+                <li>Possession control in European competition</li>
+                <li>Individual defensive errors still occurring</li>
+                <li>Need better squad rotation for fixture congestion</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # European outlook
+    st.markdown("""
+    <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">🌍 European Competition Verdict</h4>
+        <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
+            Forest's debut Europa League performance shows promising signs of tactical adaptability. 
+            The ability to maintain core "Ange-ball" principles while adjusting possession approach 
+            demonstrates growing tactical maturity under Postecoglou.
+        </p>
+        <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+            <p style="font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                <strong>Key Takeaway:</strong> Igor Jesus's clinical finishing (2 goals from 1.98 xG) provides 
+                the European-level quality needed for continental success. The challenge now is consistency 
+                across both domestic and European fixtures while managing squad rotation effectively.
             </p>
         </div>
     </div>
@@ -1156,7 +1346,7 @@ if st.session_state.is_playing and tab_selection == "Live Timeline":
 # Footer
 st.markdown("""
 ---
-<div style="text-align: center; color: #888888; margin-top: 2rem;">
+<div style="text-align: center; color: #f0f0f0; margin-top: 2rem;">
     <p>Football Tactical Dashboard | Burnley vs Nottingham Forest Analysis</p>
     <p style="font-size: 0.8rem;">Built with Streamlit | Data visualized with Plotly</p>
 </div>
