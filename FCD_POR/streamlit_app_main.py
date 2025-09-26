@@ -131,6 +131,17 @@ Recent news suggests some key players are in doubt. For Portland, Felipe Carball
 """
             return response_text
         
+        # --- Rule-based logic for adaptive responses ---
+        prompt_lower = prompt.lower()
+        if "musa" in prompt_lower and "dallas" in prompt_lower:
+            musa_data = next((p for p in context_data['players']['fc_dallas'] if p['name'] == 'Petar Musa'), None)
+            if musa_data:
+                return f"Petar Musa is a crucial part of Dallas's attack. He has scored {musa_data['goals']} goals with an xG of {musa_data['xG']}, indicating his clinical finishing ability. His play is focused centrally, where he takes a high volume of shots."
+        
+        if "portland" in prompt_lower and "strengths" in prompt_lower:
+            strengths = context_data['teams']['portland_timbers']['strengths']
+            return f"Based on the data, Portland's key strengths are their {', '.join(strengths)}. They excel in wide play, with a high volume of crosses and a strong set-piece threat."
+        
         full_prompt = f"""
         {self.system_prompt}
 
@@ -141,19 +152,11 @@ Recent news suggests some key players are in doubt. For Portland, Felipe Carball
 
         Question: {prompt}
         """
-
-        # In a real app, this would be an API call
-        # response = requests.post(self.api_url, json={'contents': [{'parts': [{'text': full_prompt}]}]})
-        # return response.json()['candidates'][0]['content']['parts'][0]['text']
-
-        # A set of predefined, data-backed responses to avoid repetition
+        # Fallback to a random generic response if no specific rule matches
         responses = [
             "Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. Portland's goalkeeper has a much higher save percentage, which could be a key factor in the match.",
-            "Analyzing the tactical data, Portland's attack is evenly distributed across the field, with a slight emphasis on wide areas. This contrasts with Dallas, who funnel a much larger percentage of their attacks through the central channel, a clear sign of their reliance on striker Petar Musa.",
-            "Based on the historical trends, Portland has shown a steady improvement in their points per game over the last three seasons, while Dallas has experienced a slight decline. This upward trajectory for Portland makes their current form and home advantage even more significant in this matchup.",
-            "The predictive model gives Portland a 48% chance to win, with a 29% chance of a draw. Key factors driving this prediction include Portland's home advantage and their recent form, which have a combined impact of +23% on their win probability."
+            "Analyzing the tactical data, Portland's attack is evenly distributed across the field, with a slight emphasis on wide areas. This contrasts with Dallas, who funnel a much larger percentage of their attacks through the central channel, a clear sign of their reliance on striker Petar Musa."
         ]
-
         return random.choice(responses)
 
 
