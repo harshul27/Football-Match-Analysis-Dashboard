@@ -13,11 +13,27 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Custom CSS for a professional dark red theme with black text
 st.markdown("""
 <style>
+    /* Overall page and main content background */
+    .stApp {
+        background-color: #121212;
+    }
+
+    /* Set default text color for the entire app */
+    body, .st-emotion-cache-1c7y2c1, .st-emotion-cache-18ni7ap, .st-emotion-cache-1629p8f, .st-emotion-cache-z5fcl4, p, li {
+        color: #000000 !important; /* Set all text to black */
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+        color: #000000 !important; /* Set all headings to black */
+    }
+
+    /* Main header banner */
     .main-header {
-        background: linear-gradient(135deg, #1f2937, #004d25);
+        background: linear-gradient(135deg, #4d0000, #330000);
         padding: 2rem;
         border-radius: 10px;
         margin-bottom: 2rem;
@@ -25,69 +41,79 @@ st.markdown("""
         text-align: center;
     }
     
+    /* Metric cards with red and dark accents */
     .metric-card {
-        background: linear-gradient(135deg, #cc1c1c, #991c1c);
+        background: linear-gradient(135deg, #4d0000, #330000);
         padding: 1.5rem;
         border-radius: 10px;
         color: white;
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
     
+    /* Stat containers for basic metrics */
     .stat-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background: #fcfcfc;
+        background: #4d0000;
         border-radius: 8px;
         margin: 0.5rem 0;
         border-left: 4px solid #cc1c1c;
     }
     
+    /* Insight boxes for analyst notes */
     .insight-box {
         padding: 1rem;
         border-radius: 8px;
         margin: 1rem 0;
-        border-left: 4px solid #16a34a;
-        background: #f0fdf4;
+        border-left: 4px solid #cc1c1c;
+        background: #4d0000;
+        color: #000000;
     }
     
+    /* Tactical notes */
     .tactical-note {
         padding: 1rem;
         border-radius: 8px;
-        background: #fef2f2;
+        background: #4d0000;
         border-left: 4px solid #ef4444;
         margin: 1rem 0;
     }
-    
-    /* General body and font color for a professional red theme */
-    body {
-        color: #f0f0f0; 
-    }
-    .st-emotion-cache-1c7y2c1 {
-        color: #f0f0f0 !important;
-    }
-    h1, h2, h3, h4, h5, h6, .css-1c7y2c1 {
-        color: #f0f0f0 !important;
-    }
-    .st-emotion-cache-13k65z8 {
-        color: #f0f0f0 !important;
-    }
-    a {
-        color: #e67373 !important;
-    }
+
+    /* Sidebar styling */
     .st-emotion-cache-1629p8f {
         background-color: #330000;
         color: white;
     }
-    
-    /* Apply font color to all text within the main content area */
-    .st-emotion-cache-z5fcl4 {
-        color: #f0f0f0;
+
+    /* Ensure containers have a dark red background */
+    .st-emotion-cache-13k65z8 {
+        background-color: #4d0000;
+        border: 1px solid #330000;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
     }
-    .st-emotion-cache-18ni7ap {
-        color: #f0f0f0;
+    
+    /* Specific styles for player performance boxes */
+    .player-card {
+        background: #4d0000;
+        border-left: 4px solid #cc1c1c;
+    }
+    
+    /* General plot background and font */
+    .js-plotly-plot {
+        background-color: #4d0000 !important;
+        color: #000000 !important;
+    }
+    .modebar-container {
+        background-color: #4d0000 !important;
+    }
+    .plotly .axis-title, .plotly .legendtext, .plotly .xtick, .plotly .ytick {
+        fill: #000000 !important;
+        color: #000000 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -117,13 +143,13 @@ timeline_data = [
     {'minute': 0, 'Burnley': 0, 'Forest': 0, 'event': 'Kick-off', 
      'description': 'Forest begin with high press, Zinchenko wide positioning',
      'ppda_forest': 8.5, 'ppda_burnley': 12.2, 'possession_forest': 65, 'possession_burnley': 35},
-    {'minute': 2, 'Burnley': 0, 'Forest': 0.11, 'event': 'Williams Goal ⚽', 
+    {'minute': 2, 'Burnley': 0, 'Forest': 0.11, 'event': 'Williams Goal', 
      'description': 'Early goal from Neco Williams, build-up through Luiz retention',
      'ppda_forest': 8.5, 'ppda_burnley': 12.2, 'possession_forest': 65, 'possession_burnley': 35},
     {'minute': 15, 'Burnley': 0.25, 'Forest': 0.34, 'event': 'Forest Press Peak', 
      'description': 'Forest PPDA at 8.5, Burnley struggling with high press',
      'ppda_forest': 8.5, 'ppda_burnley': 12.2, 'possession_forest': 67, 'possession_burnley': 33},
-    {'minute': 20, 'Burnley': 0.42, 'Forest': 0.34, 'event': 'Anthony Goal ⚽', 
+    {'minute': 20, 'Burnley': 0.42, 'Forest': 0.34, 'event': 'Anthony Goal', 
      'description': 'Burnley equalizer after Zinchenko error - failed clearance leads to goal',
      'ppda_forest': 11.0, 'ppda_burnley': 14.2, 'possession_forest': 62, 'possession_burnley': 38},
     {'minute': 30, 'Burnley': 0.48, 'Forest': 0.67, 'event': 'Tactical Networks', 
@@ -208,7 +234,7 @@ if tab_selection == "Match Overview":
     
     with col1:
         st.markdown("""
-        <div class="metric-card" style="background: linear-gradient(135deg, #cc1c1c, #991c1c);">
+        <div class="metric-card">
             <h3>Forest xG</h3>
             <div style="font-size: 2rem; font-weight: bold;">2.13</div>
             <div>vs 1.08 Burnley</div>
@@ -217,7 +243,7 @@ if tab_selection == "Match Overview":
     
     with col2:
         st.markdown("""
-        <div class="metric-card" style="background: linear-gradient(135deg, #cc1c1c, #991c1c);">
+        <div class="metric-card">
             <h3>Forest Possession</h3>
             <div style="font-size: 2rem; font-weight: bold;">63%</div>
             <div>vs 37% Burnley</div>
@@ -226,7 +252,7 @@ if tab_selection == "Match Overview":
     
     with col3:
         st.markdown("""
-        <div class="metric-card" style="background: linear-gradient(135deg, #cc1c1c, #991c1c);">
+        <div class="metric-card">
             <h3>Forest Passes</h3>
             <div style="font-size: 2rem; font-weight: bold;">501</div>
             <div>85% accuracy</div>
@@ -235,7 +261,7 @@ if tab_selection == "Match Overview":
     
     with col4:
         st.markdown("""
-        <div class="metric-card" style="background: linear-gradient(135deg, #cc1c1c, #991c1c);">
+        <div class="metric-card">
             <h3>Forest PPDA</h3>
             <div style="font-size: 2rem; font-weight: bold;">12.7</div>
             <div>High pressing</div>
@@ -256,7 +282,7 @@ if tab_selection == "Match Overview":
         for i, metric in enumerate(stats_data['Metric']):
             st.markdown(f"""
             <div class="stat-container">
-                <span style="font-weight: bold;">{metric}</span>
+                <span style="font-weight: bold; color:white;">{metric}</span>
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <span style="background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: bold;">
                         {stats_data['Burnley'][i]}
@@ -271,8 +297,8 @@ if tab_selection == "Match Overview":
         
         st.markdown("""
         <div class="insight-box">
-            <strong>Analyst Note:</strong> Forest dominated all attacking metrics - 8 shots on target vs 5, 
-            3 big chances vs 1, and 8 corners vs 5. This statistical dominance supports their higher xG output.
+            <span style="font-weight: bold; color:white;">Analyst Note:</span> <span style="color:white;">Forest dominated all attacking metrics - 8 shots on target vs 5, 
+            3 big chances vs 1, and 8 corners vs 5. This statistical dominance supports their higher xG output.</span>
         </div>
         """, unsafe_allow_html=True)
     
@@ -287,19 +313,26 @@ if tab_selection == "Match Overview":
         
         fig = go.Figure()
         fig.add_trace(go.Bar(name='Total Shots', x=conversion_data['Team'], y=conversion_data['Shots'], 
-                            marker_color='#94a3b8'))
+                            marker_color='#333333'))
         fig.add_trace(go.Bar(name='On Target', x=conversion_data['Team'], y=conversion_data['On Target'], 
                             marker_color='#cc1c1c'))
         fig.add_trace(go.Bar(name='Goals', x=conversion_data['Team'], y=conversion_data['Goals'], 
                             marker_color='#ef4444'))
         
-        fig.update_layout(title="Shot Conversion Comparison", barmode='group', height=400)
+        fig.update_layout(
+            title="Shot Conversion Comparison", 
+            barmode='group', 
+            height=400,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig, use_container_width=True)
         
         st.markdown("""
         <div class="tactical-note">
-            <strong>Key Insight:</strong> Despite Forest's dominance in chances created, Burnley were more clinical - 
-            8.3% conversion vs 5.9%. This efficiency gap kept Burnley competitive despite being outplayed.
+            <span style="font-weight: bold; color:white;">Key Insight:</span> <span style="color:white;">Despite Forest's dominance in chances created, Burnley were more clinical - 
+            8.3% conversion vs 5.9%. This efficiency gap kept Burnley competitive despite being outplayed.</span>
         </div>
         """, unsafe_allow_html=True)
     
@@ -316,16 +349,21 @@ if tab_selection == "Match Overview":
                                      mode='lines+markers', name='Burnley FC',
                                      line=dict(color='#ef4444', width=3)))
     
-    fig_timeline.update_layout(title="xG Development Throughout Match", 
-                              xaxis_title="Match Time (minutes)",
-                              yaxis_title="Expected Goals",
-                              height=500)
+    fig_timeline.update_layout(
+        title="xG Development Throughout Match", 
+        xaxis_title="Match Time (minutes)",
+        yaxis_title="Expected Goals",
+        height=500,
+        paper_bgcolor="#4d0000",
+        plot_bgcolor="#4d0000",
+        font_color="#000000"
+    )
     st.plotly_chart(fig_timeline, use_container_width=True)
     
     st.markdown("""
     <div class="insight-box">
-        <strong>Match Flow Analysis:</strong> Forest's xG grew steadily throughout the match (2.13 total), 
-        while Burnley's main threat came in the first half (0.51 by HT). Second-half xG: Forest 0.93, Burnley 0.57.
+        <span style="font-weight: bold; color:white;">Match Flow Analysis:</span> <span style="color:white;">Forest's xG grew steadily throughout the match (2.13 total), 
+        while Burnley's main threat came in the first half (0.51 by HT). Second-half xG: Forest 0.93, Burnley 0.57.</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -349,13 +387,13 @@ elif tab_selection == "Tactical Analysis":
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444; margin-top: 1rem;">
+        <div class="tactical-note">
             <h5 style="color: #dc2626; margin-bottom: 0.5rem;">Tactical Setup:</h5>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#000000;">
                 5-4-1 defensive block transitioning to 3-2-3-2 in attack. Cullen-Laurent pivot controls tempo, 
                 with Hartman providing aggressive left-sided width.
             </p>
-            <div style="font-size: 0.8rem; font-weight: bold;">
+            <div style="font-size: 0.8rem; font-weight: bold; color:#000000;">
                 Key Pattern: Back three buildup with Cullen as deep distributor. 
                 Anthony cuts inside from left while Hartman provides overlapping width.
             </div>
@@ -363,7 +401,7 @@ elif tab_selection == "Tactical Analysis":
         """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("### 🟢 Forest Formation")
+        st.markdown("### 🔴 Forest Formation")
         st.markdown("""
         <div style="background: linear-gradient(to bottom, #cc1c1c, #991c1c); height: 300px; border-radius: 10px; position: relative; color: white; display: flex; align-items: center; justify-content: center;">
             <div style="text-align: center;">
@@ -374,13 +412,13 @@ elif tab_selection == "Tactical Analysis":
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin-top: 1rem;">
+        <div class="tactical-note" style="border-left: 4px solid #cc1c1c;">
             <h5 style="color: #cc1c1c; margin-bottom: 0.5rem;">Tactical Setup:</h5>
-            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#000000;">
                 4-2-3-1 with high fullbacks in Ange's possession-based system. Patient build-up through triangular 
                 combinations with Luiz-Anderson double pivot.
             </p>
-            <div style="font-size: 0.8rem; font-weight: bold;">
+            <div style="font-size: 0.8rem; font-weight: bold; color:#000000;">
                 Key Pattern: Back four buildup with Zinchenko progression left. 
                 Gibbs-White drops deep to create overloads while fullbacks advance.
             </div>
@@ -398,26 +436,31 @@ elif tab_selection == "Tactical Analysis":
     fig_ppda.add_trace(go.Bar(name='Burnley', x=ppda_df['segment'], 
                               y=ppda_df['Burnley'], marker_color='#ef4444'))
     
-    fig_ppda.update_layout(title="PPDA Throughout Match", 
-                          xaxis_title="Time Periods",
-                          yaxis_title="PPDA Value",
-                          height=400)
+    fig_ppda.update_layout(
+        title="PPDA Throughout Match", 
+        xaxis_title="Time Periods",
+        yaxis_title="PPDA Value",
+        height=400,
+        paper_bgcolor="#4d0000",
+        plot_bgcolor="#4d0000",
+        font_color="#000000"
+    )
     st.plotly_chart(fig_ppda, use_container_width=True)
     
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
         <div class="insight-box">
-            <strong>Forest Pressing Pattern:</strong> Most intense in opening 15 minutes (8.5 PPDA) and after HT (9.0 PPDA). 
-            Classic Postecoglou high-energy starts to each half, with tactical management in middle periods.
+            <span style="font-weight: bold; color:white;">Forest Pressing Pattern:</span> <span style="color:white;">Most intense in opening 15 minutes (8.5 PPDA) and after HT (9.0 PPDA). 
+            Classic Postecoglou high-energy starts to each half, with tactical management in middle periods.</span>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
-            <strong>Burnley Response:</strong> Adapted well in final third of match (10.9 PPDA) as Parker's side 
-            pushed for winner. Counter-pressing improved significantly after adjustments.
+        <div class="tactical-note">
+            <span style="font-weight: bold; color:white;">Burnley Response:</span> <span style="color:white;">Adapted well in final third of match (10.9 PPDA) as Parker's side 
+            pushed for winner. Counter-pressing improved significantly after adjustments.</span>
         </div>
         """, unsafe_allow_html=True)
     
@@ -431,19 +474,25 @@ elif tab_selection == "Tactical Analysis":
         cross_data = pd.DataFrame({
             'Team': ['Forest Effective', 'Forest Ineffective', 'Burnley Effective', 'Burnley Ineffective'],
             'Values': [8, 11, 3, 9],
-            'Colors': ['#cc1c1c', '#fecaca', '#ef4444', '#fecaca']
+            'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
         })
         
         fig_cross = go.Figure(data=[go.Pie(labels=cross_data['Team'], values=cross_data['Values'],
                                           marker_colors=cross_data['Colors'])])
-        fig_cross.update_layout(title="Cross Effectiveness Comparison", height=400)
+        fig_cross.update_layout(
+            title="Cross Effectiveness Comparison", 
+            height=400,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_cross, use_container_width=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Forest Cross Analysis</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="tactical-note" style="border-left: 4px solid #cc1c1c;">
+            <h6 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.5rem;">Forest Cross Analysis</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div>Total Crosses: 19</div>
                 <div>Successful: 8 (26% effectiveness)</div>
                 <div>Hudson-Odoi Impact: 50% success rate</div>
@@ -451,9 +500,9 @@ elif tab_selection == "Tactical Analysis":
             </div>
         </div>
         
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Burnley Cross Analysis</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Burnley Cross Analysis</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div>Total Crosses: 12</div>
                 <div>Successful: 3 (12% effectiveness)</div>
                 <div>Main Source: Hartman overlaps (4 crosses)</div>
@@ -474,15 +523,15 @@ elif tab_selection == "Tactical Analysis":
         else:
             current_col = col2
             
-        team_color = "#fef2f2" if player['team'] == 'Forest' else "#fef2f2"
-        text_color = "#dc2626" if player['team'] == 'Forest' else "#dc2626"
+        team_color = "#4d0000"
+        text_color = "#000000"
         
         current_col.markdown(f"""
-        <div style="background: {team_color}; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <div class="player-card" style="background: {team_color}; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <h6 style="color: {text_color}; font-weight: bold; font-size: 1.1rem; margin: 0;">{player['name']}</h6>
-                <span style="background: {'#fef2f2' if player['performance_rating'] >= 8 else '#fef3c7' if player['performance_rating'] >= 7 else '#f3f4f6'}; 
-                            color: {'#dc2626' if player['performance_rating'] >= 8 else '#d97706' if player['performance_rating'] >= 7 else '#4b5563'};
+                <span style="background: {'#cc1c1c' if player['performance_rating'] >= 8 else '#ef4444' if player['performance_rating'] >= 7 else '#555555'}; 
+                            color: white;
                             padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">
                     {player['performance_rating']}/10
                 </span>
@@ -523,26 +572,26 @@ elif tab_selection == "Live Timeline":
     current_event = timeline_data[st.session_state.timeline_index]
     
     st.markdown(f"""
-    <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
+    <div class="metric-card">
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; text-align: center;">
             <div>
-                <div style="font-size: 2rem; font-weight: bold;">{current_event['minute']}'</div>
-                <div style="font-size: 1.2rem; opacity: 0.9;">{current_event['event']}</div>
+                <div style="font-size: 2rem; font-weight: bold; color:white;">{current_event['minute']}'</div>
+                <div style="font-size: 1.2rem; opacity: 0.9; color:white;">{current_event['event']}</div>
             </div>
             <div>
-                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem;">Current xG</div>
-                <div style="font-size: 1.2rem;">
+                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem; color:white;">Current xG</div>
+                <div style="font-size: 1.2rem; color:white;">
                     Forest {current_event['Forest']:.2f} - {current_event['Burnley']:.2f} Burnley
                 </div>
             </div>
             <div>
-                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem;">Possession</div>
-                <div style="font-size: 1.2rem;">
+                <div style="font-size: 0.9rem; opacity: 0.75; margin-bottom: 0.25rem; color:white;">Possession</div>
+                <div style="font-size: 1.2rem; color:white;">
                     {current_event['possession_forest']}% - {current_event['possession_burnley']}%
                 </div>
             </div>
         </div>
-        <div style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9; font-style: italic;">
+        <div style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9; font-style: italic; color:white;">
             {current_event['description']}
         </div>
     </div>
@@ -588,19 +637,25 @@ elif tab_selection == "Live Timeline":
     fig_multi.update_xaxes(title_text="Minutes")
     fig_multi.update_yaxes(title_text="Expected Goals", secondary_y=False)
     fig_multi.update_yaxes(title_text="PPDA / Possession %", secondary_y=True)
-    fig_multi.update_layout(title="Live Match Timeline Analysis", height=600)
+    fig_multi.update_layout(
+        title="Live Match Timeline Analysis", 
+        height=600,
+        paper_bgcolor="#4d0000",
+        plot_bgcolor="#4d0000",
+        font_color="#000000"
+    )
     
     st.plotly_chart(fig_multi, use_container_width=True)
     
     # Progress bar
     progress_percentage = ((st.session_state.timeline_index + 1) / len(timeline_data)) * 100
     st.markdown(f"""
-    <div style="margin-top: 2rem;">
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #f0f0f0; margin-bottom: 0.5rem;">
+    <div style="margin-top: 2rem; background:#4d0000; padding:1rem; border-radius:8px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #000000; margin-bottom: 0.5rem;">
             <span>Match Progress</span>
             <span>{progress_percentage:.0f}% Complete</span>
         </div>
-        <div style="width: 100%; background: #e5e7eb; border-radius: 20px; height: 12px;">
+        <div style="width: 100%; background: #330000; border-radius: 20px; height: 12px;">
             <div style="background: linear-gradient(90deg, #cc1c1c, #991c1c); height: 12px; border-radius: 20px; width: {progress_percentage}%; transition: all 0.5s;"></div>
         </div>
     </div>
@@ -618,9 +673,9 @@ elif tab_selection == "Live Timeline":
     
     for moment in tactical_moments:
         st.markdown(f"""
-        <div style="border-left: 4px solid {moment['color']}; background: {moment['color']}10; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
-            <div style="font-weight: bold; color: {moment['color']}; margin-bottom: 0.5rem;">{moment['minute']} - {moment['event']}</div>
-            <div style="font-size: 0.9rem; color: {moment['color']}BB;">{moment['description']}</div>
+        <div style="border-left: 4px solid {moment['color']}; background: #4d0000; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
+            <div style="font-weight: bold; color: white;">{moment['minute']} - {moment['event']}</div>
+            <div style="font-size: 0.9rem; color: #000000;">{moment['description']}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -629,25 +684,25 @@ elif tab_selection == "Manager Comparison":
     st.title("👥 Manager Comparison - The Postecoglou Project")
     
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #1f2937, #004d25); color: white; padding: 2rem; border-radius: 10px; text-align: center; margin-bottom: 2rem;">
+    <div class="main-header">
         <h3 style="font-size: 2rem; margin-bottom: 0.5rem;">THE POSTECOGLOU PROJECT</h3>
         <p style="font-size: 1.2rem; opacity: 0.9;">From Tottenham to Trent End: A Tactical Revolution in Progress</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-top: 2rem; text-align: center;">
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
+            <div style="background: #4d0000; padding: 1.5rem; border-radius: 8px;">
                 <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">+22%</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Possession Increase</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">From Nuno's 41% to Ange's 63%</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:black;">Possession Increase</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:black;">From Nuno's 41% to Ange's 63%</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
+            <div style="background: #4d0000; padding: 1.5rem; border-radius: 8px;">
                 <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">2.13</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">xG per 90 vs Burnley</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">111% increase from Nuno era</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:black;">xG per 90 vs Burnley</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:black;">111% increase from Nuno era</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
+            <div style="background: #4d0000; padding: 1.5rem; border-radius: 8px;">
                 <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">12.7</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Current PPDA</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">37% more aggressive pressing</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; color:black;">Current PPDA</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem; color:black;">37% more aggressive pressing</div>
             </div>
         </div>
     </div>
@@ -668,7 +723,7 @@ elif tab_selection == "Manager Comparison":
         }
         
         comparison_df = pd.DataFrame(comparison_data)
-        st.dataframe(comparison_df, use_container_width=True)
+        st.dataframe(comparison_df.style.background_color(subset=['Nuno Era'], color='#ef4444').background_color(subset=['Ange Era'], color='#cc1c1c').background_color(subset=['Ange Spurs'], color='#f59e0b'), use_container_width=True)
     
     with col2:
         # Radar chart
@@ -713,7 +768,10 @@ elif tab_selection == "Manager Comparison":
                 )),
             showlegend=True,
             title="Tactical Revolution Comparison",
-            height=400
+            height=400,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
         )
         
         st.plotly_chart(fig_radar, use_container_width=True)
@@ -735,10 +793,10 @@ elif tab_selection == "Advanced Metrics":
     for i, metric in enumerate(metrics):
         with [col1, col2, col3, col4][i]:
             st.markdown(f"""
-            <div style="background: linear-gradient(135deg, {metric['color']}, {metric['color']}DD); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
-                <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">{metric['title']}</h3>
-                <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">{metric['value']}</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">{metric['subtitle']}</div>
+            <div class="metric-card" style="background: linear-gradient(135deg, {metric['color']}, {metric['color']}DD); color: #000000; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color:#000000;">{metric['title']}</h3>
+                <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem; color:black;">{metric['value']}</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:black;">{metric['subtitle']}</div>
             </div>
             """, unsafe_allow_html=True)
     
@@ -761,14 +819,20 @@ elif tab_selection == "Advanced Metrics":
         fig_transition.add_trace(go.Bar(name='Max Gap (m)', x=transition_data['Team'], 
                                        y=transition_data['Max Gap (m)'], marker_color='#ef4444'))
         
-        fig_transition.update_layout(title="Transition Exposure Comparison", height=400)
+        fig_transition.update_layout(
+            title="Transition Exposure Comparison", 
+            height=400,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_transition, use_container_width=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin-bottom: 1rem;">
-            <h6 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.5rem;">Forest: Better Defensive Structure</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="insight-box">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 0.5rem;">Forest: Better Defensive Structure</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div>Average Gap: 14.1m (vs 18.8m Burnley)</div>
                 <div>Max Exposure: 21m (vs 24m Burnley)</div>
                 <div>Vulnerability Rating: 6.2/10</div>
@@ -778,9 +842,9 @@ elif tab_selection == "Advanced Metrics":
             </div>
         </div>
         
-        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-            <h6 style="color: #d97706; font-weight: bold; margin-bottom: 0.5rem;">Key Insight</h6>
-            <p style="font-size: 0.9rem; color: #d97706;">
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Key Insight</h6>
+            <p style="font-size: 0.9rem; color: #000000;">
                 Despite high line, Forest's transition exposure metrics are superior to Burnley's. 
                 This suggests better coached positional discipline when losing possession.
             </p>
@@ -794,9 +858,9 @@ elif tab_selection == "Advanced Metrics":
     
     with col1:
         st.markdown("""
-        <div style="background: linear-gradient(to bottom, #fef2f2, #fecaca); padding: 1.5rem; border-radius: 8px;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 1rem;">Build-Up Chains Analysis</h6>
-            <div style="color: #dc2626;">
+        <div class="stat-container">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 1rem;">Build-Up Chains Analysis</h6>
+            <div style="color: #000000;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Forest 10+ Pass Chains:</span>
                     <span style="font-weight: bold;">15</span>
@@ -819,17 +883,17 @@ elif tab_selection == "Advanced Metrics":
     
     with col2:
         st.markdown("""
-        <div style="background: linear-gradient(to bottom, #fef2f2, #fecaca); padding: 1.5rem; border-radius: 8px;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 1rem;">Sustained Threat Index</h6>
+        <div class="stat-container">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 1rem;">Sustained Threat Index</h6>
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #dc2626;">0.29</div>
-                <div style="font-size: 0.9rem; color: #dc2626;">Forest STI</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">0.29</div>
+                <div style="font-size: 0.9rem; color: #000000;">Forest STI</div>
             </div>
             <div style="text-align: center;">
                 <div style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">0.11</div>
-                <div style="font-size: 0.9rem; color: #ef4444;">Burnley STI</div>
+                <div style="font-size: 0.9rem; color: #000000;">Burnley STI</div>
             </div>
-            <p style="font-size: 0.8rem; color: #dc2626; margin-top: 0.75rem; font-style: italic;">
+            <p style="font-size: 0.8rem; color: #000000; margin-top: 0.75rem; font-style: italic;">
                 Share of 7+ pass sequences ending in final third
             </p>
         </div>
@@ -837,9 +901,9 @@ elif tab_selection == "Advanced Metrics":
     
     with col3:
         st.markdown("""
-        <div style="background: linear-gradient(to bottom, #fef2f2, #fecaca); padding: 1.5rem; border-radius: 8px;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 1rem;">Comparison Context</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="stat-container">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 1rem;">Comparison Context</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div style="margin-bottom: 0.5rem;">
                     <strong>Ange Spurs STI:</strong> 0.34
                 </div>
@@ -850,7 +914,7 @@ elif tab_selection == "Advanced Metrics":
                     <strong>Nuno Forest:</strong> 0.14
                 </div>
             </div>
-            <p style="font-size: 0.8rem; color: #dc2626; margin-top: 0.75rem; font-style: italic;">
+            <p style="font-size: 0.8rem; color: #000000; margin-top: 0.75rem; font-style: italic;">
                 Forest approaching Spurs-level sustained possession quality
             </p>
         </div>
@@ -874,32 +938,39 @@ elif tab_selection == "Advanced Metrics":
         fig_battles.add_trace(go.Bar(name='Success Rate %', x=battles_data['Player'], 
                                     y=battles_data['Success Rate'], marker_color='#ef4444'))
         
-        fig_battles.update_layout(title="Key 1v1 Battles", height=400, xaxis_tickangle=-45)
+        fig_battles.update_layout(
+            title="Key 1v1 Battles", 
+            height=400, 
+            xaxis_tickangle=-45,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_battles, use_container_width=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin-bottom: 1rem;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Forest Wing Dominance</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="insight-box">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 0.5rem;">Forest Wing Dominance</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div><strong>Ndoye vs Walker:</strong> 4 battles, 75% success</div>
                 <div><strong>Key Impact:</strong> Left flank overloads creating consistent threat</div>
                 <div><strong>Hudson-Odoi Effect:</strong> Added pace and directness post-substitution</div>
             </div>
         </div>
         
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444; margin-bottom: 1rem;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Burnley Counter-Threat</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Burnley Counter-Threat</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <div><strong>Anthony vs Williams:</strong> 3 battles, 67% success</div>
                 <div><strong>Clinical Edge:</strong> Lower volume but higher conversion</div>
                 <div><strong>Tactical Role:</strong> Quick transitions and cutting inside</div>
             </div>
         </div>
         
-        <div style="background: #fef2f2; padding: 1rem; border-radius: 8px; border-left: 4px solid #991c1c;">
-            <h6 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Total Isolation Metric</h6>
-            <div style="font-size: 0.9rem; color: #dc2626;">
+        <div class="insight-box">
+            <h6 style="color: #000000; font-weight: bold; margin-bottom: 0.5rem;">Total Isolation Metric</h6>
+            <div style="font-size: 0.9rem; color: #000000;">
                 <strong>14 Total 1v1 Battles</strong> - High isolation frequency indicates both teams' 
                 willingness to create wide overloads and commit to individual duels.
             </div>
@@ -918,11 +989,11 @@ elif tab_selection == "Advanced Metrics":
     
     for i, data in enumerate(effectiveness_data):
         with [col1, col2][i]:
-            bg_color = "#fef2f2" if data['team'] == "Forest" else "#fef2f2"
-            text_color = "#dc2626" if data['team'] == "Forest" else "#dc2626"
+            bg_color = "#4d0000"
+            text_color = "#000000"
             
             st.markdown(f"""
-            <div style="background: {bg_color}; padding: 1.5rem; border-radius: 8px;">
+            <div class="stat-container" style="background: {bg_color}; padding: 1.5rem; border-radius: 8px;">
                 <h6 style="color: {text_color}; font-weight: bold; margin-bottom: 1rem;">{data['team']} Cross Analysis</h6>
                 <div style="text-align: center; margin-bottom: 1rem;">
                     <div style="font-size: 2rem; font-weight: bold; color: {data['color']};">{data['rate']}</div>
@@ -950,18 +1021,24 @@ elif tab_selection == "Advanced Metrics":
         cross_pie_data = pd.DataFrame({
             'Category': ['Forest Successful', 'Forest Failed', 'Burnley Successful', 'Burnley Failed'],
             'Values': [8, 11, 3, 9],
-            'Colors': ['#cc1c1c', '#fecaca', '#ef4444', '#fecaca']
+            'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
         })
         
         fig_cross_pie = go.Figure(data=[go.Pie(labels=cross_pie_data['Category'], values=cross_pie_data['Values'],
                                               marker_colors=cross_pie_data['Colors'])])
-        fig_cross_pie.update_layout(title="Quality Differential", height=300)
+        fig_cross_pie.update_layout(
+            title="Quality Differential", 
+            height=300,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_cross_pie, use_container_width=True)
     
     st.markdown("""
-    <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 1.5rem;">
-        <h6 style="color: #d97706; font-weight: bold; margin-bottom: 0.5rem;">Tactical Insight</h6>
-        <p style="font-size: 0.9rem; color: #d97706;">
+    <div class="tactical-note">
+        <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Tactical Insight</h6>
+        <p style="font-size: 0.9rem; color: #000000;">
             Forest's superior cross effectiveness (26% vs 12%) stems from better movement patterns and timing. 
             Hudson-Odoi's 50% success rate demonstrates the impact of pace and crossing technique, while Burnley's 
             struggles reflect limited aerial targets and predictable crossing positions.
@@ -971,12 +1048,12 @@ elif tab_selection == "Advanced Metrics":
     
     # Final verdict
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+    <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
         <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">Advanced Metrics Verdict</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <div>
                 <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Postecoglou's Tactical DNA Confirmed</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                <ul style="font-size: 0.9rem; line-height: 1.6; color:white;">
                     <li><strong>Transition Discipline:</strong> Better defensive structure than expected (14.1m avg gap)</li>
                     <li><strong>Build-up Quality:</strong> 15 sequences of 10+ passes vs Burnley's 6</li>
                     <li><strong>Sustained Threat:</strong> 0.29 STI approaching Spurs level (0.34)</li>
@@ -985,7 +1062,7 @@ elif tab_selection == "Advanced Metrics":
             </div>
             <div>
                 <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Areas for Continued Development</h6>
-                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                <ul style="font-size: 0.9rem; line-height: 1.6; color:white;">
                     <li><strong>Clinical Finishing:</strong> 2.13 xG only converted to 1 goal</li>
                     <li><strong>Individual Errors:</strong> Zinchenko mistake costly in high-line system</li>
                     <li><strong>Final Third Density:</strong> Need better box occupation for crosses</li>
@@ -994,8 +1071,8 @@ elif tab_selection == "Advanced Metrics":
             </div>
         </div>
         
-        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px;">
-            <p style="font-size: 1rem; line-height: 1.6;">
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #330000; border-radius: 8px;">
+            <p style="font-size: 1rem; line-height: 1.6; color:white;">
                 <strong>The Data's Conclusion:</strong> Forest's advanced metrics reveal a team rapidly adopting 
                 Postecoglou's principles with impressive statistical backing. The challenge now shifts from 
                 tactical implementation to result optimization - converting 2.13 xG performances into consistent victories.
@@ -1010,26 +1087,26 @@ elif tab_selection == "Europa League Campaign":
     
     # Europa League header
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 2rem; border-radius: 10px; text-align: center; margin-bottom: 2rem;">
+    <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
         <h3 style="font-size: 2rem; margin-bottom: 0.5rem;">EUROPA LEAGUE CAMPAIGN</h3>
         <p style="font-size: 1.2rem; opacity: 0.9;">Forest vs Real Betis • September 24, 2025</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem; text-align: center;">
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
+            <div style="background: #330000; padding: 1rem; border-radius: 8px;">
                 <div style="font-size: 2rem; font-weight: bold; color: #fbbf24;">2-2</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Final Score</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:white;">Final Score</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
+            <div style="background: #330000; padding: 1rem; border-radius: 8px;">
                 <div style="font-size: 2rem; font-weight: bold; color: #cc1c1c;">1.98</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">xG Generated</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:white;">xG Generated</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
+            <div style="background: #330000; padding: 1rem; border-radius: 8px;">
                 <div style="font-size: 2rem; font-weight: bold; color: #cc1c1c;">45%</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Possession</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:white;">Possession</div>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
+            <div style="background: #330000; padding: 1rem; border-radius: 8px;">
                 <div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">Igor Jesus</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">2 Goals</div>
+                <div style="font-size: 0.8rem; opacity: 0.9; color:white;">2 Goals</div>
             </div>
         </div>
     </div>
@@ -1042,7 +1119,7 @@ elif tab_selection == "Europa League Campaign":
     
     with col1:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
             <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Possession Progression</h6>
             <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">118</div>
             <div style="font-size: 0.8rem; opacity: 0.9;">meters per minute</div>
@@ -1051,7 +1128,7 @@ elif tab_selection == "Europa League Campaign":
     
     with col2:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
             <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Sustained Threats</h6>
             <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">19</div>
             <div style="font-size: 0.8rem; opacity: 0.9;">8+ pass sequences to box</div>
@@ -1060,7 +1137,7 @@ elif tab_selection == "Europa League Campaign":
     
     with col3:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+        <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
             <h6 style="font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem;">Triangle Formations</h6>
             <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.25rem;">17</div>
             <div style="font-size: 0.8rem; opacity: 0.9;">3+ player triangles</div>
@@ -1082,17 +1159,17 @@ elif tab_selection == "Europa League Campaign":
         
         for i, row in igor_stats.iterrows():
             st.markdown(f"""
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: {row['Color']}20; border-radius: 8px; margin-bottom: 0.5rem;">
-                <span style="font-weight: bold; color: {row['Color']};">{row['Metric']}</span>
-                <span style="font-size: 1.5rem; font-weight: bold; color: {row['Color']};">{row['Value']}</span>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #4d0000; border-radius: 8px; margin-bottom: 0.5rem;">
+                <span style="font-weight: bold; color: white;">{row['Metric']}</span>
+                <span style="font-size: 1.5rem; font-weight: bold; color: white;">{row['Value']}</span>
             </div>
             """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
-        <div style="background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-            <h6 style="color: #d97706; font-weight: bold; margin-bottom: 0.5rem;">European Quality</h6>
-            <p style="font-size: 0.9rem; color: #d97706;">
+        <div class="tactical-note">
+            <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">European Quality</h6>
+            <p style="font-size: 0.9rem; color: #000000;">
                 Igor Jesus exceeded his xG with clinical finishing, showing the kind of 
                 edge Forest need to succeed in European competition. His two goals from 1.20 xG 
                 demonstrates the clinical finishing required at this level.
@@ -1122,7 +1199,13 @@ elif tab_selection == "Europa League Campaign":
             y=european_comparison['Possession %'],
             marker_color=['#cc1c1c', '#ef4444']
         ))
-        fig_comp1.update_layout(title="Possession Comparison", height=300)
+        fig_comp1.update_layout(
+            title="Possession Comparison", 
+            height=300,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_comp1, use_container_width=True)
     
     with col2:
@@ -1133,7 +1216,13 @@ elif tab_selection == "Europa League Campaign":
             y=european_comparison['xG per 90'],
             marker_color=['#cc1c1c', '#ef4444']
         ))
-        fig_comp2.update_layout(title="Chance Creation Comparison", height=300)
+        fig_comp2.update_layout(
+            title="Chance Creation Comparison", 
+            height=300,
+            paper_bgcolor="#4d0000",
+            plot_bgcolor="#4d0000",
+            font_color="#000000"
+        )
         st.plotly_chart(fig_comp2, use_container_width=True)
     
     # Tactical adaptations
@@ -1162,21 +1251,21 @@ elif tab_selection == "Europa League Campaign":
     
     for adaptation in adaptations:
         st.markdown(f"""
-        <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="background: #4d0000; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #cc1c1c; margin: 1rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <h6 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.75rem;">{adaptation['aspect']}</h6>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0.75rem;">
-                <div style="background: #fef2f2; padding: 0.75rem; border-radius: 6px;">
-                    <div style="font-weight: bold; color: #dc2626; font-size: 0.8rem; margin-bottom: 0.25rem;">PREMIER LEAGUE</div>
-                    <div style="font-size: 0.85rem; color: #dc2626;">{adaptation['pl_approach']}</div>
+                <div style="background: #330000; padding: 0.75rem; border-radius: 6px;">
+                    <div style="font-weight: bold; color: white; font-size: 0.8rem; margin-bottom: 0.25rem;">PREMIER LEAGUE</div>
+                    <div style="font-size: 0.85rem; color: white;">{adaptation['pl_approach']}</div>
                 </div>
-                <div style="background: #fef2f2; padding: 0.75rem; border-radius: 6px;">
-                    <div style="font-weight: bold; color: #ef4444; font-size: 0.8rem; margin-bottom: 0.25rem;">EUROPA LEAGUE</div>
-                    <div style="font-size: 0.85rem; color: #dc2626;">{adaptation['european_approach']}</div>
+                <div style="background: #330000; padding: 0.75rem; border-radius: 6px;">
+                    <div style="font-weight: bold; color: white; font-size: 0.8rem; margin-bottom: 0.25rem;">EUROPA LEAGUE</div>
+                    <div style="font-size: 0.85rem; color: white;">{adaptation['european_approach']}</div>
                 </div>
             </div>
-            <div style="background: #fef3c7; padding: 0.5rem; border-radius: 6px;">
-                <span style="font-weight: bold; color: #d97706; font-size: 0.8rem;">EFFECTIVENESS: </span>
-                <span style="color: #d97706; font-size: 0.85rem;">{adaptation['effectiveness']}</span>
+            <div style="background: #330000; padding: 0.5rem; border-radius: 6px;">
+                <span style="font-weight: bold; color: #cc1c1c; font-size: 0.8rem;">EFFECTIVENESS: </span>
+                <span style="color: white; font-size: 0.85rem;">{adaptation['effectiveness']}</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1188,7 +1277,7 @@ elif tab_selection == "Europa League Campaign":
     
     with col1:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 1.5rem; border-radius: 10px;">
+        <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
             <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">✅ Positive Signs</h6>
             <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
                 <li>Maintained attacking identity with lower possession (45%)</li>
@@ -1202,7 +1291,7 @@ elif tab_selection == "Europa League Campaign":
     
     with col2:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 1.5rem; border-radius: 10px;">
+        <div class="metric-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
             <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">⚠️ Areas for Improvement</h6>
             <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
                 <li>Game management - led 2-0 but drew 2-2</li>
@@ -1216,14 +1305,14 @@ elif tab_selection == "Europa League Campaign":
     
     # European outlook
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #cc1c1c, #991c1c); color: white; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+    <div class="metric-card" style="background: linear-gradient(135deg, #4d0000, #330000);">
         <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">🌍 European Competition Verdict</h4>
         <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
             Forest's debut Europa League performance shows promising signs of tactical adaptability. 
             The ability to maintain core "Ange-ball" principles while adjusting possession approach 
             demonstrates growing tactical maturity under Postecoglou.
         </p>
-        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px;">
+        <div style="background: #330000; padding: 1rem; border-radius: 8px;">
             <p style="font-size: 0.95rem; line-height: 1.5; margin: 0;">
                 <strong>Key Takeaway:</strong> Igor Jesus's clinical finishing (2 goals from 1.98 xG) provides 
                 the European-level quality needed for continental success. The challenge now is consistency 
@@ -1246,7 +1335,7 @@ if st.session_state.is_playing and tab_selection == "Live Timeline":
 # Footer
 st.markdown("""
 ---
-<div style="text-align: center; color: #f0f0f0; margin-top: 2rem;">
+<div style="text-align: center; color: white; margin-top: 2rem;">
     <p>Football Tactical Dashboard | Burnley vs Nottingham Forest Analysis</p>
     <p style="font-size: 0.8rem;">Built with Streamlit | Data visualized with Plotly</p>
 </div>
