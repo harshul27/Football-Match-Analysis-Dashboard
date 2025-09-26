@@ -8,8 +8,7 @@ import re
 import random
 
 # --- Consolidated JSON Data from User's Files ---
-# This data structure has been consolidated and cleaned to resolve the KeyError issues.
-# It includes a broader range of statistics and is properly nested for easy access.
+# This function loads and processes all data, eliminating duplicates and consolidating metrics.
 @st.cache_data
 def load_data():
     data_str = """
@@ -25,10 +24,15 @@ def load_data():
         "big_chances_created": 34, "set_piece_xG": 7.2, "goals_added_gplus": 4.1,
         "yellow_cards": 47, "red_cards": 2
       },
-      "last_5_form": {"results": ["W","D","L","W","D"], "goals": [2,1,0,2,2], "xG": [1.34,0.87,0.75,1.43,1.21]},
-      "tactical_heatmaps": {"left_zone_pct": 34, "central_zone_pct": 32, "right_zone_pct": 34, "build_up": "Weighted toward left channel & overlaps"},
+      "last_6_form": {"results": ["W","D","L","W","W","D"], "goals": [2,1,0,2,2,1], "xG": [1.34,0.87,0.75,1.43,1.21,1.12]},
+      "tactical_heatmaps": {"left_zone_pct": 34, "central_zone_pct": 32, "right_zone_pct": 34},
       "strengths": ["Wide play, crossing, set pieces, field tilt, pressing"],
-      "weaknesses": ["Final third conversion, counterattack vulnerability"]
+      "weaknesses": ["Final third conversion, counterattack vulnerability"],
+      "historical_trends": [
+        {"year": 2025, "points_per_game": 1.41, "xG_for": 38.1, "xGA": 40.3},
+        {"year": 2024, "points_per_game": 1.14, "xG_for": 37.4, "xGA": 40.8},
+        {"year": 2023, "points_per_game": 1.29, "xG_for": 39.1, "xGA": 41.7}
+      ]
     },
     "fc_dallas": {
       "season_stats": {
@@ -40,26 +44,31 @@ def load_data():
         "big_chances_created": 32, "set_piece_xG": 6.5, "goals_added_gplus": -2.1,
         "yellow_cards": 52, "red_cards": 3
       },
-      "last_5_form": {"results": ["L","L","D","W","L"], "goals": [1,0,2,3,1], "xG": [1.09,0.88,1.17,1.45,1.13]},
-      "tactical_heatmaps": {"left_zone_pct": 29, "central_zone_pct": 40, "right_zone_pct": 31, "build_up": "Central overload, direct balls to Musa"},
+      "last_6_form": {"results": ["L","L","D","W","L","D"], "goals": [1,0,2,3,1,1], "xG": [1.09,0.88,1.17,1.45,1.13,1.06]},
+      "tactical_heatmaps": {"left_zone_pct": 29, "central_zone_pct": 40, "right_zone_pct": 31},
       "strengths": ["Central zone attacks, direct transitions, shot efficiency"],
-      "weaknesses": ["Set piece defending, low possession, defensive errors under pressure"]
+      "weaknesses": ["Set piece defending, low possession, defensive errors under pressure"],
+      "historical_trends": [
+        {"year": 2025, "points_per_game": 1.23, "xG_for": 41.0, "xGA": 47.2},
+        {"year": 2024, "points_per_game": 1.34, "xG_for": 40.5, "xGA": 47.7},
+        {"year": 2023, "points_per_game": 1.39, "xG_for": 41.9, "xGA": 49.3}
+      ]
     }
   },
   "players": {
     "portland_timbers": [
-      {"name": "Antony", "position": "LW", "goals": 7, "assists": 3, "xG": 7.7, "xA": 2.9, "rating": 7.32, "chances_created": 23, "dribbles": 29},
-      {"name": "David Da Costa", "position": "CAM", "goals": 4, "assists": 6, "xG": 2.9, "xA": 7.3, "rating": 7.39, "chances_created": 57, "dribbles": 19},
-      {"name": "James Pantemis", "position": "GK", "clean_sheets": 4, "save_percent": 77.1, "rating": 7.11},
-      {"name": "Kevin Kelsy", "position": "ST", "goals": 7, "assists": 2, "xG": 5.6, "xA": 1.3, "rating": 7.05, "chances_created": 13, "dribbles": 15},
-      {"name": "Felipe Mora", "position": "ST", "goals": 5, "assists": 3, "xG": 6.8, "xA": 2.3, "rating": 6.98, "chances_created": 9, "dribbles": 11}
+      {"name": "Antony", "position": "LW", "goals": 7, "assists": 3, "xG": 7.7, "xA": 2.9, "rating": 7.32, "chances_created": 23, "dribbles": 29, "passes": 781, "pass_accuracy": 79.5},
+      {"name": "David Da Costa", "position": "CAM", "goals": 4, "assists": 6, "xG": 2.9, "xA": 7.3, "rating": 7.39, "chances_created": 57, "dribbles": 19, "passes": 1090, "pass_accuracy": 86.5},
+      {"name": "James Pantemis", "position": "GK", "goals":0, "assists":0, "xG":0, "xA":0, "rating": 7.11, "clean_sheets": 4, "save_percent": 77.1},
+      {"name": "Kevin Kelsy", "position": "ST", "goals": 7, "assists": 2, "xG": 5.6, "xA": 1.3, "rating": 7.05, "chances_created": 13, "dribbles": 15, "passes": 613, "pass_accuracy": 77.4},
+      {"name": "Felipe Mora", "position": "ST", "goals": 5, "assists": 3, "xG": 6.8, "xA": 2.3, "rating": 6.98, "chances_created": 9, "dribbles": 11, "passes": 501, "pass_accuracy": 81.7}
     ],
     "fc_dallas": [
-      {"name": "Petar Musa", "position": "ST", "goals": 16, "assists": 6, "xG": 13.1, "xA": 3.4, "rating": 7.41, "chances_created": 15, "dribbles": 18},
-      {"name": "Luciano Acosta", "position": "AM", "goals": 5, "assists": 1, "xG": 5.5, "xA": 5.8, "rating": 7.31, "chances_created": 42, "dribbles": 22},
-      {"name": "Shaq Moore", "position": "RB", "goals": 3, "assists": 3, "xG": 2.2, "xA": 2.7, "rating": 6.95, "chances_created": 34, "dribbles": 10},
-      {"name": "Maarten Paes", "position": "GK", "clean_sheets": 3, "save_percent": 59.4, "rating": 6.89},
-      {"name": "Sebastien Ibeagha", "position": "CB", "goals": 1, "assists": 0, "rating": 6.75, "tackles": 29, "clearances": 139}
+      {"name": "Petar Musa", "position": "ST", "goals": 16, "assists": 6, "xG": 13.1, "xA": 3.4, "rating": 7.41, "chances_created": 15, "dribbles": 18, "passes": 512, "pass_accuracy": 78.0},
+      {"name": "Luciano Acosta", "position": "AM", "goals": 5, "assists": 1, "xG": 5.5, "xA": 5.8, "rating": 7.31, "chances_created": 42, "dribbles": 22, "passes": 921, "pass_accuracy": 87.1},
+      {"name": "Shaq Moore", "position": "RB", "goals": 3, "assists": 3, "xG": 2.2, "xA": 2.7, "rating": 6.95, "chances_created": 34, "dribbles": 10, "passes": 1277, "pass_accuracy": 84.0},
+      {"name": "Maarten Paes", "position": "GK", "goals":0, "assists":0, "xG":0, "xA":0, "rating": 6.89, "clean_sheets": 3, "save_percent": 59.4},
+      {"name": "Sebastien Ibeagha", "position": "CB", "goals": 1, "assists": 0, "xG": 0.5, "xA": 0.1, "rating": 6.75, "tackles": 29, "clearances": 139}
     ]
   },
   "ml_predictions": {
@@ -94,14 +103,12 @@ def load_data():
 class GeminiChatbot:
     def __init__(self, api_key):
         self.api_key = api_key
-        # Note: In a real-world app, you would use a secure, non-placeholder URL
         self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={self.api_key}"
 
     def _get_api_response(self, prompt, context_data):
         if not self.api_key:
-            return f"""
-Based on the data, Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. """
-
+            return "Based on the data, Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. "
+        
         # Simulating live data from a "search"
         if "latest injuries" in prompt.lower() or "latest news" in prompt.lower():
             # This is a mock response from a tool call to google_search
@@ -141,14 +148,14 @@ Based on the data, Portland's superior defensive numbers and home advantage make
                 fig = px.bar(df, x='Team', y=['Goals For', 'xG For'], barmode='group', title="Goals vs Expected Goals (xG)")
                 return fig
             elif 'form' in prompt_lower or 'recent matches' in prompt_lower:
-                ptfc_df = pd.DataFrame(context_data['teams']['portland_timbers']['last_5_form']).T
+                ptfc_df = pd.DataFrame(context_data['teams']['portland_timbers']['last_6_form']).T
                 ptfc_df.columns = [f'Match {i+1}' for i in range(len(ptfc_df.columns))]
-                fcd_df = pd.DataFrame(context_data['teams']['fc_dallas']['last_5_form']).T
+                fcd_df = pd.DataFrame(context_data['teams']['fc_dallas']['last_6_form']).T
                 fcd_df.columns = [f'Match {i+1}' for i in range(len(fcd_df.columns))]
                 
                 combined_df = pd.concat([ptfc_df, fcd_df], keys=['Portland Timbers', 'FC Dallas']).reset_index().rename(columns={'level_0': 'Team', 'level_1': 'Metric'})
                 
-                fig = px.line(combined_df, x='Metric', y=[f'Match {i+1}' for i in range(5)], color='Team', title="Last 5 Match Trends")
+                fig = px.line(combined_df, x='Metric', y=[f'Match {i+1}' for i in range(len(ptfc_df.columns))], color='Team', title="Last 6 Match Trends")
                 fig.update_layout(yaxis_title='Values', xaxis_title='Metric')
                 return fig
             else:
@@ -160,87 +167,105 @@ Based on the data, Portland's superior defensive numbers and home advantage make
 # --- Dashboard Section Functions with Enhanced Visuals ---
 
 def show_overview(data, ml_predictions):
-    st.header("📈 Season Overview", divider='green')
+    st.header("📈 Season Overview & Narrative", divider='green')
+    
+    st.markdown(
+        f"""
+        <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        As the season progresses, both teams find themselves in a tight race for a playoff spot. **Portland Timbers** currently sit 6th with 41 points from 29 games, while **FC Dallas** are 10th with 37 points from 30 games. This matchup is crucial for Dallas, who must secure a win to keep their playoff hopes alive. Both teams have a negative goal difference, indicating defensive struggles throughout the season. However, the Timbers have shown more stability at home and in recent form, which could give them a crucial advantage in this fixture.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("🟢 Portland Timbers")
         portland = data['teams']['portland_timbers']
         form_colors = {'W': '🟢', 'D': '🟡', 'L': '🔴'}
-        form_str = ' '.join([form_colors[result] for result in portland['last_5_form']['results']])
+        form_str = ' '.join([form_colors[result] for result in portland['last_6_form']['results']])
         
         st.markdown(f"**Record:** {portland['season_stats']['wins']}-{portland['season_stats']['draws']}-{portland['season_stats']['losses']} ({portland['season_stats']['points']} pts)")
         st.markdown(f"**Conference Position:** 6th")
-        st.markdown(f"**Recent Form (L5):** {form_str}")
+        st.markdown(f"**Recent Form (L6):** {form_str}")
         
     with col2:
         st.subheader("🔵 FC Dallas")
         dallas = data['teams']['fc_dallas']
         form_colors = {'W': '🟢', 'D': '🟡', 'L': '🔴'}
-        form_str = ' '.join([form_colors[result] for result in dallas['last_5_form']['results']])
+        form_str = ' '.join([form_colors[result] for result in dallas['last_6_form']['results']])
         
         st.markdown(f"**Record:** {dallas['season_stats']['wins']}-{dallas['season_stats']['draws']}-{dallas['season_stats']['losses']} ({dallas['season_stats']['points']} pts)")
         st.markdown(f"**Conference Position:** 10th")
-        st.markdown(f"**Recent Form (L5):** {form_str}")
+        st.markdown(f"**Recent Form (L6):** {form_str}")
 
     st.markdown("---")
     
     # Dynamic metrics with progress bars
     st.subheader("Key Metrics Comparison")
+    
+    ptfc_stats = data['teams']['portland_timbers']['season_stats']
+    fcd_stats = data['teams']['fc_dallas']['season_stats']
+    
     col1, col2, col3 = st.columns(3)
-    
-    ptfc = data['teams']['portland_timbers']['season_stats']
-    fcd = data['teams']['fc_dallas']['season_stats']
-    
     with col1:
-        st.metric(label="Goals For", value=f"{ptfc['goals_for']}", delta=f"vs Dallas: {ptfc['goals_for'] - fcd['goals_for']:+}")
-        st.progress(ptfc['goals_for'] / 50)
+        st.metric(label="Goals For", value=f"{ptfc_stats['goals_for']}", delta=f"vs Dallas: {ptfc_stats['goals_for'] - fcd_stats['goals_for']:+}")
+        st.progress(ptfc_stats['goals_for'] / 50)
     with col2:
-        st.metric(label="Expected Goals (xG)", value=f"{ptfc['xG_for']}", delta=f"vs Dallas: {ptfc['xG_for'] - fcd['xG_for']:+}")
-        st.progress(ptfc['xG_for'] / 50)
+        st.metric(label="Expected Goals (xG)", value=f"{ptfc_stats['xG_for']}", delta=f"vs Dallas: {ptfc_stats['xG_for'] - fcd_stats['xG_for']:+}")
+        st.progress(ptfc_stats['xG_for'] / 50)
     with col3:
-        st.metric(label="Possession", value=f"{ptfc['possession_pct']}%", delta=f"vs Dallas: {ptfc['possession_pct'] - fcd['possession_pct']:+}")
-        st.progress(ptfc['possession_pct'] / 100)
+        st.metric(label="Possession", value=f"{ptfc_stats['possession_pct']}%", delta=f"vs Dallas: {ptfc_stats['possession_pct'] - fcd_stats['possession_pct']:+}")
+        st.progress(ptfc_stats['possession_pct'] / 100)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
     col4, col5, col6 = st.columns(3)
     with col4:
-        st.metric(label="Goals Against", value=f"{fcd['goals_against']}", delta=f"vs Portland: {fcd['goals_against'] - ptfc['goals_against']:+}")
-        st.progress(fcd['goals_against'] / 50)
+        st.metric(label="Goals Against", value=f"{fcd_stats['goals_against']}", delta=f"vs Portland: {fcd_stats['goals_against'] - ptfc_stats['goals_against']:+}")
+        st.progress(fcd_stats['goals_against'] / 50)
     with col5:
-        st.metric(label="Expected Goals Against (xGA)", value=f"{fcd['xG_against']}", delta=f"vs Portland: {fcd['xG_against'] - ptfc['xG_against']:+}")
-        st.progress(fcd['xG_against'] / 50)
+        st.metric(label="Expected Goals Against (xGA)", value=f"{fcd_stats['xG_against']}", delta=f"vs Portland: {fcd_stats['xG_against'] - ptfc_stats['xG_against']:+}")
+        st.progress(fcd_stats['xG_against'] / 50)
     with col6:
-        st.metric(label="Pass Accuracy", value=f"{fcd['pass_accuracy_pct']}%", delta=f"vs Portland: {fcd['pass_accuracy_pct'] - ptfc['pass_accuracy_pct']:+}")
-        st.progress(fcd['pass_accuracy_pct'] / 100)
+        st.metric(label="Pass Accuracy", value=f"{fcd_stats['pass_accuracy_pct']}%", delta=f"vs Portland: {fcd_stats['pass_accuracy_pct'] - ptfc_stats['pass_accuracy_pct']:+}")
+        st.progress(fcd_stats['pass_accuracy_pct'] / 100)
 
 def show_performance(data):
     st.header("📊 Performance & Tactical Analysis", divider='green')
+    
+    ptfc_stats = data['teams']['portland_timbers']['season_stats']
+    fcd_stats = data['teams']['fc_dallas']['season_stats']
+    
+    st.markdown(
+        f"""
+        <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        **Narrative:** The radar chart below visualizes the core strengths and weaknesses of each team. **Portland** excels in areas like possession and pressing, which allows them to dictate the pace of the game. They are also a major threat from set pieces. **Dallas**, on the other hand, is a more direct, counter-attacking side that relies on being clinical in front of goal despite having lower overall possession. The battle for midfield control and converting chances will be key.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Radar chart for team comparison
     st.subheader("Team Strengths: A Tactical Snapshot")
     categories = ['Attack', 'Defense', 'Possession', 'Pressing', 'Set Pieces', 'Creativity']
     
-    ptfc_stats = data['teams']['portland_timbers']['season_stats']
-    fcd_stats = data['teams']['fc_dallas']['season_stats']
-    
     # Correctly normalize metrics for a 0-100 scale
     ptfc_values = [
-        ptfc_stats['goals_for'] / 50 * 100,
-        100 - (ptfc_stats['goals_against'] / 50 * 100),
+        (ptfc_stats['goals_for'] / 50) * 100,
+        100 - (ptfc_stats['goals_against'] / 50) * 100,
         ptfc_stats['possession_pct'],
-        100 - (ptfc_stats['ppda'] / 20 * 100),
-        ptfc_stats['set_piece_xG'] / 10 * 100,
-        ptfc_stats['big_chances_created'] / 40 * 100
+        100 - (ptfc_stats['ppda'] / 20) * 100,
+        (ptfc_stats['set_piece_xG'] / 10) * 100,
+        (ptfc_stats['big_chances_created'] / 40) * 100
     ]
     fcd_values = [
-        fcd_stats['goals_for'] / 50 * 100,
-        100 - (fcd_stats['goals_against'] / 50 * 100),
+        (fcd_stats['goals_for'] / 50) * 100,
+        100 - (fcd_stats['goals_against'] / 50) * 100,
         fcd_stats['possession_pct'],
-        100 - (fcd_stats['ppda'] / 20 * 100),
-        fcd_stats['set_piece_xG'] / 10 * 100,
-        fcd_stats['big_chances_created'] / 40 * 100
+        100 - (fcd_stats['ppda'] / 20) * 100,
+        (fcd_stats['set_piece_xG'] / 10) * 100,
+        (fcd_stats['big_chances_created'] / 40) * 100
     ]
 
     fig = go.Figure()
@@ -248,7 +273,7 @@ def show_performance(data):
     fig.add_trace(go.Scatterpolar(r=fcd_values, theta=categories, fill='toself', name='FC Dallas', marker_color='#3B82F6'))
     fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=True, height=500)
     st.plotly_chart(fig, use_container_width=True)
-
+        
     # --- New: Tactical Heatmap Visualization ---
     st.markdown("---")
     st.subheader("Attack Zone Breakdown")
@@ -268,10 +293,47 @@ def show_performance(data):
     fig_zones = px.bar(zones_df, x='Team', y='Percentage', color='Zone',
                        barmode='group', title="Chance Creation by Attack Zone")
     st.plotly_chart(fig_zones, use_container_width=True)
+    
+    st.markdown(
+        f"""
+        **Narrative:** The heatmap analysis highlights key tactical differences. **Portland** distributes their attack evenly across the field, but their wide play is their primary strength. **Dallas**, however, shows a clear preference for a central overload, relying on players like Petar Musa to create and convert chances from the middle of the pitch.
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # --- New: Historical Trend Chart ---
+    st.markdown("---")
+    st.subheader("Historical Performance Trend")
+    
+    ptfc_history = pd.DataFrame(data['teams']['portland_timbers']['historical_trends'])
+    fcd_history = pd.DataFrame(data['teams']['fc_dallas']['historical_trends'])
+    ptfc_history['Team'] = 'Portland Timbers'
+    fcd_history['Team'] = 'FC Dallas'
+    
+    combined_history = pd.concat([ptfc_history, fcd_history])
+    
+    fig_history = px.line(combined_history, x='year', y='points_per_game', color='Team',
+                          title='Points Per Game Trend (Last 3 Seasons)', markers=True)
+    st.plotly_chart(fig_history, use_container_width=True)
+    
+    st.markdown(
+        f"""
+        **Narrative:** A quick look at the last three seasons reveals some interesting trends. **Portland** has shown a gradual improvement in their points per game, suggesting a team that is finding its footing. **Dallas**, on the other hand, has seen a slight decline, indicating potential inconsistency. This trend makes Portland's current form and home advantage even more significant.
+        """
+    )
 
 
 def show_key_players(data):
     st.header("⭐ Key Players Analysis", divider='green')
+    
+    st.markdown(
+        f"""
+        <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        **Narrative:** This section provides a detailed look at each team's key players. Their statistics reveal their roles in the team's tactics. For Portland, the creative forces of **Antony** and **David Da Costa** on the wings and in the center are crucial. For Dallas, the focus is squarely on their star striker, **Petar Musa**, who is responsible for a significant portion of their goals and xG.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     col1, col2 = st.columns(2)
     
@@ -350,8 +412,31 @@ def show_match_intelligence(data, ml_predictions):
     with summary_col:
         st.markdown(f"""
         <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; color: black;">
-        The data suggests a tightly contested match. Portland's home advantage and defensive solidity, especially from their goalkeeper, give them a crucial edge. While FC Dallas boasts a clinical finisher in Petar Musa, their overall defensive vulnerabilities and lower possession numbers are likely to be exploited. Expect Portland to control possession and win the game through a decisive moment, potentially from a set piece or a key creative pass from a player like David Da Costa.         </div>
+        **Narrative:** The data suggests a tightly contested match. **Portland's home advantage** and defensive solidity, especially from their goalkeeper **James Pantemis** (77.1% save rate), give them a crucial edge. While FC Dallas boasts a clinical finisher in **Petar Musa** (16 goals), their overall defensive vulnerabilities and lower possession numbers are likely to be exploited. Expect Portland to control possession and win the game through a decisive moment, potentially from a set piece or a key creative pass from a player like David Da Costa. 
+        </div>
         """, unsafe_allow_html=True)
+        
+    st.markdown("---")
+    
+    st.subheader("Tactical Battle Scenarios")
+    
+    ptfc_strengths = data['teams']['portland_timbers']['strengths']
+    ptfc_weaknesses = data['teams']['portland_timbers']['weaknesses']
+    fcd_strengths = data['teams']['fc_dallas']['strengths']
+    fcd_weaknesses = data['teams']['fc_dallas']['weaknesses']
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.success("**Portland's Game Plan**")
+        st.markdown("- **Exploit Wide Areas:** Use wide players like Antony and Da Costa to create overlaps and crosses.")
+        st.markdown("- **Win Set Pieces:** Force corners and free kicks, as this is a key strength for the team.")
+        st.markdown("- **High Press:** Use their effective press to win the ball back in dangerous areas.")
+        
+    with col2:
+        st.info("**FC Dallas' Game Plan**")
+        st.markdown("- **Central Overload:** Funnel attacks through the center to get the ball to Petar Musa.")
+        st.markdown("- **Counter-Attacks:** Capitalize on Portland's turnovers with quick, direct transitions.")
+        st.markdown("- **Defend Deep:** Absorb pressure and defend well in their own box against Portland's crosses and set pieces.")
 
 def show_chatbot(data, ml_predictions):
     st.header("💬 AI Match Analyst", divider='green')
