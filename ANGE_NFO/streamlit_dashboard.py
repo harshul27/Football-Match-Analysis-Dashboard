@@ -393,7 +393,7 @@ elif tab_selection == "Tactical Analysis":
         
         st.markdown("""
         <div class="tactical-note">
-            <h5 style="color: #dc2626; margin-bottom: 0.5rem;">Tactical Setup:</h5>
+            <h5 style="color: #dc2626; font-weight: bold; margin-bottom: 0.5rem;">Tactical Setup:</h5>
             <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#e0e0e0;">
                 5-4-1 defensive block transitioning to 3-2-3-2 in attack. Cullen-Laurent pivot controls tempo, 
                 with Hartman providing aggressive left-sided width.
@@ -418,7 +418,7 @@ elif tab_selection == "Tactical Analysis":
         
         st.markdown("""
         <div class="tactical-note" style="border-left: 4px solid #cc1c1c;">
-            <h5 style="color: #cc1c1c; margin-bottom: 0.5rem;">Tactical Setup:</h5>
+            <h5 style="color: #cc1c1c; font-weight: bold; margin-bottom: 0.5rem;">Tactical Setup:</h5>
             <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color:#e0e0e0;">
                 4-2-3-1 with high fullbacks in Ange's possession-based system. Patient build-up through triangular 
                 combinations with Luiz-Anderson double pivot.
@@ -647,7 +647,7 @@ elif tab_selection == "Live Timeline":
         height=600,
         paper_bgcolor="#1a1a1a",
         plot_bgcolor="#1a1a1a",
-        font_color="#e0e0e0"
+        font_color="#f0f0f0"
     )
     
     st.plotly_chart(fig_multi, use_container_width=True)
@@ -776,7 +776,7 @@ elif tab_selection == "Manager Comparison":
             height=400,
             paper_bgcolor="#1a1a1a",
             plot_bgcolor="#1a1a1a",
-            font_color="#e0e0e0"
+            font_color="#f0f0f0"
         )
         
         st.plotly_chart(fig_radar, use_container_width=True)
@@ -1294,4 +1294,54 @@ elif tab_selection == "Europa League Campaign":
         </div>
         """, unsafe_allow_html=True)
     
-    with
+    with col2:
+        st.markdown("""
+        <div class="metric-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+            <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">⚠️ Areas for Improvement</h6>
+            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+                <li>Game management - led 2-0 but drew 2-2</li>
+                <li>Set piece conversion - 0/5 free kicks converted</li>
+                <li>Possession control in European competition</li>
+                <li>Individual defensive errors still occurring</li>
+                <li>Need better squad rotation for fixture congestion</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # European outlook
+    st.markdown("""
+    <div class="metric-card" style="background: linear-gradient(135deg, #260000, #1a0000);">
+        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">🌍 European Competition Verdict</h4>
+        <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
+            Forest's debut Europa League performance shows promising signs of tactical adaptability. 
+            The ability to maintain core "Ange-ball" principles while adjusting possession approach 
+            demonstrates growing tactical maturity under Postecoglou.
+        </p>
+        <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
+            <p style="font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                <strong>Key Takeaway:</strong> Igor Jesus's clinical finishing (2 goals from 1.98 xG) provides 
+                the European-level quality needed for continental success. The challenge now is consistency 
+                across both domestic and European fixtures while managing squad rotation effectively.
+            </p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Auto-play functionality for timeline
+if st.session_state.is_playing and tab_selection == "Live Timeline":
+    time.sleep(1.5)
+    if st.session_state.timeline_index < len(timeline_data) - 1:
+        st.session_state.timeline_index += 1
+        st.rerun()
+    else:
+        st.session_state.is_playing = False
+        st.rerun()
+
+# Footer
+st.markdown("""
+---
+<div style="text-align: center; color: #f0f0f0; margin-top: 2rem;">
+    <p>Football Tactical Dashboard | Burnley vs Nottingham Forest Analysis</p>
+    <p style="font-size: 0.8rem;">Built with Streamlit | Data visualized with Plotly</p>
+</div>
+""", unsafe_allow_html=True)
