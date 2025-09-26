@@ -9,7 +9,7 @@ import random
 
 # Place your Gemini API key here.
 # This keeps the key private and within the code itself.
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+GEMINI_API_KEY = "AIzaSyDqb9Ki3aZimFOcqVLyR0kiT4OGO2V2dgM"
 
 # --- Hardcoded JSON Data from User's Files ---
 # This function loads and processes all data, eliminating duplicates and consolidating metrics.
