@@ -1,4 +1,50 @@
-import streamlit as st
+# European performance comparison
+    st.subheader("European vs Premier League Performance Analysis")
+    
+    european_comparison = pd.DataFrame({
+        'Competition': ['Premier League (avg)', 'Europa League vs Betis'],
+        'Possession %': [63, 45],
+        'xG Generated': [1.80, 1.98],
+        'Pass Accuracy': [85, 86],
+        'Final Third Entries': [39, 26],
+        'Cross Efficiency': [26, 38]
+    })
+    
+    # Create comparison charts
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        fig_comp1 = go.Figure()
+        fig_comp1.add_trace(go.Bar(
+            name='Possession & Pass Accuracy',
+            x=['Possession %', 'Pass Accuracy %'],
+            y=[63, 85],
+            name_='Premier League',
+            marker_color='#d42c20',
+            text=['63%', '85%'],
+            textposition='outside'
+        ))
+        fig_comp1.add_trace(go.Bar(
+            name='Europa League',
+            x=['Possession %', 'Pass Accuracy %'],
+            y=[45, 86],
+            marker_color='#ff6b35',
+            text=['45%', '86%'],
+            textposition='outside'
+        ))
+        fig_comp1.update_layout(
+            title="Possession & Accuracy Comparison", 
+            height=400,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font_color='#f5f5f5',
+            barmode='group'
+        )
+        st.plotly_chart(fig_comp1, use_container_width=True)
+    
+    with col2:
+        fig_comp2 = go.Figure()
+        fig_import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -249,6 +295,49 @@ if tab_selection == "Match Overview":
             <h3>Forest xG</h3>
             <div style="font-size: 2rem; font-weight: bold;">2.13</div>
             <div>vs 1.08 Burnley</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Ange-ball metrics explanation
+    st.subheader("Advanced Metrics Explained")
+    st.markdown("Understanding the unique tactical measurements that define Postecoglou's system")
+    
+    metrics_explanation = [
+        {
+            "metric": "Possession Progression Rate (118 m/min)",
+            "definition": "Speed at which Forest moves possession upfield in meters per minute. Shows directness despite patient build-up.",
+            "context": "Higher than typical possession teams - Ange maintains tempo even with high possession percentage."
+        },
+        {
+            "metric": "Sustained Threat Sequences (19)",
+            "definition": "Number of possession chains with 8+ passes ending in/around opposition box. Measures patient build-up quality.",
+            "context": "Exceptional for 45% possession - shows efficiency when Forest do build patiently."
+        },
+        {
+            "metric": "3+ Player Triangles (17)",
+            "definition": "Count of successful wide triangle formations exploited during build-up. Classic Ange tactical pattern.",
+            "context": "High frequency indicates players understanding positional relationships in Ange's system."
+        },
+        {
+            "metric": "Defensive Line Height (52m)",
+            "definition": "Average distance of back line from Forest's goal during opposition build-up phases.",
+            "context": "Extremely high-risk approach - higher than even at Spurs, shows tactical confidence in Europe."
+        },
+        {
+            "metric": "Cross Efficiency (38%)",
+            "definition": "Percentage of crosses leading to shots or xThreat creation. Quality over quantity approach.",
+            "context": "Significantly higher than Premier League performance (26%) - suggests tactical adaptation."
+        }
+    ]
+    
+    for metric in metrics_explanation:
+        st.markdown(f"""
+        <div style="background: #2d1b1b; padding: 1.25rem; border-radius: 8px; border-left: 4px solid #d42c20; margin: 0.75rem 0;">
+            <h6 style="color: #d42c20; font-weight: bold; margin-bottom: 0.5rem;">{metric['metric']}</h6>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f5f5f5;">{metric['definition']}</p>
+            <div style="font-size: 0.85rem; font-style: italic; color: #ff6b35;">
+                <strong>Context:</strong> {metric['context']}
+            </div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -703,17 +792,17 @@ elif tab_selection == "Manager Comparison":
             <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
                 <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">+22%</div>
                 <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Possession Increase</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">From Nuno's 41% to Ange's 63%</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">From Nuno's 42% to Ange's 63%</div>
             </div>
             <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">2.13</div>
-                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">xG per 90 vs Burnley</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">111% increase from Nuno era</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">1.80</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">xG per 90 Average</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">73% increase from Nuno era (1.04)</div>
             </div>
             <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">12.7</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: #f5f5f5;">11.8</div>
                 <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem;">Current PPDA</div>
-                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">37% more aggressive pressing</div>
+                <div style="font-size: 0.7rem; opacity: 0.75; margin-top: 0.25rem;">40% more aggressive pressing vs Nuno (19.7)</div>
             </div>
         </div>
     </div>
@@ -727,14 +816,26 @@ elif tab_selection == "Manager Comparison":
     with col1:
         st.markdown("##### Core Tactical Metrics")
         comparison_data = {
-            'Metric': ['Possession %', 'PPDA', 'xG per 90', 'Final Third Entries'],
-            'Nuno Era': [41.0, 20.1, 1.01, 18],
-            'Ange Era': [63.0, 12.7, 1.80, 39],
-            'Ange Spurs': [57.2, 13.6, 1.70, 58]
+            'Metric': ['Possession %', 'PPDA', 'xG per 90', 'Final Third Entries', 'Pass Accuracy', 'Points per Game'],
+            'Nuno Era': [42.0, 19.7, 1.04, 19, 78, 1.77],
+            'Ange Era': [63.0, 11.8, 1.80, 39, 85, 1.20],
+            'Ange Spurs': [57.2, 13.6, 1.70, 58, 87, 0.85]
         }
         
         comparison_df = pd.DataFrame(comparison_data)
         st.dataframe(comparison_df, use_container_width=True)
+        
+        st.markdown("""
+        <div class="insight-box" style="margin-top: 1rem;">
+            <h6 style="font-weight: bold; margin-bottom: 0.5rem;">Key Observations:</h6>
+            <ul style="font-size: 0.85rem; line-height: 1.4;">
+                <li><strong>Possession:</strong> 50% increase from Nuno's direct style</li>
+                <li><strong>Pressing:</strong> PPDA nearly halved - much more aggressive</li>
+                <li><strong>Attack:</strong> 73% more xG generation under Ange</li>
+                <li><strong>Results:</strong> Points per game dropped initially but trend improving</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
         # Radar chart
@@ -987,36 +1088,60 @@ elif tab_selection == "Europa League Campaign":
     </div>
     """, unsafe_allow_html=True)
     
-    # Campaign assessment
-    st.subheader("Europa League Campaign Assessment")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="insight-box">
-            <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">Positive Signs</h6>
-            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
-                <li>Maintained attacking identity with lower possession (45%)</li>
-                <li>Clinical finishing from Igor Jesus (2 goals from 1.98 xG)</li>
-                <li>All "Ange-ball" metrics above European averages</li>
-                <li>Defensive line height (52m) shows tactical confidence</li>
-            </ul>
+    # European competition verdict
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #d42c20, #b71c1c); color: #f5f5f5; padding: 2rem; border-radius: 10px; margin-top: 2rem;">
+        <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">European Competition Analysis Verdict</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+            <div>
+                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Tactical Maturity Demonstrated</h6>
+                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                    <li><strong>Adaptive Philosophy:</strong> Maintained Ange-ball principles while adjusting possession approach (45% vs 63%)</li>
+                    <li><strong>Improved Efficiency:</strong> Higher xG (1.98 vs 1.80) with 18% less possession</li>
+                    <li><strong>Quality Enhancement:</strong> Cross effectiveness up 46% (38% vs 26%)</li>
+                    <li><strong>Clinical Edge:</strong> Igor Jesus converting 1.20 xG into 2 goals shows European-level finishing</li>
+                </ul>
+            </div>
+            <div>
+                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Areas Requiring Focus</h6>
+                <ul style="font-size: 0.9rem; line-height: 1.6;">
+                    <li><strong>Game Management:</strong> Led 2-0 but allowed comeback - need better control</li>
+                    <li><strong>Set Piece Execution:</strong> 0/5 free kicks converted despite good positioning</li>
+                    <li><strong>Squad Rotation:</strong> Managing domestic and European fixture demands</li>
+                    <li><strong>Defensive Discipline:</strong> 52m line height risky against elite European attacks</li>
+                </ul>
+            </div>
         </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="tactical-note">
-            <h6 style="font-size: 1.1rem; font-weight: bold; margin-bottom: 1rem;">Areas for Improvement</h6>
-            <ul style="font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.5rem;">
-                <li>Game management - led 2-0 but drew 2-2</li>
-                <li>Set piece conversion - 0/5 free kicks converted</li>
-                <li>Possession control in European competition</li>
-                <li>Need better squad rotation for fixture congestion</li>
-            </ul>
+        
+        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 8px;">
+            <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Statistical Context & Projections</h6>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center; margin-bottom: 1rem;">
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold;">118</div>
+                    <div style="font-size: 0.8rem;">m/min progression</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold;">86%</div>
+                    <div style="font-size: 0.8rem;">pass accuracy</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold;">17</div>
+                    <div style="font-size: 0.8rem;">triangle formations</div>
+                </div>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: bold;">2.0x</div>
+                    <div style="font-size: 0.8rem;">goal conversion vs PL</div>
+                </div>
+            </div>
+            <p style="font-size: 0.95rem; line-height: 1.6; margin: 0; text-align: center;">
+                <strong>European Outlook:</strong> Forest's debut European performance under Postecoglou demonstrates 
+                promising tactical adaptability while maintaining core identity. The challenge shifts from implementation 
+                to consistency - managing the demanding schedule while fine-tuning European-specific game management skills. 
+                Igor Jesus provides the clinical edge needed, but squad depth will be crucial for sustained European success.
+            </p>
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
 # Auto-play functionality for timeline
 if st.session_state.is_playing and tab_selection == "Live Timeline":
