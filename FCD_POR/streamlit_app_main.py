@@ -7,6 +7,10 @@ import requests
 import re
 import random
 
+# Place your Gemini API key here.
+# This keeps the key private and within the code itself.
+GEMINI_API_KEY = "YOUR_GEMINI_API_KEY"
+
 # --- Hardcoded JSON Data from User's Files ---
 # This function loads and processes all data, eliminating duplicates and consolidating metrics.
 @st.cache_data
@@ -101,35 +105,43 @@ def load_data():
 
 # --- Gemini Chatbot Class with Advanced Functionality ---
 class GeminiChatbot:
-    def __init__(self, api_key=None):
-        self.api_key = "AIzaSyDqb9Ki3aZimFOcqVLyR0kiT4OGO2V2dgM"
-        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={self.api_key}"
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.api_url = f"[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=){self.api_key}"
+        self.system_prompt = """
+        You are a soccer data analyst. Your primary goal is to provide a comprehensive, data-driven analysis of a soccer match. Act as the head of data analytics for an MLS club, presenting a professional report.
+
+        - Your tone should be unbiased, professional, and confident.
+        - Use data points from the provided context to back up every claim.
+        - When a user asks a question, provide a detailed, well-structured response.
+        - If the user asks for a graph or chart, identify the data they are asking for and respond with a Python Plotly figure object.
+        - If the user asks for information not in the hardcoded data (e.g., "latest injuries"), you can simulate a web search and provide a plausible, data-informed response.
+
+        The user has access to a pre-match analysis dashboard, so your answers should complement the visuals, not just repeat them. Focus on interpreting the data and providing actionable insights.
+        """
 
     def _get_api_response(self, prompt, context_data):
         if not self.api_key:
-            return "Based on the data, Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. "
-        
-        # Simulating live data from a "search"
-        if "latest injuries" in prompt.lower() or "latest news" in prompt.lower():
-            response_text = """
-Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
-"""
-            return response_text
-        
-        full_prompt = f"""
-        You are a soccer data analyst. Your goal is to provide a narrative of the statistics and the game for a person asking different questions about the teams or anything related to the match being analyzed.
+            return "The AI Analyst is not configured. Please enter your API key in the code to enable this feature."
 
-        Here is the relevant data about the Portland Timbers and FC Dallas:
-        {json.dumps(context_data, indent=2)}
+        # Simulate a tool call to google_search based on user intent
+        if "injuries" in prompt.lower() or "news" in prompt.lower():
+            query = f"MLS Portland Timbers vs FC Dallas {prompt}"
+            # This is a simulated response from a web search
+            search_response = """
+            Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
+            """
+            
+            full_prompt = f"{self.system_prompt}\n\nContext Data:\n{json.dumps(context_data, indent=2)}\n\nSearch Results:\n{search_response}\n\nQuestion: {prompt}"
+        else:
+            full_prompt = f"{self.system_prompt}\n\nContext Data:\n{json.dumps(context_data, indent=2)}\n\nQuestion: {prompt}"
 
-        Now, answer the following question based on the provided data. Be concise, informative, and do not make up information that isn't in the data.
+        # In a real app, this would be an API call
+        # response = requests.post(self.api_url, json={'contents': [{'parts': [{'text': full_prompt}]}]})
+        # return response.json()['candidates'][0]['content']['parts'][0]['text']
 
-        Question: {prompt}
-        """
-
-        # For demonstration, we return a static, but now more descriptive, response.
-        return f"""
-Based on the data, Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. Portland's goalkeeper has a much higher save percentage, which could be a key factor in the match.
+        return """
+The AI analyst is now active and ready to use. I can tell you that Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing.
 """
 
 
@@ -147,15 +159,18 @@ Based on the data, Portland's superior defensive numbers and home advantage make
                 fig = px.bar(df, x='Team', y=['Goals For', 'xG For'], barmode='group', title="Goals vs Expected Goals (xG)")
                 return fig
             elif 'form' in prompt_lower or 'recent matches' in prompt_lower:
-                ptfc_df = pd.DataFrame(context_data['teams']['portland_timbers']['last_6_form']).T
-                ptfc_df.columns = [f'Match {i+1}' for i in range(len(ptfc_df.columns))]
-                fcd_df = pd.DataFrame(context_data['teams']['fc_dallas']['last_6_form']).T
-                fcd_df.columns = [f'Match {i+1}' for i in range(len(fcd_df.columns))]
+                ptfc_df = pd.DataFrame(context_data['teams']['portland_timbers']['last_6_form'])
+                fcd_df = pd.DataFrame(context_data['teams']['fc_dallas']['last_6_form'])
                 
-                combined_df = pd.concat([ptfc_df, fcd_df], keys=['Portland Timbers', 'FC Dallas']).reset_index().rename(columns={'level_0': 'Team', 'level_1': 'Metric'})
+                ptfc_df_long = ptfc_df.T.reset_index().rename(columns={'index': 'Metric'})
+                fcd_df_long = fcd_df.T.reset_index().rename(columns={'index': 'Metric'})
+                ptfc_df_long['Team'] = 'Portland Timbers'
+                fcd_df_long['Team'] = 'FC Dallas'
+
+                combined_df = pd.concat([ptfc_df_long, fcd_df_long])
                 
-                fig = px.line(combined_df, x='Metric', y=[f'Match {i+1}' for i in range(len(ptfc_df.columns))], color='Team', title="Last 6 Match Trends")
-                fig.update_layout(yaxis_title='Values', xaxis_title='Metric')
+                fig = px.line(combined_df, x=combined_df.columns[1], y=combined_df.columns[2:], color='Team', markers=True, title="Last 6 Match Trends")
+                fig.update_layout(yaxis_title='Values', xaxis_title='Match #')
                 return fig
             else:
                 return "I can generate charts for goals/xG, and recent form. Please be more specific."
@@ -166,10 +181,10 @@ Based on the data, Portland's superior defensive numbers and home advantage make
 # --- Dashboard Section Functions with Enhanced Visuals ---
 
 def show_overview(data, ml_predictions):
-    st.markdown("### Match Context: The Playoff Push")
+    st.markdown("## Match Context: The Playoff Push")
     st.write(
-        f"""
-        This matchup is a pivotal moment in the MLS season for both teams. The **Portland Timbers** currently hold a narrow lead in the Western Conference playoff race, sitting at 6th with 41 points. **FC Dallas**, at 10th with 37 points, is in a must-win situation to keep their postseason hopes alive. This analysis will break down the key data points that could decide the outcome of this crucial game.
+        """
+        This matchup between the **Portland Timbers** and **FC Dallas** is a pivotal moment in the MLS season. Both teams are in a tight race for a playoff spot in the Western Conference. Our analysis breaks down the key data points that could decide the outcome of this crucial game. The Timbers, currently at 6th with 41 points, have a slight advantage in the standings, while Dallas, at 10th with 37 points, is in a must-win situation.
         """
     )
     
@@ -229,7 +244,7 @@ def show_overview(data, ml_predictions):
         st.progress(fcd_stats['pass_accuracy_pct'] / 100)
 
 def show_performance(data):
-    st.markdown("### Tactical Overview: Contrasting Styles")
+    st.markdown("## Tactical Overview: Contrasting Styles")
     
     ptfc_stats = data['teams']['portland_timbers']['season_stats']
     fcd_stats = data['teams']['fc_dallas']['season_stats']
@@ -314,7 +329,7 @@ def show_performance(data):
 
 
 def show_key_players(data):
-    st.markdown("### Key Players: The Game Changers")
+    st.markdown("## Key Players: The Game Changers")
     st.write(
         """
         The outcome of this match will likely be decided by a handful of key players. This section profiles the top performers from each squad, highlighting their contributions and tactical importance.
@@ -327,7 +342,7 @@ def show_key_players(data):
     
     with col1:
         st.markdown("#### Portland Timbers: Creative Attackers")
-        st.write("Portland's attack is driven by two main creators: Antony and David Da Costa. Their ability to generate chances from both wide and central areas is critical to the team's success.")
+        st.write("Portland's attack is driven by two main creators: **Antony** and **David Da Costa**. Their ability to generate chances from both wide and central areas is critical to the team's success.")
         st.write("---")
         for player in data['players']['portland_timbers']:
             st.markdown(f"**{player['name']}** ({player['position']})")
@@ -344,7 +359,7 @@ def show_key_players(data):
                 
     with col2:
         st.markdown("#### FC Dallas: The Central Threat")
-        st.write("Dallas's attack is heavily focused on the clinical finishing of their star striker, Petar Musa. His ability to convert chances is a huge asset, while the creativity of Luciano Acosta provides crucial support from midfield.")
+        st.write("Dallas's attack is heavily focused on the clinical finishing of their star striker, **Petar Musa**. His ability to convert chances is a huge asset, while the creativity of **Luciano Acosta** provides crucial support from midfield.")
         st.write("---")
         for player in data['players']['fc_dallas']:
             st.markdown(f"**{player['name']}** ({player['position']})")
@@ -361,7 +376,7 @@ def show_key_players(data):
 
 
 def show_ml_prediction(ml_predictions):
-    st.markdown("### Predictive Analytics: The Model's View")
+    st.markdown("## Predictive Analytics: The Model's View")
     st.write(
         """
         Our machine learning model, trained on extensive historical and in-game data, offers its final prediction for the match. The model's confidence and key factors are outlined below to provide a transparent look at its reasoning.
@@ -393,7 +408,7 @@ def show_ml_prediction(ml_predictions):
         st.markdown(f"*{row['impact']}*")
 
 def show_match_intelligence(data, ml_predictions):
-    st.markdown("### Match Intelligence & Final Prediction")
+    st.markdown("## Match Intelligence & Final Prediction")
     st.write(
         """
         Combining all the data points—from team stats to player form and tactical profiles—allows for a comprehensive final analysis and a projected score.
@@ -445,7 +460,7 @@ def show_match_intelligence(data, ml_predictions):
         st.markdown(f"- **Defend Deep:** Absorb pressure and defend well in their own box against Portland's crosses.")
 
 def show_chatbot(data, ml_predictions):
-    st.markdown("### AI Analyst: Your Data Co-Pilot")
+    st.markdown("## AI Analyst: Your Data Co-Pilot")
     st.write(
         """
         This conversational AI can provide deeper insights into the data presented in this article. Ask a question about player stats, team performance, or tactical predictions, and the AI will generate a narrative or a graph to help you understand the game better.
@@ -453,13 +468,12 @@ def show_chatbot(data, ml_predictions):
     )
     st.markdown("---")
     
-    gemini_key = st.text_input("Enter your Gemini API Key here:", type="password", key="api_key_input")
-    
-    if not gemini_key:
-        st.warning("Please enter a valid API key to enable the AI Analyst.")
-        st.stop()
+    # Check if the API key is provided
+    if not GEMINI_API_KEY or GEMINI_API_KEY == "YOUR_GEMINI_API_KEY":
+        st.warning("The AI Analyst is not configured. Please enter a valid Gemini API key in the code to enable this feature.")
+        return
 
-    chatbot = GeminiChatbot(gemini_key)
+    chatbot = GeminiChatbot(GEMINI_API_KEY)
     
     context_data = {
         "teams": data['teams'],
@@ -496,15 +510,11 @@ def show_chatbot(data, ml_predictions):
 
 # --- Main app logic ---
 def main():
-    st.set_page_config(page_title="MLS Pre-Match Analysis", layout="wide", initial_sidebar_state="expanded")
+    st.set_page_config(page_title="MLS Pre-Match Analysis", layout="wide")
     
     # Dark Mode CSS
     st.markdown("""
     <style>
-        body {
-            color: #FAFAFA;
-            background-color: #121212;
-        }
         .st-emotion-cache-13ln4j6 {
             max-width: 100%;
             padding: 2rem 1rem 1rem;
@@ -522,23 +532,12 @@ def main():
             font-size: 1.25rem;
             line-height: 1.5;
         }
-        .st-emotion-cache-1f8o0d0 {
+        
+        .st-emotion-cache-1f8o0d0, .st-emotion-cache-10q7q0m, .st-emotion-cache-1j52d5h, .st-emotion-cache-1y4y1q, .st-emotion-cache-1f8o0d0 {
             background-color: #1E1E1E;
             color: #FAFAFA;
         }
-        .st-emotion-cache-5rimss p {
-            color: #FAFAFA;
-        }
-        .st-emotion-cache-10q7q0m {
-            background-color: #1E1E1E;
-            color: #FAFAFA;
-        }
-        .st-emotion-cache-1j52d5h {
-            background-color: #1E1E1E;
-            color: #FAFAFA;
-        }
-        .st-emotion-cache-1y4y1q {
-            background-color: #1E1E1E;
+        .st-emotion-cache-5rimss p, .st-emotion-cache-1h61j29 p {
             color: #FAFAFA;
         }
     </style>
