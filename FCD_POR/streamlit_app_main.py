@@ -102,7 +102,7 @@ def load_data():
 # --- Gemini Chatbot Class with Advanced Functionality ---
 class GeminiChatbot:
     def __init__(self, api_key=None):
-        self.api_key = api_key
+        self.api_key = "AIzaSyDqb9Ki3aZimFOcqVLyR0kiT4OGO2V2dgM"
         self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={self.api_key}"
 
     def _get_api_response(self, prompt, context_data):
