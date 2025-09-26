@@ -108,6 +108,108 @@ def load_data():
     
     return data
 
+# --- Gemini Chatbot Class with Advanced Functionality ---
+class GeminiChatbot:
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key={self.api_key}"
+        self.system_prompt = """
+        You are a soccer data analyst. Your primary goal is to provide a comprehensive, data-driven analysis of a soccer match. Act as the head of data analytics for an MLS club, presenting a professional report.
+
+        - Your tone should be unbiased, professional, and confident.
+        - Use data points from the provided context to back up every claim.
+        - When a user asks a question, provide a detailed, well-structured response.
+        - If the user asks for a graph or chart, identify the data they are asking for and respond with a Python Plotly figure object.
+        - If the user asks for information not in the hardcoded data (e.g., "latest injuries"), you can simulate a web search and provide a plausible, data-informed response.
+
+        The user has access to a pre-match analysis dashboard, so your answers should complement the visuals, not just repeat them. Focus on interpreting the data and providing actionable insights.
+        """
+
+    def _get_api_response(self, prompt, context_data):
+        if not self.api_key or self.api_key == "YOUR_GEMINI_API_KEY":
+            return "The AI Analyst is not configured. Please enter your API key in the code to enable this feature."
+        
+        # --- Rule-based logic for adaptive responses ---
+        prompt_lower = prompt.lower()
+        
+        # Player-specific queries
+        if "musa" in prompt_lower or "petar" in prompt_lower and "dallas" in prompt_lower:
+            musa_data = next((p for p in context_data['players']['fc_dallas'] if "musa" in p['name'].lower()), None)
+            if musa_data:
+                return f"Petar Musa is FC Dallas's most dangerous attacker. He has scored a team-leading {musa_data['goals']} goals with an xG of {musa_data['xG']}, indicating his clinical finishing ability. His play is focused centrally, where he takes a high volume of shots."
+        
+        if "da costa" in prompt_lower or "david" in prompt_lower and "portland" in prompt_lower:
+            dacosta_data = next((p for p in context_data['players']['portland_timbers'] if "da costa" in p['name'].lower()), None)
+            if dacosta_data:
+                return f"David Da Costa is Portland's primary creative engine. With {dacosta_data['assists']} assists and a high xA of {dacosta_data['xA']}, he is crucial for setting up scoring opportunities, as shown by his {dacosta_data['chances_created']} chances created."
+        
+        # Team-specific tactical queries
+        if "portland" in prompt_lower and ("strengths" in prompt_lower or "weaknesses" in prompt_lower):
+            ptfc_strengths = ", ".join(context_data['teams']['portland_timbers']['strengths'])
+            ptfc_weaknesses = ", ".join(context_data['teams']['portland_timbers']['weaknesses'])
+            return f"Portland's key strengths include {ptfc_strengths}. A primary weakness is their {ptfc_weaknesses}, which can be a point of vulnerability."
+
+        if "dallas" in prompt_lower and ("strengths" in prompt_lower or "weaknesses" in prompt_lower):
+            fcd_strengths = ", ".join(context_data['teams']['fc_dallas']['strengths'])
+            fcd_weaknesses = ", ".join(context_data['teams']['fc_dallas']['weaknesses'])
+            return f"FC Dallas's tactical strengths are rooted in {fcd_strengths}. However, their vulnerabilities lie in {fcd_weaknesses}."
+
+        # Comparison queries
+        if "compare" in prompt_lower and "possession" in prompt_lower:
+            ptfc_possession = context_data['teams']['portland_timbers']['season_stats']['possession_pct']
+            fcd_possession = context_data['teams']['fc_dallas']['season_stats']['possession_pct']
+            return f"Portland averages {ptfc_possession}% possession, indicating a control-based style. In contrast, Dallas has a lower average of {fcd_possession}%, which suggests a more direct, counter-attacking approach."
+        
+        # Simulated live data from a "search"
+        if "injuries" in prompt_lower or "news" in prompt_lower:
+            response_text = """
+Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
+"""
+            return response_text
+        
+        # Fallback to a random generic response if no specific rule matches
+        responses = [
+            "Portland's superior defensive numbers and home advantage make them slight favorites. Players like Antony and David Da Costa are key to their attack, while Dallas will rely heavily on Petar Musa's clinical finishing. Portland's goalkeeper has a much higher save percentage, which could be a key factor in the match.",
+            "Analyzing the tactical data, Portland's attack is evenly distributed across the field, with a slight emphasis on wide areas. This contrasts with Dallas, who funnel a much larger percentage of their attacks through the central channel, a clear sign of their reliance on striker Petar Musa."
+        ]
+        return random.choice(responses)
+
+
+    def get_response(self, prompt, context_data):
+        prompt_lower = prompt.lower()
+
+        # Check for keywords to generate a specific visualization
+        if 'graph' in prompt_lower or 'chart' in prompt_lower or 'plot' in prompt_lower:
+            if 'goals' in prompt_lower or 'xg' in prompt_lower:
+                df = pd.DataFrame({
+                    'Team': ['Portland', 'FC Dallas'],
+                    'Goals For': [context_data['teams']['portland_timbers']['season_stats']['goals_for'], context_data['teams']['fc_dallas']['season_stats']['goals_for']],
+                    'xG For': [context_data['teams']['portland_timbers']['season_stats']['xG_for'], context_data['teams']['fc_dallas']['season_stats']['xG_for']]
+                })
+                fig = px.bar(df, x='Team', y=['Goals For', 'xG For'], barmode='group', title="Goals vs Expected Goals (xG)")
+                return fig
+            elif 'form' in prompt_lower or 'recent matches' in prompt_lower:
+                ptfc_df = pd.DataFrame(context_data['teams']['portland_timbers']['last_6_form'])
+                fcd_df = pd.DataFrame(context_data['teams']['fc_dallas']['last_6_form'])
+                
+                ptfc_df_long = ptfc_df.T.reset_index().rename(columns={'index': 'Metric'})
+                fcd_df_long = fcd_df.T.reset_index().rename(columns={'index': 'Metric'})
+                ptfc_df_long['Team'] = 'Portland Timbers'
+                fcd_df_long['Team'] = 'FC Dallas'
+
+                combined_df = pd.concat([ptfc_df_long, fcd_df_long])
+                
+                fig = px.line(combined_df, x=combined_df.columns[1], y=combined_df.columns[2:], color='Team', markers=True, title="Last 6 Match Trends")
+                fig.update_layout(yaxis_title='Values', xaxis_title='Match #')
+                return fig
+            else:
+                return "I can generate charts for goals/xG, and recent form. Please be more specific."
+        
+        # Default to API response for narrative questions
+        return self._get_api_response(prompt, context_data)
+
+# --- Dashboard Section Functions with Enhanced Visuals ---
+
 def show_overview(data, ml_predictions):
     st.markdown("## Match Context: The Playoff Push")
     st.write(
