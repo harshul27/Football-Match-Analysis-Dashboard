@@ -6,29 +6,571 @@ from plotly.subplots import make_subplots
 import time
 import json
 
-# Load data from the provided JSON file
-try:
-    with open('NFO&BUR.txt') as f:
-        full_data = [json.loads(line) for line in f]
-except FileNotFoundError:
-    st.error("Error: The file 'NFO&BUR.txt' was not found. Please ensure it is in the same directory as the app script.")
-    st.stop()
+# Provided JSON data as a string
+json_string = """
+[
+    {
+      "match": "Burnley vs Nottingham Forest",
+      "competition": "Premier League",
+      "date": "2025-09-20",
+      "score": {
+        "Burnley": 1,
+        "Nottingham_Forest": 1
+      },
+      "xG": {
+        "Burnley": 1.08,
+        "Nottingham_Forest": 2.13
+      },
+      "possession": {
+        "Burnley": {
+          "total": 37,
+          "first_half": 35,
+          "second_half": 40
+        },
+        "Nottingham_Forest": {
+          "total": 63,
+          "first_half": 65,
+          "second_half": 60
+        }
+      },
+      "passing": {
+        "Burnley": {
+          "completed": 307,
+          "accuracy_percent": 76
+        },
+        "Nottingham_Forest": {
+          "completed": 501,
+          "accuracy_percent": 85
+        }
+      },
+      "shots": {
+        "Burnley": {
+          "total": 12,
+          "on_target": 5,
+          "shots_box": 7
+        },
+        "Nottingham_Forest": {
+          "total": 17,
+          "on_target": 8,
+          "shots_box": 12
+        }
+      },
+      "key_events": [
+        {"minute": 2, "team": "Nottingham_Forest", "event": "Goal", "player": "Neco Williams"},
+        {"minute": 20, "team": "Burnley", "event": "Goal", "player": "Jaidon Anthony", "assist": "L. Foster", "error": "Zinchenko"}
+      ],
+      "defensive_errors": [
+        {"minute": 19, "team": "Nottingham_Forest", "player": "Zinchenko", "type": "failed clearance", "result": "goal against"}
+      ],
+      "ppda": {
+        "Nottingham_Forest": {
+          "interval_1_15": 8.5,
+          "interval_16_30": 11,
+          "interval_31_45": 15,
+          "interval_46_60": 9
+        },
+        "Burnley": {
+          "interval_1_15": 12,
+          "interval_16_30": 14,
+          "interval_31_45": 13,
+          "interval_46_60": 10
+        }
+      },
+      "fouls_committed": {
+        "Burnley": 12,
+        "Nottingham_Forest": 11,
+        "individual": {
+          "Burnley": {"Q. Hartman": 3, "K. Walker": 2, "L. Tchaouna": 2, "M. Estève": 1},
+          "Nottingham_Forest": {"Morato": 3, "M. Gibbs-White": 2, "D. Bakwa": 2}
+        }
+      },
+      "corners": {
+        "Burnley": 5,
+        "Nottingham_Forest": 8
+      },
+      "aerial_duels": {
+        "Burnley": {
+          "won": 7,
+          "attempted": 19,
+          "success_percent": 38
+        },
+        "Nottingham_Forest": {
+          "won": 12,
+          "attempted": 19,
+          "success_percent": 63
+        }
+      },
+      "set_pieces": {
+        "shots_from_corners": {
+          "Burnley": 2,
+          "Nottingham_Forest": 6
+        }
+      },
+      "player_highlights": {
+        "Nottingham_Forest": {
+          "Zinchenko": {
+            "progressive_passes": 5,
+            "final_third_entries": 30,
+            "pass_accuracy": 91
+          },
+          "Chris_Wood": {
+            "box_touches": 7,
+            "shots": 3,
+            "aerial_duels_won": 5
+          },
+          "Gibbs_White": {
+            "recoveries": 11,
+            "box_passes": 7,
+            "shot_creating_actions": 2
+          }
+        },
+        "Burnley": {
+          "Cullen": {
+            "recoveries": 7,
+            "passes_completed": 32
+          },
+          "Anthony": {
+            "shots": 3,
+            "shot_creating_actions": 1
+          },
+          "Hartman": {
+            "crosses": 4,
+            "advanced_map_position": "highest"
+          }
+        }
+      },
+      "build_up_patterns": {
+        "Nottingham_Forest": "Back four buildup, Zinchenko progression left, Luiz-Anderson rotations, Gibbs-White dropping deep",
+        "Burnley": "Back three buildup, Cullen & Laurent double pivot, Hartman advanced"
+      },
+      "transition_exposure": {
+        "Burnley": {
+          "pivot_defense_gap_avg_m": 18.8,
+          "pivot_defense_gap_max_m": 24
+        },
+        "Nottingham_Forest": {
+          "pivot_defense_gap_avg_m": 14.1,
+          "pivot_defense_gap_max_m": 21
+        }
+      },
+      "flank_isolation_metric": {
+        "total_1v1s": 7,
+        "Ndoye_vs_Walker": 4,
+        "Anthony_vs_Williams": 3
+      },
+      "cross_effectiveness_index": {
+        "Nottingham_Forest": 0.24,
+        "Hudson_Odoi": 0.50,
+        "Ndoye": 0.33,
+        "Burnley": 0.12
+      }
+    },
+    {
+      "club": "Nottingham Forest",
+      "comparison_periods": [
+        {
+          "coach": "Nuno Espirito Santo",
+          "season": "2024/25",
+          "formation": "4-2-3-1, 4-4-2 (occasional back five)",
+          "possession_percent_avg": 41,
+          "pass_accuracy_percent": 78,
+          "ppda": 20.1,
+          "passes_per_game": 340,
+          "long_ball_ratio_percent": 17.4,
+          "xG_per90": 1.01,
+          "xGA_per90": 1.18,
+          "build_up": "Direct, use target man, wide overlaps, quick vertical counters",
+          "set_piece_xG_per_game": 0.44,
+          "aerial_duels_won_per_game": 17,
+          "flank_overloads_per_half": 1.2,
+          "transition_initiations_per_game": 12,
+          "final_third_entries_per_game": 18,
+          "notes": "Defensive solidity, mid/low block, tactical adaptiveness, strong set-pieces"
+        },
+        {
+          "coach": "Ange Postecoglou",
+          "season": "2025/26",
+          "sample_match": "Burnley vs Nottingham Forest, Sep 20 2025",
+          "formation": "4-2-3-1 base, high fullbacks, invert pivots, pressing triggers",
+          "possession_percent_avg": 63,
+          "pass_accuracy_percent": 85,
+          "ppda": 12.7,
+          "passes_per_game": 501,
+          "long_ball_ratio_percent": 9,
+          "xG_per90": 2.13,
+          "xGA_per90": 1.08,
+          "build_up": "Short passing, progressive fullbacks, flank triangles, patient possession",
+          "set_piece_xG_per_game": 0.22,
+          "aerial_duels_won_per_game": 12,
+          "flank_overloads_per_half": 3.5,
+          "transition_initiations_per_game": 22,
+          "final_third_entries_per_game": 39,
+          "notes": "Possession-based, higher press line, more progressive attacks, transition vulnerability when countered"
+        }
+      ],
+      "difference_analysis": {
+        "possession": "Higher under Ange (+22%)",
+        "pass_accuracy": "Up 7% with Ange",
+        "attacking_patterns": "Direct vertical counters under Nuno vs wide triangle build-up and patient attacks under Ange",
+        "pressing": "PPDA halved under Ange; much more aggressive pressing",
+        "transition_control": "Double transition initiations under Ange, also higher exposure to counter",
+        "final_third_entries": "More than doubled under Ange",
+        "aerial_strength": "Declined from Nuno to Ange (fewer duels won, focus on ground passing)",
+        "set_piece_share": "Down under Ange (fewer set-piece chances, less aerial focus)",
+        "tactical_notes": "Team moved from target man/deep block to wide-passing, high-line possession. Defensive exposure higher under Ange, attacking threat and box occupation much improved."
+      }
+    },
+    {
+      "date": "2025-09-20",
+      "competition": "Premier League",
+      "teams": ["Burnley", "Nottingham Forest"],
+      "score": {"Burnley": 1, "Nottingham Forest": 1},
+      "lineups": {
+        "Burnley": [
+          {"name": "Martin Dubravka", "position": "GK"},
+          {"name": "Kyle Walker", "position": "RB"},
+          {"name": "Hjalmar Ekdal", "position": "CB"},
+          {"name": "Maxime Estève", "position": "CB"},
+          {"name": "Quilindschy Hartman", "position": "LB"},
+          {"name": "Josh Cullen", "position": "CM"},
+          {"name": "Florentino", "position": "CDM"},
+          {"name": "Josh Laurent", "position": "CM"},
+          {"name": "Loum Tchaouna", "position": "RW"},
+          {"name": "Lyle Foster", "position": "ST"},
+          {"name": "Jaidon Anthony", "position": "LW"}
+        ],
+        "Nottingham_Forest": [
+          {"name": "Matz Sels", "position": "GK"},
+          {"name": "Neco Williams", "position": "RB"},
+          {"name": "Nikola Milenkovic", "position": "CB"},
+          {"name": "Morato", "position": "CB"},
+          {"name": "Oleksandr Zinchenko", "position": "LB"},
+          {"name": "Douglas Luiz", "position": "CDM"},
+          {"name": "Elliot Anderson", "position": "CM"},
+          {"name": "Dilane Bakwa", "position": "RW"},
+          {"name": "Morgan Gibbs-White", "position": "CAM"},
+          {"name": "Dan Ndoye", "position": "LW"},
+          {"name": "Chris Wood", "position": "ST"}
+        ]
+      },
+      "stat_totals": {
+        "possession": {"Burnley": 37, "Forest": 63},
+        "xG": {"Burnley": 1.08, "Forest": 2.13},
+        "shots": {"Burnley": 12, "Forest": 17},
+        "shots_on_target": {"Burnley": 5, "Forest": 8},
+        "big_chances": {"Burnley": 1, "Forest": 3},
+        "passes": {"Burnley": 307, "Forest": 501},
+        "pass_accuracy": {"Burnley": 76, "Forest": 85},
+        "dribble_success": {"Burnley": 65, "Forest": 40},
+        "fouls_committed": {"Burnley": 12, "Forest": 11},
+        "corners": {"Burnley": 4, "Forest": 5},
+        "yellow_cards": {"Burnley": 1, "Forest": 1},
+        "aerial_duels": {"Burnley_won": 7, "Forest_won": 12, "attempted": 19},
+        "progressive_passes": {"Burnley": 28, "Forest": 45},
+        "crosses": {"Burnley_completed": 6, "Forest_completed": 8},
+        "recoveries": {"Burnley": 44, "Forest": 54}
+      },
+      "timeline_events": [
+        {"minute": 2, "team": "Forest", "event": "Goal", "player": "Neco Williams"},
+        {"minute": 20, "team": "Burnley", "event": "Goal", "player": "Jaidon Anthony", "assist": "Lyle Foster"},
+        {"minute": 35, "team": "Burnley", "event": "Yellow Card", "player": "Florentino"},
+        {"minute": 54, "team": "Forest", "event": "Yellow Card", "player": "Douglas Luiz"}
+      ],
+      "player_stats": {
+        "Burnley": [
+          {"name": "M. Dubravka", "saves": 7, "high_claims": 2, "passes": 31, "completion": 78},
+          {"name": "K. Walker", "tackles": 2, "interceptions": 1, "clearances": 4, "fouls": 2, "crosses": 2},
+          {"name": "Q. Hartman", "shots": 1, "crosses": 4, "fouls": 3, "dribbles": 2, "duels_won": 6},
+          {"name": "J. Cullen", "passes": 56, "completion": 87, "progressive_passes": 7, "recoveries": 9},
+          {"name": "J. Anthony", "shots": 3, "on_target": 2, "goal": 1, "dribbles": 3, "SCA": 1}
+        ],
+        "Nottingham_Forest": [
+          {"name": "Matz Sels", "saves": 4, "passes": 48, "completion": 79},
+          {"name": "N Williams", "goal": 1, "tackles": 2, "interceptions": 2, "crosses": 7, "duels_won": 5},
+          {"name": "Zinchenko", "progressive_passes": 5, "pass_accuracy": 91, "final_third_entries": 13, "fouls": 1},
+          {"name": "Gibbs-White", "passes": 51, "completion": 84, "recoveries": 8, "dribbles": 3, "SCA": 2},
+          {"name": "Chris Wood", "shots": 3, "touches_box": 7, "aerials_won": 4}
+        ]
+      }
+    },
+    {
+      "comparison": [
+        {
+          "manager": "Ange Postecoglou",
+          "club": "Tottenham Hotspur",
+          "season": "2024/25 EPL",
+          "matches": 34,
+          "points_per_game": 0.85,
+          "goals_for_per_game": 1.6,
+          "goals_against_per_game": 1.47,
+          "xG_per_game": 1.7,
+          "xGA_per_game": 1.68,
+          "total_possession": 57.2,
+          "passes_per_game": 538,
+          "pass_accuracy": 87,
+          "progressive_passes_per_game": 38,
+          "thru_balls_per_game": 3,
+          "crosses_completed_per_game": 7,
+          "PPDA": 13.6,
+          "defensive_actions_per_game": 68,
+          "allowed_xG_per_90_Europa": 0.54,
+          "attack_build_up": "2-3-5, inverted fullbacks, focus on 3rd-man combinations, high pressing line",
+          "key_innovative_metrics": {
+            "Sustained Threat Index": 0.28,
+            "Line Breaks per 90": 13.1,
+            "Attacking Third Passes per 90": 58,
+            "Average Build-up Length": 9
+          }
+        },
+        {
+          "manager": "Ange Postecoglou",
+          "club": "Nottingham Forest",
+          "season": "2025/26 EPL (first matches)",
+          "matches": 5,
+          "points_per_game": 1.2,
+          "goals_for_per_game": 1.4,
+          "goals_against_per_game": 1.1,
+          "xG_per_game": 1.8,
+          "xGA_per_game": 1.13,
+          "total_possession": 63,
+          "passes_per_game": 501,
+          "pass_accuracy": 85,
+          "progressive_passes_per_game": 40,
+          "midfield_regain_per_game": 12,
+          "overloads_left_per_game": 4,
+          "PPDA": 11.8,
+          "attack_build_up": "Wide, progressive triangles, fullbacks advanced, high-possession game",
+          "key_innovative_metrics": {
+            "Transition Exp": 2,
+            "Flank Usage %": 54,
+            "Wing Overload Frequency": 5,
+            "Build-Up Chains 10+": 17
+          }
+        },
+        {
+          "manager": "Nuno Espirito Santo",
+          "club": "Nottingham Forest",
+          "season": "2024/25 EPL",
+          "matches": 35,
+          "points_per_game": 1.77,
+          "goals_for_per_game": 1.46,
+          "goals_against_per_game": 1.12,
+          "xG_per_game": 1.04,
+          "xGA_per_game": 1.23,
+          "possession": 42,
+          "passes_per_game": 343,
+          "long_balls_per_game": 56,
+          "crosses_completed_per_game": 6,
+          "pass_accuracy": 78,
+          "PPDA": 19.7,
+          "overload_frequency": 1.2,
+          "formation": "4-2-3-1 to 5-4-1 situational block",
+          "attack_build_up": "Direct, target man usage, emphasis on set pieces and counters",
+          "key_innovative_metrics": {
+            "Transition Initiations": 11,
+            "Set Piece xG %": 34,
+            "Aerial Duels Won/90": 17,
+            "Final Third Entries": 19
+          }
+        }
+      ]
+    },
+    {
+      "match_info": {
+        "competition": "UEFA Europa League",
+        "date": "2025-09-24",
+        "opponent": "Real Betis",
+        "score": {"Forest": 2, "Betis": 2},
+        "goals": [
+          {"minute": 18, "player": "Igor Jesus", "assist": "Gibbs-White"},
+          {"minute": 23, "player": "Igor Jesus", "assist": "Douglas Luiz"}
+        ],
+        "points_earned": 1
+      },
+      "team_stats": {
+        "possession_percent": 45,
+        "minutes_played": 90,
+        "xG": 1.98,
+        "xA": 1.44,
+        "xAG": 1.12,
+        "goals_scored": 2,
+        "goals_per_90": 2,
+        "assists": 2,
+        "assists_per_90": 2,
+        "shots_total": 16,
+        "shots_on_target": 6,
+        "shots_off_target": 7,
+        "shots_frame": 2,
+        "goals_per_shot": 0.125,
+        "goals_per_shots_on_target": 0.333,
+        "average_shot_distance": 13.7,
+        "dribbles": 21,
+        "successful_dribbles": 14,
+        "dribbles_per_90": 21,
+        "successful_dribbles_per_90": 14,
+        "key_passes": 8,
+        "key_passes_per_90": 8,
+        "chances_created": 12,
+        "chances_created_per_90": 12,
+        "penalty_goals": 0,
+        "total_goal_contributions": 4,
+        "passes_completed": 344,
+        "passes_completed_per_90": 344,
+        "pass_accuracy_percent": 86,
+        "long_pass_accuracy_percent": 71,
+        "short_pass_completed": 163,
+        "medium_pass_completed": 135,
+        "long_pass_completed": 46,
+        "short_pass_attempted": 176,
+        "medium_pass_attempted": 142,
+        "long_pass_attempted": 65,
+        "short_pass_completion": 93,
+        "medium_pass_completion": 95,
+        "long_pass_completion": 71,
+        "passes_completed_in_box_per_90": 14,
+        "passes_into_box": 27,
+        "passes_into_final_third": 21,
+        "crosses_total": 10,
+        "crosses_per_90": 10,
+        "passes_completed_per_90": 344,
+        "progressive_passes": 23,
+        "progressive_passes_received": 19,
+        "distance_covered_per_90": 106.7,
+        "top_acceleration_kph": 31.2,
+        "live_ball_passes": 280,
+        "dead_ball_passes": 64,
+        "fouls_committed": 11,
+        "fouls_committed_per_90": 11,
+        "fouls_won": 8,
+        "fouls_won_per_90": 8,
+        "yellow_cards": 2,
+        "red_cards": 0,
+        "non_penalty_xG": 1.98,
+        "carries": 41,
+        "progressive_ball_carries": 16,
+        "touches": 473,
+        "interceptions": 13,
+        "blocks": 10,
+        "shot_creating_actions": 15,
+        "goal_creating_actions": 2,
+        "total_passing_distance": 4128,
+        "progressive_passing_distance": 1203,
+        "free_kicks_attempted": 5,
+        "free_kicks_converted": 0,
+        "offside_committed": 1,
+        "through_balls": 2,
+        "switches": 7,
+        "throw_ins_taken": 21,
+        "corner_kicks_taken": 3,
+        "inswinging_corners": 1,
+        "outswinging_corners": 2,
+        "straight_corners": 0,
+        "goals_left_foot": 0,
+        "goals_right_foot": 1,
+        "goals_outside_box": 0,
+        "goals_by_headers": 1,
+        "tap_ins": 0,
+        "passes_blocked": 5,
+        "shot_creating_live_ball_passes": 7,
+        "shot_creating_dead_ball_passes": 3,
+        "successful_take_ons_leading_shot": 4,
+        "counter_attack_goals": 1,
+        "tackles_def_3rd": 7,
+        "tackles_mid_3rd": 9,
+        "tackles_att_3rd": 5,
+        "dribblers_tackled": 6,
+        "dribblers_challenged": 7,
+        "challenges_lost": 3,
+        "clearances": 22,
+        "clearances_on_line": 1,
+        "errors_leading_to_opp_shot": 1,
+        "sub_appearances": 4,
+        "xGA": 1.64,
+        "own_goals": 0,
+        "penalty_kicks_conceded": 0,
+        "balls_recovered": 30,
+        "duels": 54,
+        "duels_won": 27,
+        "aerial_duels": 18,
+        "aerial_duels_won": 10
+      },
+      "heatmap_and_video": {
+        "operating_areas": ["left wing", "attacking third", "central pivot zone", "right flank late"],
+        "aggressive_areas": ["Betis defensive box", "right halfspace", "central final third"],
+        "percentage_aggressive_area": 34,
+        "movement_patterns": ["left-right switches", "Gibbs-White central to left", "Ndoye inside-out runs", "Luiz pivoting"],
+        "goalscoring_areas": ["header inside 6-yard box", "low shot left side of box"],
+        "finishing_corners": ["bottom left", "central low", "header middle"]
+      },
+      "player_stats_sample": {
+        "Igor Jesus": {
+          "goals": 2,
+          "shots": 4,
+          "assists": 0,
+          "minutes": 90,
+          "xG": 1.2,
+          "dribbles": 3,
+          "touches_in_box": 9,
+          "aerial_duels_won": 3,
+          "progressive_carries": 5,
+          "distance_covered": 10.1
+        },
+        "Morgan Gibbs-White": {
+          "assists": 1,
+          "xA": 0.44,
+          "chances_created": 3,
+          "progressive_passes": 4,
+          "minutes": 90,
+          "key_passes": 2,
+          "distance_covered": 11.8,
+          "passes_into_box": 3
+        },
+        "Douglas Luiz": {
+          "assists": 1,
+          "progressive_passes": 5,
+          "tackles": 3,
+          "minutes": 90,
+          "interceptions": 2,
+          "blocks": 1,
+          "passes_completed": 52
+        }
+      },
+      "angeball_metrics": {
+        "possession_progression_rate": 118,
+        "average_pass_length": 13.6,
+        "sustained_threat_sequences": 19,
+        "width_usage_percent": 42,
+        "rest-defense effectiveness": 7.1,
+        "defensive_line_height": 52,
+        "fastest_field_tilt_transition": 5.3,
+        "recoveries_after_losing_ball": 10,
+        "3+player-possession_triangles": 17,
+        "flank_isolation_metric": 3,
+        "xThreat_from_passes": 0.44,
+        "shot-chain_possession_sequences": 11,
+        "cross_efficiency": 0.38,
+        "counterattack_directness": 0.67,
+        "final_third_entries": 26
+      }
+    }
+]
+"""
+full_data = [json.loads(line) for line in json_string.strip().split('\n') if line]
 
 # Extract relevant data from the JSON list
 # This assumes the data for each section is in a separate JSON object within the file.
-match_info = next((item for item in full_data if "match" in item and item["match"] == "Burnley vs Nottingham Forest"), None)
-player_stats_match = next((item for item in full_data if "player_stats_match" in item), None)
-player_highlights = next((item for item in full_data if "player_highlights" in item), None)
-comparison_data = next((item for item in full_data if "comparison" in item), None)
-comparison_periods = next((item for item in full_data if "comparison_periods" in item), None)
-ppda_segments = next((item for item in full_data if "ppda_segments" in item), None)
-xg_timeline = next((item for item in full_data if "xg_timeline" in item), None)
-cross_effectiveness = next((item for item in full_data if "cross_effectiveness" in item), None)
+match_info = next((item for item in full_data if "match" in item), None)
+ange_comparison_data = next((item for item in full_data if "club" in item and item["club"] == "Nottingham Forest"), None)
+europa_data = next((item for item in full_data if "match_info" in item and item["match_info"]["competition"] == "UEFA Europa League"), None)
+innovative_metrics_data = next((item for item in full_data if "innovative_metrics" in item), None)
+player_coaching_comparison_data = next((item for item in full_data if "player_coaching_comparison" in item), None)
+flank_transition_data = next((item for item in full_data if "flank_isolation_metric" in item and "cross_effectiveness_index" in item), None)
 
 # Handle the case where any data is missing
-if not all([match_info, player_stats_match, player_highlights, comparison_data, comparison_periods, ppda_segments, xg_timeline, cross_effectiveness]):
-    st.error("Error: One or more data sections were not found in 'NFO&BUR.txt'.")
+if not all([match_info, ange_comparison_data, europa_data, innovative_metrics_data, player_coaching_comparison_data, flank_transition_data]):
+    st.error("Error: One or more data sections were not found in the provided text.")
     st.stop()
+
 
 # Page configuration
 st.set_page_config(
@@ -159,82 +701,80 @@ if 'is_playing' not in st.session_state:
     st.session_state.is_playing = False
 
 # Match data
-match_info_full = data[0]
-match_stats_full = data[2]
-europa_data = data[3]
-ange_comparison_data = data[1]
+match_stats = next(item for item in full_data if "stat_totals" in item)
 
-# Timeline data (using data from the provided JSON)
+# Timeline data
 timeline_data = [
     {'minute': 0, 'Burnley': 0, 'Forest': 0, 'event': 'Kick-off', 
      'description': 'Forest begin with high press, Zinchenko wide positioning',
-     'ppda_forest': ppda_segments['ppda_segments'][0]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][0]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
-    {'minute': 2, 'Burnley': xg_timeline['xg_timeline'][0]['Burnley'], 'Forest': xg_timeline['xg_timeline'][0]['Forest'], 'event': 'Williams Goal', 
+     'ppda_forest': innovative_metrics_data['innovative_metrics']['PPDA'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_1_15'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
+    {'minute': 2, 'Burnley': 0, 'Forest': 0.11, 'event': 'Williams Goal', 
      'description': 'Early goal from Neco Williams, build-up through Luiz retention',
-     'ppda_forest': ppda_segments['ppda_segments'][0]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][0]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
-    {'minute': 15, 'Burnley': xg_timeline['xg_timeline'][1]['Burnley'], 'Forest': xg_timeline['xg_timeline'][1]['Forest'], 'event': 'Forest Press Peak', 
+     'ppda_forest': innovative_metrics_data['innovative_metrics']['PPDA'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_1_15'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
+    {'minute': 15, 'Burnley': 0.25, 'Forest': 0.34, 'event': 'Forest Press Peak', 
      'description': 'Forest PPDA at 8.5, Burnley struggling with high press',
-     'ppda_forest': ppda_segments['ppda_segments'][0]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][0]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
-    {'minute': 20, 'Burnley': xg_timeline['xg_timeline'][1]['Burnley'], 'Forest': xg_timeline['xg_timeline'][1]['Forest'], 'event': 'Anthony Goal', 
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_1_15'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_1_15'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
+    {'minute': 20, 'Burnley': 0.42, 'Forest': 0.34, 'event': 'Anthony Goal', 
      'description': 'Burnley equalizer after Zinchenko error - failed clearance leads to goal',
-     'ppda_forest': ppda_segments['ppda_segments'][1]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][1]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
-    {'minute': 30, 'Burnley': xg_timeline['xg_timeline'][2]['Burnley'], 'Forest': xg_timeline['xg_timeline'][2]['Forest'], 'event': 'Tactical Networks', 
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_16_30'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_16_30'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
+    {'minute': 30, 'Burnley': 0.48, 'Forest': 0.67, 'event': 'Tactical Networks', 
      'description': 'Forest triangulate left side (Zinchenko-Ndoye-Luiz), Burnley overload right',
-     'ppda_forest': ppda_segments['ppda_segments'][1]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][1]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
-    {'minute': 45, 'Burnley': xg_timeline['xg_timeline'][2]['Burnley'], 'Forest': xg_timeline['xg_timeline'][2]['Forest'], 'event': 'Half-time', 
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_16_30'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_16_30'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
+    {'minute': 45, 'Burnley': 0.51, 'Forest': 1.20, 'event': 'Half-time', 
      'description': 'Forest dominate chances creation, PPDA drops to 15.0',
-     'ppda_forest': ppda_segments['ppda_segments'][2]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][2]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info_full['possession']['Burnley']['first_half']},
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_31_45'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_31_45'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['first_half'], 'possession_burnley': match_info['possession']['Burnley']['first_half']},
     {'minute': 54, 'Burnley': 0.61, 'Forest': 1.35, 'event': 'Hudson-Odoi Introduction', 
      'description': 'Forest increase width, subs enhance crossing threat',
-     'ppda_forest': ppda_segments['ppda_segments'][3]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][3]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info_full['possession']['Burnley']['second_half']},
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_46_60'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info['possession']['Burnley']['second_half']},
     {'minute': 60, 'Burnley': 0.68, 'Forest': 1.52, 'event': 'Pressing Shift', 
      'description': 'Burnley switch to higher press, Forest press drops',
-     'ppda_forest': ppda_segments['ppda_segments'][3]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][3]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info_full['possession']['Burnley']['second_half']},
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_46_60'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info['possession']['Burnley']['second_half']},
     {'minute': 75, 'Burnley': 0.89, 'Forest': 1.89, 'event': 'Laurent On', 
      'description': 'Burnley bring on Laurent to stiffen pivot, Hartman overlaps more',
-     'ppda_forest': ppda_segments['ppda_segments'][4]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][4]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info_full['possession']['Burnley']['second_half']},
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_46_60'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info['possession']['Burnley']['second_half']},
     {'minute': 88, 'Burnley': 1.02, 'Forest': 2.07, 'event': 'Final Forest Push', 
      'description': 'Zinchenko to Ndoye cross, blocked by Dubravka',
-     'ppda_forest': ppda_segments['ppda_segments'][4]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][4]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info_full['possession']['Burnley']['second_half']},
-    {'minute': 90, 'Burnley': xg_timeline['xg_timeline'][3]['Burnley'], 'Forest': xg_timeline['xg_timeline'][3]['Forest'], 'event': 'Full-time', 
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_46_60'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info['possession']['Burnley']['second_half']},
+    {'minute': 90, 'Burnley': 1.08, 'Forest': 2.13, 'event': 'Full-time', 
      'description': 'Forest statistical dominance doesn\'t convert to victory',
-     'ppda_forest': ppda_segments['ppda_segments'][4]['Forest'], 'ppda_burnley': ppda_segments['ppda_segments'][4]['Burnley'], 
-     'possession_forest': match_info_full['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info_full['possession']['Burnley']['second_half']}
+     'ppda_forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'ppda_burnley': match_info['ppda']['Burnley']['interval_46_60'], 
+     'possession_forest': match_info['possession']['Nottingham_Forest']['second_half'], 'possession_burnley': match_info['possession']['Burnley']['second_half']}
 ]
 
 # PPDA data
 ppda_data = [
-    {'segment': ppda_segments['ppda_segments'][0]['segment'] + '\'', 'Forest': ppda_segments['ppda_segments'][0]['Forest'], 'Burnley': ppda_segments['ppda_segments'][0]['Burnley'], 'Forest_Description': 'Aggressive early press', 'Burnley_Description': 'Struggling with press'},
-    {'segment': ppda_segments['ppda_segments'][1]['segment'] + '\'', 'Forest': ppda_segments['ppda_segments'][1]['Forest'], 'Burnley': ppda_segments['ppda_segments'][1]['Burnley'], 'Forest_Description': 'Sustained pressure', 'Burnley_Description': 'Adapting to intensity'},
-    {'segment': ppda_segments['ppda_segments'][2]['segment'] + '\'', 'Forest': ppda_segments['ppda_segments'][2]['Forest'], 'Burnley': ppda_segments['ppda_segments'][2]['Burnley'], 'Forest_Description': 'Press intensity drops', 'Burnley_Description': 'Better circulation'},
-    {'segment': ppda_segments['ppda_segments'][3]['segment'] + '\'', 'Forest': ppda_segments['ppda_segments'][3]['Forest'], 'Burnley': ppda_segments['ppda_segments'][3]['Burnley'], 'Forest_Description': 'Second-half intensity', 'Burnley_Description': 'Counter-pressing'},
-    {'segment': ppda_segments['ppda_segments'][4]['segment'] + '\'', 'Forest': ppda_segments['ppda_segments'][4]['Forest'], 'Burnley': ppda_segments['ppda_segments'][4]['Burnley'], 'Forest_Description': 'Managed pressing', 'Burnley_Description': 'Higher energy phase'}
+    {'segment': '0-15\'', 'Forest': match_info['ppda']['Nottingham_Forest']['interval_1_15'], 'Burnley': match_info['ppda']['Burnley']['interval_1_15'], 'Forest_Description': 'Aggressive early press', 'Burnley_Description': 'Struggling with press'},
+    {'segment': '16-30\'', 'Forest': match_info['ppda']['Nottingham_Forest']['interval_16_30'], 'Burnley': match_info['ppda']['Burnley']['interval_16_30'], 'Forest_Description': 'Sustained pressure', 'Burnley_Description': 'Adapting to intensity'},
+    {'segment': '31-45\'', 'Forest': match_info['ppda']['Nottingham_Forest']['interval_31_45'], 'Burnley': match_info['ppda']['Burnley']['interval_31_45'], 'Forest_Description': 'Press intensity drops', 'Burnley_Description': 'Better circulation'},
+    {'segment': '46-60\'', 'Forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'Burnley': match_info['ppda']['Burnley']['interval_46_60'], 'Forest_Description': 'Second-half intensity', 'Burnley_Description': 'Counter-pressing'},
+    {'segment': '61-75\'', 'Forest': match_info['ppda']['Nottingham_Forest']['interval_46_60'], 'Burnley': match_info['ppda']['Burnley']['interval_46_60'], 'Forest_Description': 'Managed pressing', 'Burnley_Description': 'Higher energy phase'}
 ]
 
 # Player performance data (using data from the provided JSON)
 player_performance = [
-    {'name': 'Zinchenko', 'team': 'Forest', 'progressive_passes': player_stats_match['player_stats_match'][1]['players'][4]['progressive_passes'], 'final_third_entries': player_stats_match['player_stats_match'][1]['players'][4]['final_third_entries'], 
-     'pass_accuracy': player_stats_match['player_stats_match'][1]['players'][4]['pass_accuracy'], 'key_moment': '19\' Defensive error leading to goal', 
+    {'name': 'Zinchenko', 'team': 'Forest', 'progressive_passes': player_highlights['player_highlights']['Nottingham_Forest']['Zinchenko']['progressive_passes'], 'final_third_entries': player_highlights['player_highlights']['Nottingham_Forest']['Zinchenko']['final_third_entries'],
+     'pass_accuracy': player_highlights['player_highlights']['Nottingham_Forest']['Zinchenko']['pass_accuracy'], 'key_moment': '19\' Defensive error leading to goal',
      'tactical_role': 'Progressive left-back, high positioning', 'performance_rating': 7.2},
-    {'name': 'Gibbs-White', 'team': 'Forest', 'shot_creating_actions': player_stats_match['player_stats_match'][1]['players'][7]['SCA'], 'recoveries': player_stats_match['player_stats_match'][1]['players'][6]['recoveries'], 'dribbles': player_stats_match['player_stats_match'][1]['players'][7]['dribbles'],
+    {'name': 'Gibbs-White', 'team': 'Forest', 'shot_creating_actions': player_highlights['player_highlights']['Nottingham_Forest']['Gibbs_White']['shot_creating_actions'], 'recoveries': player_highlights['player_highlights']['Nottingham_Forest']['Gibbs_White']['recoveries'], 'dribbles': 3,
      'key_moment': 'Dropping deep to link play', 'tactical_role': 'Fluid #10, creating connections', 'performance_rating': 7.8},
-    {'name': 'Chris Wood', 'team': 'Forest', 'box_touches': player_stats_match['player_stats_match'][1]['players'][8]['touches_in_box'], 'aerial_duels_won': player_stats_match['player_stats_match'][1]['players'][3]['aerials_won'], 'shots': player_stats_match['player_stats_match'][1]['players'][8]['shots'],
+    {'name': 'Chris Wood', 'team': 'Forest', 'box_touches': player_highlights['player_highlights']['Nottingham_Forest']['Chris_Wood']['box_touches'], 'aerial_duels_won': player_highlights['player_highlights']['Nottingham_Forest']['Chris_Wood']['aerial_duels_won'], 'shots': player_highlights['player_highlights']['Nottingham_Forest']['Chris_Wood']['shots'],
      'key_moment': 'Physical presence in final third', 'tactical_role': 'Target man with link-up evolution', 'performance_rating': 7.1},
-    {'name': 'Josh Cullen', 'team': 'Burnley', 'passes': player_stats_match['player_stats_match'][0]['players'][3]['passes'], 'pass_accuracy': player_stats_match['player_stats_match'][0]['players'][3]['completion'], 'recoveries': player_stats_match['player_stats_match'][0]['players'][3]['recoveries'],
+    {'name': 'Josh Cullen', 'team': 'Burnley', 'passes': player_highlights['player_highlights']['Burnley']['Cullen']['passes_completed'], 'pass_accuracy': 87, 'recoveries': player_highlights['player_highlights']['Burnley']['Cullen']['recoveries'],
      'key_moment': 'Controlling tempo from deep', 'tactical_role': 'Deep-lying playmaker in pivot', 'performance_rating': 8.1},
-    {'name': 'Jaidon Anthony', 'team': 'Burnley', 'goals': player_stats_match['player_stats_match'][0]['players'][8]['goal'], 'shots': player_stats_match['player_stats_match'][0]['players'][8]['shots'], 'dribbles': player_stats_match['player_stats_match'][0]['players'][8]['dribbles'],
+    {'name': 'Jaidon Anthony', 'team': 'Burnley', 'goals': 1, 'shots': player_highlights['player_highlights']['Burnley']['Anthony']['shots'], 'dribbles': 3,
      'key_moment': '20\' Clinical finish for equalizer', 'tactical_role': 'Left-wing threat, cutting inside', 'performance_rating': 8.4}
 ]
+
 
 # Header
 st.markdown("""
@@ -273,8 +813,8 @@ if tab_selection == "Match Overview":
         st.markdown(f"""
         <div class="metric-card">
             <h3>Forest xG</h3>
-            <div style="font-size: 2rem; font-weight: bold;">{match_info_full['xG']['Nottingham_Forest']}</div>
-            <div>vs {match_info_full['xG']['Burnley']} Burnley</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['xG']['Nottingham_Forest']}</div>
+            <div>vs {match_info['xG']['Burnley']} Burnley</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -282,8 +822,8 @@ if tab_selection == "Match Overview":
         st.markdown(f"""
         <div class="metric-card">
             <h3>Forest Possession</h3>
-            <div style="font-size: 2rem; font-weight: bold;">{match_info_full['possession']['Nottingham_Forest']['total']}%</div>
-            <div>vs {match_info_full['possession']['Burnley']['total']}% Burnley</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['possession']['Nottingham_Forest']['total']}%</div>
+            <div>vs {match_info['possession']['Burnley']['total']}% Burnley</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -291,8 +831,8 @@ if tab_selection == "Match Overview":
         st.markdown(f"""
         <div class="metric-card">
             <h3>Forest Passes</h3>
-            <div style="font-size: 2rem; font-weight: bold;">{match_info_full['passing']['Nottingham_Forest']['completed']}</div>
-            <div>{match_info_full['passing']['Nottingham_Forest']['accuracy_percent']}% accuracy</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['passing']['Nottingham_Forest']['completed']}</div>
+            <div>{match_info['passing']['Nottingham_Forest']['accuracy_percent']}% accuracy</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -300,7 +840,7 @@ if tab_selection == "Match Overview":
         st.markdown(f"""
         <div class="metric-card">
             <h3>Forest PPDA</h3>
-            <div style="font-size: 2rem; font-weight: bold;">{round(ppda_segments['ppda_segments'][0]['Forest'],1)}</div>
+            <div style="font-size: 2rem; font-weight: bold;">{match_info['ppda']['Nottingham_Forest']['interval_1_15']}</div>
             <div>High pressing</div>
         </div>
         """, unsafe_allow_html=True)
@@ -312,8 +852,8 @@ if tab_selection == "Match Overview":
         st.subheader("Basic Match Statistics")
         stats_data = {
             'Metric': ['Shots', 'Shots on Target', 'Big Chances', 'Corners', 'Fouls'],
-            'Burnley': [match_info_full['shots']['Burnley']['total'], match_info_full['shots']['Burnley']['on_target'], 1, match_info_full['corners']['Burnley'], match_info_full['fouls_committed']['Burnley']],
-            'Forest': [match_info_full['shots']['Nottingham_Forest']['total'], match_info_full['shots']['Nottingham_Forest']['on_target'], 3, match_info_full['corners']['Nottingham_Forest'], match_info_full['fouls_committed']['Nottingham_Forest']]
+            'Burnley': [match_stats['stat_totals']['shots']['Burnley'], match_stats['stat_totals']['shots_on_target']['Burnley'], match_stats['stat_totals']['big_chances']['Burnley'], match_stats['stat_totals']['corners']['Burnley'], match_stats['stat_totals']['fouls_committed']['Burnley']],
+            'Forest': [match_stats['stat_totals']['shots']['Forest'], match_stats['stat_totals']['shots_on_target']['Forest'], match_stats['stat_totals']['big_chances']['Forest'], match_stats['stat_totals']['corners']['Forest'], match_stats['stat_totals']['fouls_committed']['Forest']]
         }
         
         for i, metric in enumerate(stats_data['Metric']):
@@ -343,9 +883,9 @@ if tab_selection == "Match Overview":
         st.subheader("Shot Conversion Analysis")
         conversion_data = pd.DataFrame({
             'Team': ['Burnley', 'Forest'],
-            'Shots': [match_info_full['shots']['Burnley']['total'], match_info_full['shots']['Nottingham_Forest']['total']],
-            'On Target': [match_info_full['shots']['Burnley']['on_target'], match_info_full['shots']['Nottingham_Forest']['on_target']],
-            'Goals': [match_info_full['score']['Burnley'], match_info_full['score']['Nottingham_Forest']]
+            'Shots': [match_stats['stat_totals']['shots']['Burnley'], match_stats['stat_totals']['shots']['Forest']],
+            'On Target': [match_stats['stat_totals']['shots_on_target']['Burnley'], match_stats['stat_totals']['shots_on_target']['Forest']],
+            'Goals': [match_stats['score']['Burnley'], match_stats['score']['Nottingham Forest']]
         })
         
         fig = go.Figure()
@@ -508,13 +1048,20 @@ elif tab_selection == "Tactical Analysis":
     
     with col1:
         # Cross effectiveness pie chart
+        cross_data_values = [
+            cross_effectiveness['cross_effectiveness']['Forest']['successful'], 
+            cross_effectiveness['cross_effectiveness']['Forest']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Forest']['successful'], 
+            cross_effectiveness['cross_effectiveness']['Burnley']['successful'], 
+            cross_effectiveness['cross_effectiveness']['Burnley']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Burnley']['successful']
+        ]
+
         cross_data = pd.DataFrame({
-            'Team': ['Forest Effective', 'Forest Ineffective', 'Burnley Effective', 'Burnley Ineffective'],
-            'Values': [cross_effectiveness['cross_effectiveness']['Forest']['successful'], cross_effectiveness['cross_effectiveness']['Forest']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Forest']['successful'], cross_effectiveness['cross_effectiveness']['Burnley']['successful'], cross_effectiveness['cross_effectiveness']['Burnley']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Burnley']['successful']],
+            'Category': ['Forest Successful', 'Forest Failed', 'Burnley Successful', 'Burnley Failed'],
+            'Values': cross_data_values,
             'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
         })
         
-        fig_cross = go.Figure(data=[go.Pie(labels=cross_data['Team'], values=cross_data['Values'],
+        fig_cross = go.Figure(data=[go.Pie(labels=cross_data['Category'], values=cross_data['Values'],
                                           marker_colors=cross_data['Colors'])])
         fig_cross.update_layout(
             title="Cross Effectiveness Comparison", 
@@ -635,38 +1182,37 @@ elif tab_selection == "Live Timeline":
     """, unsafe_allow_html=True)
     
     # Multi-line timeline chart
-    timeline_subset = timeline_data[:st.session_state.timeline_index + 1]
-    timeline_df_subset = pd.DataFrame(timeline_subset)
+    timeline_subset = pd.DataFrame(timeline_data[:st.session_state.timeline_index + 1])
     
     fig_multi = make_subplots(specs=[[{"secondary_y": True}]])
     
     # xG lines
     fig_multi.add_trace(
-        go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['Forest'], 
+        go.Scatter(x=timeline_subset['minute'], y=timeline_subset['Forest'], 
                   mode='lines+markers', name='Forest xG', line=dict(color='#cc1c1c', width=4)),
         secondary_y=False
     )
     fig_multi.add_trace(
-        go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['Burnley'], 
+        go.Scatter(x=timeline_subset['minute'], y=timeline_subset['Burnley'], 
                   mode='lines+markers', name='Burnley xG', line=dict(color='#ef4444', width=4)),
         secondary_y=False
     )
     
     # PPDA lines
     fig_multi.add_trace(
-        go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['ppda_forest'], 
+        go.Scatter(x=timeline_subset['minute'], y=timeline_subset['ppda_forest'], 
                   mode='lines', name='Forest PPDA', line=dict(color='#991c1c', width=2, dash='dash')),
         secondary_y=True
     )
     fig_multi.add_trace(
-        go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['ppda_burnley'], 
+        go.Scatter(x=timeline_subset['minute'], y=timeline_subset['ppda_burnley'], 
                   mode='lines', name='Burnley PPDA', line=dict(color='#dc2626', width=2, dash='dash')),
         secondary_y=True
     )
     
     # Possession lines
     fig_multi.add_trace(
-        go.Scatter(x=timeline_df_subset['minute'], y=timeline_df_subset['possession_forest'], 
+        go.Scatter(x=timeline_subset['minute'], y=timeline_subset['possession_forest'], 
                   mode='lines', name='Forest Possession %', line=dict(color='#4d0000', width=1, dash='dot')),
         secondary_y=True
     )
@@ -721,9 +1267,9 @@ elif tab_selection == "Manager Comparison":
     st.title("👥 Manager Comparison - The Postecoglou Project")
     
     # Get comparison data from the loaded JSON
-    nuno_era_data = next(item for item in comparison_periods['comparison_periods'] if item['coach'] == 'Nuno Espirito Santo')
-    ange_forest_data = next(item for item in comparison_periods['comparison_periods'] if item['coach'] == 'Ange Postecoglou' and 'sample_match' in item)
-    ange_spurs_data = next(item for item in comparison_periods['comparison_periods'] if item['coach'] == 'Ange Postecoglou' and item['club'] == 'Tottenham Hotspur')
+    nuno_era_data = next(item for item in ange_comparison_data['comparison_periods'] if item['coach'] == 'Nuno Espirito Santo')
+    ange_forest_data = next(item for item in ange_comparison_data['comparison_periods'] if item['coach'] == 'Ange Postecoglou' and 'sample_match' in item)
+    ange_spurs_data = next(item for item in ange_comparison_data['comparison_periods'] if item['coach'] == 'Ange Postecoglou' and item['club'] == 'Tottenham Hotspur')
 
     possession_increase = ange_forest_data['possession_percent_avg'] - nuno_era_data['possession_percent_avg']
     xg_increase_percent = ((ange_forest_data['xG_per90'] - nuno_era_data['xG_per90']) / nuno_era_data['xG_per90']) * 100
@@ -761,16 +1307,14 @@ elif tab_selection == "Manager Comparison":
     
     with col1:
         st.markdown("##### Core Tactical Metrics")
-        comparison_data = {
+        comparison_data = pd.DataFrame({
             'Metric': ['Possession %', 'PPDA', 'xG per 90', 'Final Third Entries'],
             'Nuno Era': [nuno_era_data['possession_percent_avg'], nuno_era_data['ppda'], nuno_era_data['xG_per90'], nuno_era_data['final_third_entries_per_game']],
             'Ange Era': [ange_forest_data['possession_percent_avg'], ange_forest_data['ppda'], ange_forest_data['xG_per90'], ange_forest_data['final_third_entries_per_game']],
             'Ange Spurs': [ange_spurs_data['total_possession'], ange_spurs_data['PPDA'], ange_spurs_data['xG_per_game'], ange_spurs_data['final_third_entries_per_game']]
-        }
+        })
         
-        comparison_df = pd.DataFrame(comparison_data)
-        
-        st.dataframe(comparison_df, use_container_width=True)
+        st.dataframe(comparison_data, use_container_width=True)
     
     with col2:
         # Radar chart
@@ -830,11 +1374,17 @@ elif tab_selection == "Advanced Metrics":
     # Key advanced metrics
     col1, col2, col3, col4 = st.columns(4)
     
+    # Get advanced metrics from JSON
+    transition_exposure_data = next(item for item in full_data if "transition_exposure_index" in item)
+    build_up_chain_volume_data = next(item for item in full_data if "build_up_chain_volume" in item)
+    sustained_threat_index_data = next(item for item in full_data if "innovative_metrics" in item)
+    flank_isolation_data = next(item for item in full_data if "flank_isolation_metric" in item and "cross_effectiveness_index" in item)
+
     metrics = [
-        {"title": "Transition Exposure", "value": f"{data['transition_exposure']['Forest']['avg_gap_m']}m", "subtitle": "Forest avg gap", "color": "#cc1c1c"},
-        {"title": "Build-Up Chains 10+", "value": f"{data['build_up_patterns']['Nottingham_Forest']}", "subtitle": "Forest vs 6 Burnley", "color": "#cc1c1c"},
-        {"title": "Sustained Threat", "value": "0.29", "subtitle": "Forest vs 0.11 Burnley", "color": "#cc1c1c"},
-        {"title": "Flank Isolation", "value": f"{data['flank_isolation_metric']['total_1v1s']}", "subtitle": "Total 1v1 battles", "color": "#cc1c1c"}
+        {"title": "Transition Exposure", "value": f"{transition_exposure_data['transition_exposure_index']['Forest']['avg_gap_meters']}m", "subtitle": "Forest avg gap", "color": "#cc1c1c"},
+        {"title": "Build-Up Chains 10+", "value": f"{build_up_chain_volume_data['Build-Up Chain Volume']['Ange Forest']}", "subtitle": f"Forest vs {build_up_chain_volume_data['Build-Up Chain Volume']['Nuno Forest']} Burnley", "color": "#cc1c1c"},
+        {"title": "Sustained Threat", "value": f"{sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Forest']}", "subtitle": f"Forest vs {sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Nuno Forest']} Burnley", "color": "#cc1c1c"},
+        {"title": "Flank Isolation", "value": f"{flank_isolation_data['flank_isolation_metric']['Burnley']['total_wide_1v1s'] + flank_isolation_data['flank_isolation_metric']['Forest']['total_wide_1v1s']}", "subtitle": "Total 1v1 battles", "color": "#cc1c1c"}
     ]
     
     for i, metric in enumerate(metrics):
@@ -855,8 +1405,8 @@ elif tab_selection == "Advanced Metrics":
     with col1:
         transition_data = pd.DataFrame({
             'Team': ['Forest', 'Burnley'],
-            'Avg Gap (m)': [data['transition_exposure']['Forest']['avg_gap_m'], data['transition_exposure']['Burnley']['avg_gap_m']],
-            'Max Gap (m)': [data['transition_exposure']['Forest']['max_gap_m'], data['transition_exposure']['Burnley']['max_gap_m']],
+            'Avg Gap (m)': [transition_exposure_data['transition_exposure_index']['Forest']['avg_gap_meters'], transition_exposure_data['transition_exposure_index']['Burnley']['avg_gap_meters']],
+            'Max Gap (m)': [transition_exposure_data['transition_exposure_index']['Forest']['max_gap_meters'], transition_exposure_data['transition_exposure_index']['Burnley']['max_gap_meters']],
             'Vulnerability Rating': [6.2, 7.8]
         })
         
@@ -876,12 +1426,12 @@ elif tab_selection == "Advanced Metrics":
         st.plotly_chart(fig_transition, use_container_width=True)
     
     with col2:
-        st.markdown(f"""
+        st.markdown("""
         <div class="insight-box">
             <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Forest: Better Defensive Structure</h6>
             <div style="font-size: 0.9rem; color: #e0e0e0;">
-                <div>Average Gap: {data['transition_exposure']['Forest']['avg_gap_m']}m (vs {data['transition_exposure']['Burnley']['avg_gap_m']}m Burnley)</div>
-                <div>Max Exposure: {data['transition_exposure']['Forest']['max_gap_m']}m (vs {data['transition_exposure']['Burnley']['max_gap_m']}m Burnley)</div>
+                <div>Average Gap: 14.1m (vs 18.8m Burnley)</div>
+                <div>Max Exposure: 21m (vs 24m Burnley)</div>
                 <div>Vulnerability Rating: 6.2/10</div>
                 <p style="font-size: 0.8rem; margin-top: 0.5rem; font-style: italic;">
                     Ange's lessons from Spurs showing - better midfield-defense connection under pressure
@@ -910,15 +1460,15 @@ elif tab_selection == "Advanced Metrics":
             <div style="color: #e0e0e0;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Forest 10+ Pass Chains:</span>
-                    <span style="font-weight: bold;">{data['build_up_chain_volume']['Ange Forest']}</span>
+                    <span style="font-weight: bold;">{build_up_chain_volume_data['Build-Up Chain Volume']['Ange Forest']}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Burnley 10+ Pass Chains:</span>
-                    <span style="font-weight: bold;">{data['build_up_chain_volume']['Nuno Forest']}</span>
+                    <span style="font-weight: bold;">{build_up_chain_volume_data['Build-Up Chain Volume']['Nuno Forest']}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                     <span>Forest Avg Length:</span>
-                    <span style="font-weight: bold;">{data['innovative_metrics']['Average Build-up Length']} passes</span>
+                    <span style="font-weight: bold;">{sustained_threat_index_data['innovative_metrics']['Average Build-up Length']} passes</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <span>Completion Rate:</span>
@@ -929,15 +1479,15 @@ elif tab_selection == "Advanced Metrics":
         """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("""
+        st.markdown(f"""
         <div class="stat-container">
             <h6 style="color: #e0e0e0; font-weight: bold; margin-bottom: 1rem;">Sustained Threat Index</h6>
             <div style="text-align: center; margin-bottom: 1rem;">
-                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">0.29</div>
+                <div style="font-size: 2.5rem; font-weight: bold; color: #cc1c1c;">{sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Forest']}</div>
                 <div style="font-size: 0.9rem; color: #e0e0e0;">Forest STI</div>
             </div>
             <div style="text-align: center;">
-                <div style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">0.11</div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #ef4444;">{sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Nuno Forest']}</div>
                 <div style="font-size: 0.9rem; color: #e0e0e0;">Burnley STI</div>
             </div>
             <p style="font-size: 0.8rem; color: #e0e0e0; margin-top: 0.75rem; font-style: italic;">
@@ -952,13 +1502,13 @@ elif tab_selection == "Advanced Metrics":
             <h6 style="color: #e0e0e0; font-weight: bold; margin-bottom: 1rem;">Comparison Context</h6>
             <div style="font-size: 0.9rem; color: #e0e0e0;">
                 <div style="margin-bottom: 0.5rem;">
-                    <strong>Ange Spurs STI:</strong> {data['innovative_metrics']['Sustained Threat Index']['Ange Spurs']}
+                    <strong>Ange Spurs STI:</strong> {sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Ange Spurs']}
                 </div>
                 <div style="margin-bottom: 0.5rem;">
                     <strong>Premier League Avg:</strong> 0.18
                 </div>
                 <div style="margin-bottom: 0.5rem;">
-                    <strong>Nuno Forest:</strong> {data['innovative_metrics']['Sustained Threat Index']['Nuno Forest']}
+                    <strong>Nuno Forest:</strong> {sustained_threat_index_data['innovative_metrics']['Sustained Threat Index']['Nuno Forest']}
                 </div>
             </div>
             <p style="font-size: 0.8rem; color: #e0e0e0; margin-top: 0.75rem; font-style: italic;">
@@ -975,7 +1525,7 @@ elif tab_selection == "Advanced Metrics":
     with col1:
         battles_data = pd.DataFrame({
             'Player': ['Ndoye vs Walker', 'Anthony vs Williams', 'Hudson-Odoi vs Walker', 'Hartman vs Bakwa'],
-            'Battles': [data['flank_isolation_metric']['Forest']['Ndoye_vs_Walker_1v1s'], data['flank_isolation_metric']['Burnley']['Anthony_vs_Williams_1v1s'], 2, 3],
+            'Battles': [flank_transition_data['flank_isolation_metric']['Forest']['Ndoye_vs_Walker_1v1s'], flank_transition_data['flank_isolation_metric']['Burnley']['Anthony_vs_Williams_1v1s'], 2, 3],
             'Success Rate': [75, 67, 50, 33]
         })
         
@@ -1000,7 +1550,7 @@ elif tab_selection == "Advanced Metrics":
         <div class="insight-box">
             <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Forest Wing Dominance</h6>
             <div style="font-size: 0.9rem; color: #e0e0e0;">
-                <div><strong>Ndoye vs Walker:</strong> {data['flank_isolation_metric']['Forest']['Ndoye_vs_Walker_1v1s']} battles, 75% success</div>
+                <div><strong>Ndoye vs Walker:</strong> {flank_transition_data['flank_isolation_metric']['Forest']['Ndoye_vs_Walker_1v1s']} battles, 75% success</div>
                 <div><strong>Key Impact:</strong> Left flank overloads creating consistent threat</div>
                 <div><strong>Hudson-Odoi Effect:</strong> Added pace and directness post-substitution</div>
             </div>
@@ -1009,7 +1559,7 @@ elif tab_selection == "Advanced Metrics":
         <div class="tactical-note">
             <h6 style="color: #ef4444; font-weight: bold; margin-bottom: 0.5rem;">Burnley Counter-Threat</h6>
             <div style="font-size: 0.9rem; color: #e0e0e0;">
-                <div><strong>Anthony vs Williams:</strong> {data['flank_isolation_metric']['Burnley']['Anthony_vs_Williams_1v1s']} battles, 67% success</div>
+                <div><strong>Anthony vs Williams:</strong> {flank_transition_data['flank_isolation_metric']['Burnley']['Anthony_vs_Williams_1v1s']} battles, 67% success</div>
                 <div><strong>Clinical Edge:</strong> Lower volume but higher conversion</div>
                 <div><strong>Tactical Role:</strong> Quick transitions and cutting inside</div>
             </div>
@@ -1018,7 +1568,7 @@ elif tab_selection == "Advanced Metrics":
         <div class="insight-box">
             <h6 style="color: #f0f0f0; font-weight: bold; margin-bottom: 0.5rem;">Total Isolation Metric</h6>
             <div style="font-size: 0.9rem; color: #e0e0e0;">
-                <strong>{data['flank_isolation_metric']['Burnley']['total_wide_1v1s'] + data['flank_isolation_metric']['Forest']['total_wide_1v1s']} Total 1v1 Battles</strong> - High isolation frequency indicates both teams' 
+                <strong>{flank_transition_data['flank_isolation_metric']['Burnley']['total_wide_1v1s'] + flank_transition_data['flank_isolation_metric']['Forest']['total_wide_1v1s']} Total 1v1 Battles</strong> - High isolation frequency indicates both teams' 
                 willingness to create wide overloads and commit to individual duels.
             </div>
         </div>
@@ -1030,8 +1580,8 @@ elif tab_selection == "Advanced Metrics":
     col1, col2, col3 = st.columns(3)
     
     effectiveness_data = [
-        {"team": "Forest", "rate": f"{data['cross_effectiveness']['Forest']['cross_to_shot_pct']*100:.0f}%", "total": data['cross_effectiveness']['Forest']['total_crosses'], "successful": data['cross_effectiveness']['Forest']['successful'], "hudson_rate": "50%", "color": "#cc1c1c"},
-        {"team": "Burnley", "rate": f"{data['cross_effectiveness']['Burnley']['cross_to_shot_pct']*100:.0f}%", "total": data['cross_effectiveness']['Burnley']['total_crosses'], "successful": data['cross_effectiveness']['Burnley']['successful'], "hartman": "4 crosses", "color": "#ef4444"}
+        {"team": "Forest", "rate": f"{flank_transition_data['cross_effectiveness_index']['Nottingham_Forest']*100:.0f}%", "total": 19, "successful": 8, "hudson_rate": "50%", "color": "#cc1c1c"},
+        {"team": "Burnley", "rate": f"{flank_transition_data['cross_effectiveness_index']['Burnley']*100:.0f}%", "total": 12, "successful": 3, "hartman": "4 crosses", "color": "#ef4444"}
     ]
     
     for i, data in enumerate(effectiveness_data):
@@ -1067,7 +1617,7 @@ elif tab_selection == "Advanced Metrics":
         # Pie chart for cross effectiveness
         cross_pie_data = pd.DataFrame({
             'Category': ['Forest Successful', 'Forest Failed', 'Burnley Successful', 'Burnley Failed'],
-            'Values': [cross_effectiveness['cross_effectiveness']['Forest']['successful'], cross_effectiveness['cross_effectiveness']['Forest']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Forest']['successful'], cross_effectiveness['cross_effectiveness']['Burnley']['successful'], cross_effectiveness['cross_effectiveness']['Burnley']['total_crosses'] - cross_effectiveness['cross_effectiveness']['Burnley']['successful']],
+            'Values': [8, 11, 3, 9],
             'Colors': ['#cc1c1c', '#330000', '#ef4444', '#4d0000']
         })
         
@@ -1131,7 +1681,7 @@ elif tab_selection == "Advanced Metrics":
 # Tab 6: Europa League Campaign
 elif tab_selection == "Europa League Campaign":
     st.title("🏆 Europa League Campaign")
-
+    
     # Get Europa League data
     europa_match_info = europa_data['match_info']
     europa_team_stats = europa_data['team_stats']
@@ -1157,7 +1707,7 @@ elif tab_selection == "Europa League Campaign":
                 <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">Possession</div>
             </div>
             <div style="background: #1a1a1a; padding: 1rem; border-radius: 8px;">
-                <div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">{europa_player_stats['Igor Jesus']['name']}</div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;">Igor Jesus</div>
                 <div style="font-size: 0.8rem; opacity: 0.9; color:#e0e0e0;">{europa_player_stats['Igor Jesus']['goals']} Goals</div>
             </div>
         </div>
