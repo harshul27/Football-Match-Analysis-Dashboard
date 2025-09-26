@@ -870,8 +870,7 @@ st.markdown("""
     <p>Football Tactical Dashboard | Burnley vs Nottingham Forest Analysis</p>
     <p style="font-size: 0.8rem;">Built with Streamlit | Data visualized with Plotly</p>
 </div>
-""", unsafe_allow_html=True); font-size: 0.9rem; opacity: 0.9; font-style: italic;">
-            {current_event['description']}
+    """, unsafe_allow_html=True)
         </div>
     </div>
     """, unsafe_allow_html=True)
