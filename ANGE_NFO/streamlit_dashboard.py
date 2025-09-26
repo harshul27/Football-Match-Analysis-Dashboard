@@ -1223,7 +1223,7 @@ st.markdown("""
         <h4 style="font-size: 1.5rem; margin-bottom: 1rem;">Advanced Metrics Verdict</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
             <div>
-                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Postecoglou's Tactical DNA Confirmed</h6>
+                <h6 style="font-size: 1.1rem; margin-bottom: 0.75rem;">Postecoglou's Tactical DNA Confirmed</h6></h6>
                 <ul style="font-size: 0.9rem; line-height: 1.6;">
                     <li><strong>Transition Discipline:</strong> Better defensive structure than expected (14.1m avg gap)</li>
                     <li><strong>Build-up Quality:</strong> 15 sequences of 10+ passes vs Burnley's 6</li>
