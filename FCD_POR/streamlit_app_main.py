@@ -121,16 +121,14 @@ class GeminiChatbot:
         """
 
     def _get_api_response(self, prompt, context_data):
-        # A simple flag to avoid making a real API call if no key is available.
         if not self.api_key or self.api_key == "YOUR_GEMINI_API_KEY":
             return "The AI Analyst is not configured. Please enter your API key in the code to enable this feature."
         
         # Simulating live data from a "search"
         if "injuries" in prompt.lower() or "news" in prompt.lower():
-            # This is a simulated response from a web search
             response_text = """
-            Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
-            """
+Recent news suggests some key players are in doubt. For Portland, Felipe Carballo is out for the season with an ACL injury. Juan Mosquera and Jimer Fory are questionable with lower body and hip injuries, respectively. For FC Dallas, Paxton Pomykal and Maarten Paes have been on the injury list, but Paes is nearing a return.
+"""
             return response_text
         
         full_prompt = f"""
