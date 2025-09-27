@@ -7,10 +7,10 @@ import time
 
 # Page configuration
 st.set_page_config(
-    page_title="Football Tactical Dashboard",
-    page_icon="⚽",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Football Tactical Dashboard",
+    page_icon="⚽",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # Custom CSS for a professional, subtle dark theme
