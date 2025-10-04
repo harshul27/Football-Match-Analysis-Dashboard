@@ -1,0 +1,649 @@
+{
+  "seasons": [
+    {
+      "year": 2022,
+      "possession": 54,
+      "xg_per_game": 1.3,
+      "goals_per_game": 1.31,
+      "pass_accuracy": 81,
+      "def_line_height": 40,
+      "vert_index": 52,
+      "main_playmaker": "Berg",
+      "pass_network": {"Berg": ["Winger", "CB", "LB"]},
+      "attack_zones": {"left wing": 62, "central": 38},
+      "formation": "4-3-3",
+      "note": "AI intro"
+    },
+    {
+      "year": 2023,
+      "possession": 57,
+      "xg_per_game": 1.55,
+      "goals_per_game": 1.65,
+      "pass_accuracy": 83,
+      "def_line_height": 43,
+      "vert_index": 55,
+      "main_playmaker": "Vetlesen",
+      "pass_network": {"Vetlesen": ["LW", "CF", "RW"]},
+      "attack_zones": {"left wing": 49, "half-space": 32, "right flank":19},
+      "formation": "4-3-3",
+      "note": "Vetlesen sale"
+    },
+    {
+      "year": 2024,
+      "possession": 50,
+      "xg_per_game": 1.7,
+      "goals_per_game": 1.75,
+      "pass_accuracy": 81,
+      "def_line_height": 44,
+      "vert_index": 51,
+      "main_playmaker": "Hauge",
+      "pass_network": {"Hauge": ["LB", "CF", "RW"]},
+      "attack_zones": {"half-space": 47, "left wing": 37, "central":16},
+      "formation": "4-3-3",
+      "note": "Hauge return, Europa semi"
+    },
+    {
+      "year": 2025,
+      "possession": 54.5,
+      "xg_per_game": 2.2,
+      "goals_per_game": 2.0,
+      "pass_accuracy": 84,
+      "def_line_height": 46,
+      "vert_index": 57,
+      "main_playmaker": "Evjen",
+      "pass_network": {"Evjen": ["RW", "LW", "CF"]},
+      "attack_zones": {"half-space": 51, "right flank": 39, "central":10},
+      "formation": "4-3-3",
+      "note": "CL debut, Tottenham draw"
+    }
+  ],
+  "matches": [
+    {
+      "date": "2025-09-30",
+      "competition": "Champions League",
+      "opponent": "Tottenham",
+      "score": "2-2",
+      "stats": {
+        "possession": 54.5,
+        "xG": 2.5,
+        "shots": 18,
+        "passes_completed": 520,
+        "dribbles": 22,
+        "recoveries": 39
+      },
+      "formation_phases": [
+        "starting_4-3-3",
+        "attacking_wide_overloads",
+        "defensive_high_press",
+        "transitional_build_up"
+      ],
+      "player_heatmaps": {
+        "Hauge": {"touches": 64, "dribbles": 8, "shots": 4},
+        "Berg": {"touches": 72, "recoveries": 11, "passes_completed": 45},
+        "Bjorkan": {"touches": 51, "overlaps": 7, "tackles": 3},
+        "Høgh": {"touches": 37, "shots": 3, "dribbles": 3}
+      },
+      "context_map": {
+        "attack_zones": {"final_third_xG": 1.6, "shots": 9, "key_passes": 7},
+        "defense_zones": {"zone_xG_conceded": 1.1, "shots_faced": 5, "clearances": 11},
+        "transitions": {"recoveries": 8, "counters": 4, "fouls_won": 3},
+        "set_pieces": {"danger_area_xG": 0.4, "set_piece_shots": 2}
+      }
+    }
+  ]
+}
+{
+  "club_metrics": {
+    "seasonal_team": [
+      {
+        "season": 2023,
+        "goals_per_match": 2.24,
+        "goals_conceded_per_match": 1.06,
+        "xG_per_match": 1.81,
+        "xGA_per_match": 1.24,
+        "points_per_match": 2.20,
+        "possession_pct": 58,
+        "shots_per_match": 15.9,
+        "shots_on_target_per_match": 4.98,
+        "shot_conversion_rate_pct": 13,
+        "clean_sheets_pct": 48,
+        "big_chances_created_per_match": 1.7,
+        "key_passes_per_match": 8.5,
+        "xA_per_match": 1.06,
+        "passing_accuracy_pct": 81,
+        "long_balls_completed_per_match": 13.8,
+        "progressive_passes_per_match": 20.8,
+        "progressive_carries_per_match": 13.1,
+        "distance_covered_km_avg": null,
+        "duels_won_per_match": 54,
+        "aerial_duels_won_per_match": 14.2,
+        "tackles_per_match": 16.9,
+        "interceptions_per_match": 7.9,
+        "blocks_per_match": 2.8,
+        "clearances_per_match": 14.2,
+        "fouls_committed_per_match": 9.7,
+        "fouls_won_per_match": 9.1,
+        "yellow_cards": 41,
+        "red_cards": 2,
+        "sub_appearances_per_match": null,
+        "penalties_won": null,
+        "penalties_conceded": null,
+        "corners_per_match": 5.9,
+        "operating_area_pct": {
+          "central": 23,
+          "final_third": 42
+        },
+        "goal_contribution_type_pct": {
+          "open_play": 69,
+          "set_piece": 21,
+          "penalty": 10
+        }
+      },
+      {
+        "season": 2024,
+        "goals_per_match": 2.43,
+        "goals_conceded_per_match": 1.18,
+        "xG_per_match": 1.93,
+        "xGA_per_match": 1.21,
+        "points_per_match": 2.13,
+        "possession_pct": 60,
+        "shots_per_match": 16.1,
+        "shots_on_target_per_match": 5.21,
+        "shot_conversion_rate_pct": 13,
+        "clean_sheets_pct": 41,
+        "big_chances_created_per_match": 1.9,
+        "key_passes_per_match": 8.9,
+        "xA_per_match": 1.12,
+        "passing_accuracy_pct": 82,
+        "long_balls_completed_per_match": 13.5,
+        "progressive_passes_per_match": 21.5,
+        "progressive_carries_per_match": 13.9,
+        "distance_covered_km_avg": null,
+        "duels_won_per_match": 52,
+        "aerial_duels_won_per_match": 13.7,
+        "tackles_per_match": 17.8,
+        "interceptions_per_match": 8.1,
+        "blocks_per_match": 2.7,
+        "clearances_per_match": 14.8,
+        "fouls_committed_per_match": 9.6,
+        "fouls_won_per_match": 8.6,
+        "yellow_cards": 44,
+        "red_cards": 5,
+        "sub_appearances_per_match": null,
+        "penalties_won": null,
+        "penalties_conceded": null,
+        "corners_per_match": 6.1,
+        "operating_area_pct": {
+          "central": 19,
+          "final_third": 37
+        },
+        "goal_contribution_type_pct": {
+          "open_play": 69,
+          "set_piece": 21,
+          "penalty": 10
+        }
+      },
+      {
+        "season": 2025,
+        "goals_per_match": 2.68,
+        "goals_conceded_per_match": 0.91,
+        "xG_per_match": 2.11,
+        "xGA_per_match": 1.04,
+        "points_per_match": 1.98,
+        "possession_pct": 62,
+        "shots_per_match": 17.3,
+        "shots_on_target_per_match": 6.05,
+        "shot_conversion_rate_pct": 15,
+        "clean_sheets_pct": 45,
+        "big_chances_created_per_match": 2.3,
+        "key_passes_per_match": 9.7,
+        "xA_per_match": 1.25,
+        "passing_accuracy_pct": 84,
+        "long_balls_completed_per_match": 12.9,
+        "progressive_passes_per_match": 23.1,
+        "progressive_carries_per_match": 15.2,
+        "distance_covered_km_avg": 111,
+        "duels_won_per_match": 56,
+        "aerial_duels_won_per_match": 15.2,
+        "tackles_per_match": 19.7,
+        "interceptions_per_match": 8.6,
+        "blocks_per_match": 2.9,
+        "clearances_per_match": 16.1,
+        "fouls_committed_per_match": 8.2,
+        "fouls_won_per_match": 10.5,
+        "yellow_cards": 36,
+        "red_cards": 3,
+        "sub_appearances_per_match": 4.2,
+        "penalties_won": 4,
+        "penalties_conceded": 2,
+        "corners_per_match": 6.8,
+        "operating_area_pct": {
+          "central": 21,
+          "final_third": 42
+        },
+        "goal_contribution_type_pct": {
+          "open_play": 69,
+          "set_piece": 21,
+          "penalty": 10
+        }
+      }
+    ]
+  },
+  "player_metrics": {
+    "Kasper Høgh": {
+      "2023": {
+        "matches": 21,
+        "goals": 7,
+        "assists": 4,
+        "xG": 8.1,
+        "shots": 42,
+        "minutes": 1450,
+        "sc_actions": 31
+      },
+      "2024": {
+        "matches": 26,
+        "goals": 11,
+        "assists": 6,
+        "xG": 10.8,
+        "shots": 61,
+        "minutes": 2045,
+        "sc_actions": 42
+      },
+      "2025": {
+        "matches": 21,
+        "goals": 16,
+        "assists": 5,
+        "xG": 14.1,
+        "shots": 73,
+        "minutes": 1880,
+        "shots_per_90": 3.5,
+        "shots_on_target_per_90": 1.6,
+        "key_passes_per_90": 1.3,
+        "progressive_passes_received": 34,
+        "progressive_carries_per_90": 5.9,
+        "sc_actions": 47
+      }
+    },
+    "Patrick Berg": {
+      "2023": {
+        "matches": 21,
+        "goals": 2,
+        "assists": 6,
+        "xA": 5.7,
+        "passes_completed_per_90": 88.2,
+        "passing_accuracy": 87
+      },
+      "2024": {
+        "matches": 28,
+        "goals": 4,
+        "assists": 7,
+        "xA": 6.9,
+        "passes_completed_per_90": 90.3,
+        "passing_accuracy": 87,
+        "sc_actions": 38
+      },
+      "2025": {
+        "matches": 20,
+        "goals": 3,
+        "assists": 8,
+        "xA": 7.6,
+        "tackles_per_90": 3.3,
+        "interceptions_per_90": 1.2,
+        "big_chances_created": 15,
+        "chances_created": 45,
+        "passes_completed_per_90": 92.7,
+        "passing_accuracy": 89,
+        "fouls_committed_per_90": 1.1,
+        "fouls_won_per_90": 2.3,
+        "yellow_cards": 2,
+        "red_cards": 0,
+        "sc_actions": 45
+      }
+    },
+    "Jens Petter Hauge": {
+      "2023": {
+        "matches": 19,
+        "goals": 4,
+        "assists": 2,
+        "xG": 3.2,
+        "xA": 4.8,
+        "dribbles_per_90": 1.3,
+        "progressive_runs": 22
+      },
+      "2024": {
+        "matches": 24,
+        "goals": 5,
+        "assists": 2,
+        "xG": 4.6,
+        "xA": 6.2,
+        "dribbles_per_90": 1.4,
+        "progressive_runs": 27,
+        "pass_into_box_per_90": 2.1
+      },
+      "2025": {
+        "matches": 21,
+        "goals": 6,
+        "assists": 3,
+        "xG": 5.3,
+        "xA": 8.1,
+        "shot_creating_actions": 45,
+        "dribbles_per_90": 1.8,
+        "successful_take_ons_season": 56,
+        "progressive_runs": 38,
+        "passes_into_box_per_90": 2.4,
+        "touches_per_90": 57
+      }
+    },
+    "Nikita Haikin": {
+      "2023": {
+        "matches": 22,
+        "saves": 42,
+        "clean_sheets": 11,
+        "save_pct": 69,
+        "goals_conceded_per_90": 0.95
+      },
+      "2024": {
+        "matches": 22,
+        "saves": 43,
+        "clean_sheets": 8,
+        "save_pct": 70,
+        "goals_conceded_per_90": 1.12
+      },
+      "2025": {
+        "matches": 22,
+        "saves": 51,
+        "clean_sheets": 10,
+        "save_pct": 71,
+        "goals_conceded_per_90": 0.9,
+        "progressive_passing_distance_per_90": 312,
+        "green_zone_clearances": 18,
+        "penalty_goals_allowed": 1
+      }
+    }
+  },
+  "heatmap_video": {
+    "operating_areas": {
+      "Hauge": ["left half-space", "penalty box"],
+      "Berg": ["central", "defensive third"],
+      "Høgh": ["penalty area", "central channel"]
+    },
+    "aggressive_zone_pct": 42,
+    "top_speed_kmh": 34.2,
+    "transition_pattern": "midfield to flanks with fullback overlaps, high central occupancy in attack"
+  }
+}
+{
+  "team": {
+    "seasonal_overview": [
+      {
+        "season": 2023,
+        "matches_played": 30,
+        "wins": 18,
+        "draws": 4,
+        "losses": 8,
+        "goals_scored": 67,
+        "goals_conceded": 32,
+        "goal_difference": 35,
+        "points": 58,
+        "goals_per_match": 2.24,
+        "goals_conceded_per_match": 1.06,
+        "xG": 54.3,
+        "xG_per_match": 1.81,
+        "xGA": 37.2,
+        "xGA_per_match": 1.24,
+        "possession_pct": 58,
+        "shots_per_match": 15.9,
+        "shots_on_target_per_match": 4.98,
+        "shots_off_target_per_match": 4.0,
+        "big_chances_created": 51,
+        "big_chances_created_per_match": 1.7,
+        "big_chances_missed": 33,
+        "conversion_rate_pct": 13,
+        "passing_accuracy_pct": 81,
+        "key_passes": 256,
+        "key_passes_per_match": 8.5,
+        "assists": 46,
+        "xA": 31.8,
+        "xA_per_match": 1.06,
+        "progressive_passes_per_match": 20.8,
+        "progressive_carries_per_match": 13.1,
+        "distance_covered_km": null,
+        "yellow_cards": 41,
+        "red_cards": 2,
+        "corners_per_match": 5.9,
+        "tackles_per_match": 16.9,
+        "interceptions_per_match": 7.9,
+        "blocks_per_match": 2.8,
+        "clearances_per_match": 14.2,
+        "duels_won_per_match": 54,
+        "aerial_duels_won_per_match": 14.2,
+        "penalties_won": null,
+        "penalties_conceded": null,
+        "clean_sheets": 14,
+        "clean_sheets_pct": 48,
+        "operating_area": {"left_wing": 62, "central": 38},
+        "aggressive_zone_pct": 38
+      },
+      {
+        "season": 2024,
+        "matches_played": 30,
+        "wins": 19,
+        "draws": 5,
+        "losses": 6,
+        "goals_scored": 73,
+        "goals_conceded": 35,
+        "goal_difference": 38,
+        "points": 62,
+        "goals_per_match": 2.43,
+        "goals_conceded_per_match": 1.18,
+        "xG": 58.1,
+        "xG_per_match": 1.93,
+        "xGA": 36.3,
+        "xGA_per_match": 1.21,
+        "possession_pct": 60,
+        "shots_per_match": 16.1,
+        "shots_on_target_per_match": 5.21,
+        "shots_off_target_per_match": 4.2,
+        "big_chances_created": 57,
+        "big_chances_created_per_match": 1.9,
+        "big_chances_missed": 37,
+        "conversion_rate_pct": 13,
+        "passing_accuracy_pct": 82,
+        "key_passes": 267,
+        "key_passes_per_match": 8.9,
+        "assists": 49,
+        "xA": 33.6,
+        "xA_per_match": 1.12,
+        "progressive_passes_per_match": 21.5,
+        "progressive_carries_per_match": 13.9,
+        "distance_covered_km": null,
+        "yellow_cards": 44,
+        "red_cards": 5,
+        "corners_per_match": 6.1,
+        "tackles_per_match": 17.8,
+        "interceptions_per_match": 8.1,
+        "blocks_per_match": 2.7,
+        "clearances_per_match": 14.8,
+        "duels_won_per_match": 52,
+        "aerial_duels_won_per_match": 13.7,
+        "penalties_won": 5,
+        "penalties_conceded": 3,
+        "clean_sheets": 12,
+        "clean_sheets_pct": 41,
+        "operating_area": {"half_space": 32, "left_wing": 49, "right_flank": 19},
+        "aggressive_zone_pct": 37
+      },
+      {
+        "season": 2025,
+        "matches_played": 30,
+        "wins": 20,
+        "draws": 5,
+        "losses": 5,
+        "goals_scored": 80,
+        "goals_conceded": 28,
+        "goal_difference": 52,
+        "points": 65,
+        "goals_per_match": 2.68,
+        "goals_conceded_per_match": 0.91,
+        "xG": 63.3,
+        "xG_per_match": 2.11,
+        "xGA": 31.2,
+        "xGA_per_match": 1.04,
+        "possession_pct": 62,
+        "shots_per_match": 17.3,
+        "shots_on_target_per_match": 6.05,
+        "shots_off_target_per_match": 4.4,
+        "big_chances_created": 69,
+        "big_chances_created_per_match": 2.3,
+        "big_chances_missed": 42,
+        "conversion_rate_pct": 15,
+        "passing_accuracy_pct": 84,
+        "key_passes": 291,
+        "key_passes_per_match": 9.7,
+        "assists": 55,
+        "xA": 37.5,
+        "xA_per_match": 1.25,
+        "progressive_passes_per_match": 23.1,
+        "progressive_carries_per_match": 15.2,
+        "distance_covered_km": 111,
+        "yellow_cards": 36,
+        "red_cards": 3,
+        "corners_per_match": 6.8,
+        "tackles_per_match": 19.7,
+        "interceptions_per_match": 8.6,
+        "blocks_per_match": 2.9,
+        "clearances_per_match": 16.1,
+        "duels_won_per_match": 56,
+        "aerial_duels_won_per_match": 15.2,
+        "penalties_won": 7,
+        "penalties_conceded": 4,
+        "clean_sheets": 14,
+        "clean_sheets_pct": 45,
+        "operating_area": {"half_space": 51, "right_flank": 39, "central": 10},
+        "aggressive_zone_pct": 42
+      }
+    ],
+    "seasonal_advanced": [
+      {
+        "season": 2025,
+        "xGOT_total": 68.2,
+        "xGOT_per_90": 2.27,
+        "passes_attempted_per_90": 418,
+        "passes_completed_per_90": 357,
+        "long_passes_completed_per_90": 12.9,
+        "short_passes_completed_per_90": 41.8,
+        "medium_passes_completed_per_90": 88.2,
+        "pass_completion_pct_short": 91.2,
+        "pass_completion_pct_medium": 86.7,
+        "pass_completion_pct_long": 72.5,
+        "through_balls_per_90": 0.7,
+        "switches_per_90": 4.9,
+        "throw_ins_per_90": 15.8,
+        "inswinging_corners_per_90": 2.1,
+        "outswinging_corners_per_90": 2.5,
+        "straight_corners_per_90": 2.2,
+        "free_kicks_attempted": 47,
+        "free_kicks_converted": 6,
+        "live_ball_passes": 12241,
+        "dead_ball_passes": 812
+      }
+    ]
+  },
+  "players": {
+    "Kasper Waarts Høgh": {
+      "2025": {
+        "matches": 28,
+        "goals": 16,
+        "assists": 5,
+        "xG": 14.1,
+        "xA": 3.2,
+        "xG_per_90": 0.79,
+        "goals_per_90": 0.91,
+        "shots": 73,
+        "shots_on_target_per_90": 1.6,
+        "shots_per_90": 3.5,
+        "key_passes_per_90": 1.3,
+        "big_chances_missed": 12,
+        "penalty_goals": 2,
+        "headed_goals": 3,
+        "goals_left_foot": 6,
+        "goals_right_foot": 8,
+        "touches_per_90": 44,
+        "progressive_runs": 22,
+        "top_speed_kmh": 33.1
+      }
+    },
+    "Patrick Berg": {
+      "2025": {
+        "matches": 29,
+        "goals": 3,
+        "assists": 8,
+        "xA": 7.6,
+        "passes_completed_per_90": 92.7,
+        "passing_accuracy_pct": 89,
+        "tackles_per_90": 3.3,
+        "interceptions_per_90": 1.2,
+        "blocks_per_90": 0.3,
+        "clearances_per_90": 1.1,
+        "duels_won_per_90": 7.1,
+        "aerial_duels_won_per_90": 1.6,
+        "balls_recovered_per_90": 9.5,
+        "chances_created": 45,
+        "key_passes_per_90": 2.0,
+        "successful_take_ons_per_90": 1.2
+      }
+    },
+    "Jens Petter Hauge": {
+      "2025": {
+        "matches": 27,
+        "goals": 6,
+        "assists": 3,
+        "xG": 5.3,
+        "xA": 8.1,
+        "dribbles_per_90": 1.8,
+        "successful_dribbles_per_90": 1.2,
+        "touches_per_90": 57,
+        "shots_per_90": 2.3,
+        "shots_on_target_per_90": 0.9,
+        "key_passes_per_90": 1.6,
+        "passes_into_box_per_90": 2.4,
+        "progressive_runs": 38,
+        "poss_won_att_3rd_per_90": 1.1,
+        "top_speed_kmh": 34.2
+      }
+    },
+    "Nikita Haikin": {
+      "2025": {
+        "matches": 30,
+        "clean_sheets": 14,
+        "goals_conceded": 28,
+        "saves_per_90": 2.3,
+        "save_pct": 71.4,
+        "goals_prevented": -0.8,
+        "goals_conceded_per_90": 0.9,
+        "penalty_goals_allowed": 1,
+        "passes_attempted_per_90": 33.5,
+        "passes_completed_per_90": 28.2,
+        "launch_pct": 22.3,
+        "average_pass_length_m": 35.4
+      }
+    }
+  },
+  "position_heatmap": {
+    "left_wing": {"frequency": 44, "action_type": ["crosses", "penetrations"], "goals_scored": 9},
+    "half_space": {"frequency": 39, "action_type": ["progressive runs", "cutbacks"], "goals_scored": 7},
+    "central": {"frequency": 12, "action_type": ["key passes", "one-twos"], "goals_scored": 10},
+    "right_flank": {"frequency": 26, "action_type": ["switches", "secondary assists"], "goals_scored": 5}
+  },
+  "tactical_events": {
+    "match_events_CL_Tottenham_2025": [
+      {"minute": 14, "event": "Goal (Hauge, left cut-in)"},
+      {"minute": 28, "event": "Goal (Hauge, cutback, inside box)"},
+      {"minute": 45, "event": "Missed Penalty (Høgh, right foot)"},
+      {"minute": 51, "event": "Substitution (Jørgensen for Saltnes)"},
+      {"minute": 70, "event": "Overlapping Bjørkan, big chance created"},
+      {"minute": 73, "event": "Own goal forced off a corner"},
+      {"minute": 87, "event": "Equalizer for Spurs (defensive set piece error)"}
+    ]
+  }
+}
