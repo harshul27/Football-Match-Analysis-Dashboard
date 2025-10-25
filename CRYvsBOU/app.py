@@ -19,7 +19,7 @@ st.markdown("""
         text-align: center;
         padding: 20px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        color: white; /* Ensure header text is white */
         border-radius: 10px;
         margin-bottom: 20px;
     }
@@ -30,6 +30,7 @@ st.markdown("""
         border-left: 4px solid;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin: 10px 0;
+        color: #1a1a1a; /* SET DARK TEXT COLOR for visibility on white background */
     }
     .insight-box {
         background: #f0f9ff;
@@ -37,6 +38,7 @@ st.markdown("""
         border-radius: 8px;
         border-left: 4px solid #3b82f6;
         margin: 10px 0;
+        color: #1a1a1a; /* SET DARK TEXT COLOR for visibility on light blue background */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -527,21 +529,21 @@ elif tab_selection == "Tactical":
     
     with col1:
         st.markdown("""
-        <div style="background: #eff6ff; padding: 20px; border-radius: 10px; border-left: 4px solid #1e40af;">
+        <div style="background: #eff6ff; padding: 20px; border-radius: 10px; border-left: 4px solid #1e40af; color: #1a1a1a;">
         <h4 style="color: #1e40af;">🔵 Crystal Palace Formations</h4>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>0-45': 3-4-2-1 / 3-4-3</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>0-45': 3-4-2-1 / 3-4-3</b><br><br>
         <small>Back 3 + keeper, wingbacks high, 3-2-5 in attack</small>
         </div>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>45-63': 4-2-3-1</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>45-63': 4-2-3-1</b><br><br>
         <small>Richards pushed into midfield for control</small>
         </div>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>63-90': 4-4-2 Dual Strikers</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>63-90': 4-4-2 Dual Strikers</b><br><br>
         <small>Nketiah added, 2v2 vs CBs, 2 goals in 4 mins</small>
         </div>
         </div>
@@ -549,21 +551,21 @@ elif tab_selection == "Tactical":
     
     with col2:
         st.markdown("""
-        <div style="background: #fef2f2; padding: 20px; border-radius: 10px; border-left: 4px solid #dc2626;">
+        <div style="background: #fef2f2; padding: 20px; border-radius: 10px; border-left: 4px solid #dc2626; color: #1a1a1a;">
         <h4 style="color: #dc2626;">🔴 Bournemouth Formations</h4>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>0-45': 4-2-4 High Press</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>0-45': 4-2-4 High Press</b><br><br>
         <small>2 at back, fullbacks high, front 4 aggressive, PPDA 7.2</small>
         </div>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>45-75': Gradual Retreat to 5-2-3</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>45-75': Gradual Retreat to 5-2-3</b><br><br>
         <small>Truffert deeper, PPDA dropped to 11.2</small>
         </div>
         
-        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px;">
-        <b>Post-Kroupi: Lost Focal Point</b><br>
+        <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
+        <b>Post-Kroupi: Lost Focal Point</b><br><br>
         <small>No aerial target, relied on Semenyo + Doak width</small>
         </div>
         </div>
@@ -588,4 +590,23 @@ elif tab_selection == "Tactical":
         fig = go.Figure()
         fig.add_trace(go.Bar(name='Palace', x=data['pressing']['Zone'], y=data['pressing']['Palace'], marker_color='#1e40af'))
         fig.add_trace(go.Bar(name='Bournemouth', x=data['pressing']['Zone'], y=data['pressing']['Bournemouth'], marker_color='#dc2626'))
-        fig.update
+        fig.update_layout(barmode='group', height=400)
+        st.plotly_chart(fig, use_container_width=True)
+        st.info("Bournemouth most effective in High Press (61% success)")
+    
+    # The original code was cut off here. I'll complete the section to ensure full visibility.
+    with col2:
+        st.subheader("🔑 Tactical Insights Summary")
+        st.markdown("""
+        <div class="insight-box" style="border-left: 4px solid #f97316; background: #fff7ed; color: #1a1a1a;">
+        <h5 style="color: #f97316;">Bournemouth's First Half Strategy</h5>
+        <p><small>Overload wide areas, intense counter-press (PPDA 7.2), high defensive line to squeeze play.</small></p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.markdown("""
+        <div class="insight-box" style="border-left: 4px solid #10b981; background: #ecfdf5; color: #1a1a1a;">
+        <h5 style="color: #10b981;">Palace's Game-Winning Adjustment</h5>
+        <p><small>Switch to 4-4-2 (Nketiah sub), bypass press with long balls and aggressive wingback play (Muñoz), capitalize on aerial superiority.</small></p>
+        </div>
+        """, unsafe_allow_html=True)
+# END OF TABS (assuming "Advanced" is not implemented)
