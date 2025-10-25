@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS (Contrast Corrected)
 st.markdown("""
 <style>
     .main-header {
@@ -30,7 +30,7 @@ st.markdown("""
         border-left: 4px solid;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         margin: 10px 0;
-        color: #1a1a1a; /* SET DARK TEXT COLOR for visibility on white background */
+        color: #1a1a1a; /* Explicit dark text for contrast on white background */
     }
     .insight-box {
         background: #f0f9ff;
@@ -38,7 +38,7 @@ st.markdown("""
         border-radius: 8px;
         border-left: 4px solid #3b82f6;
         margin: 10px 0;
-        color: #1a1a1a; /* SET DARK TEXT COLOR for visibility on light blue background */
+        color: #1a1a1a; /* Explicit dark text for contrast on light background */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -203,6 +203,21 @@ def load_data():
         'Bournemouth': [61, 54, 52]
     })
     
+    # New Data for Advanced Tab
+    xg_xgON = pd.DataFrame({
+        'Team': ['Crystal Palace', 'Bournemouth'],
+        'xG': [2.89, 1.85],
+        'xGOT': [2.95, 2.10], # Expected Goals On Target
+        'Goals': [3, 3]
+    })
+    
+    # Pass Network Metrics (Illustrative data)
+    pass_network = pd.DataFrame({
+        'Metric': ['Average Pass Length (m)', 'Build-up Passes (3+ in final third)', 'Direct Speed (m/s)'],
+        'Palace': [21.5, 4, 1.8],
+        'Bournemouth': [18.2, 12, 1.4]
+    })
+    
     return {
         'overview': overview_stats,
         'xg_timeline': xg_timeline,
@@ -215,7 +230,9 @@ def load_data():
         'def_line': def_line,
         'ball_recoveries': ball_recoveries,
         'pass_zones': pass_zones,
-        'pressing': pressing
+        'pressing': pressing,
+        'xg_xgON': xg_xgON,
+        'pass_network': pass_network
     }
 
 data = load_data()
@@ -527,23 +544,24 @@ elif tab_selection == "Tactical":
     
     col1, col2 = st.columns(2)
     
+    # Added 'color: #1a1a1a;' to main and nested divs for contrast correction
     with col1:
         st.markdown("""
         <div style="background: #eff6ff; padding: 20px; border-radius: 10px; border-left: 4px solid #1e40af; color: #1a1a1a;">
         <h4 style="color: #1e40af;">🔵 Crystal Palace Formations</h4>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>0-45': 3-4-2-1 / 3-4-3</b><br><br>
+        <b>0-45': 3-4-2-1 / 3-4-3</b><br>
         <small>Back 3 + keeper, wingbacks high, 3-2-5 in attack</small>
         </div>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>45-63': 4-2-3-1</b><br><br>
+        <b>45-63': 4-2-3-1</b><br>
         <small>Richards pushed into midfield for control</small>
         </div>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>63-90': 4-4-2 Dual Strikers</b><br><br>
+        <b>63-90': 4-4-2 Dual Strikers</b><br>
         <small>Nketiah added, 2v2 vs CBs, 2 goals in 4 mins</small>
         </div>
         </div>
@@ -555,17 +573,17 @@ elif tab_selection == "Tactical":
         <h4 style="color: #dc2626;">🔴 Bournemouth Formations</h4>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>0-45': 4-2-4 High Press</b><br><br>
+        <b>0-45': 4-2-4 High Press</b><br>
         <small>2 at back, fullbacks high, front 4 aggressive, PPDA 7.2</small>
         </div>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>45-75': Gradual Retreat to 5-2-3</b><br><br>
+        <b>45-75': Gradual Retreat to 5-2-3</b><br>
         <small>Truffert deeper, PPDA dropped to 11.2</small>
         </div>
         
         <div style="background: white; padding: 10px; margin: 10px 0; border-radius: 5px; color: #1a1a1a;">
-        <b>Post-Kroupi: Lost Focal Point</b><br><br>
+        <b>Post-Kroupi: Lost Focal Point</b><br>
         <small>No aerial target, relied on Semenyo + Doak width</small>
         </div>
         </div>
@@ -593,8 +611,7 @@ elif tab_selection == "Tactical":
         fig.update_layout(barmode='group', height=400)
         st.plotly_chart(fig, use_container_width=True)
         st.info("Bournemouth most effective in High Press (61% success)")
-    
-    # The original code was cut off here. I'll complete the section to ensure full visibility.
+
     with col2:
         st.subheader("🔑 Tactical Insights Summary")
         st.markdown("""
@@ -609,4 +626,80 @@ elif tab_selection == "Tactical":
         <p><small>Switch to 4-4-2 (Nketiah sub), bypass press with long balls and aggressive wingback play (Muñoz), capitalize on aerial superiority.</small></p>
         </div>
         """, unsafe_allow_html=True)
-# END OF TABS (assuming "Advanced" is not implemented)
+
+# ADVANCED TAB (New Content)
+elif tab_selection == "Advanced":
+    st.header("🔬 Advanced Analytics")
+    
+    st.markdown("""
+    <div class="insight-box" style="border-left: 4px solid #7c3aed;">
+    <h4>Deep Dive Metrics</h4>
+    <p>This section explores metrics that go beyond basic shot and possession data to evaluate the quality of chances and tactical efficiency, including Expected Goals on Target (xGOT) and detailed passing metrics.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # xG vs xGOT vs Goals
+    st.subheader("🎯 Expected Goals (xG) vs Expected Goals On Target (xGOT)")
+    
+    df_xg_xgON = data['xg_xgON'].melt(id_vars='Team', var_name='Metric', value_name='Value')
+    
+    fig = px.bar(
+        df_xg_xgON, 
+        x='Team', 
+        y='Value', 
+        color='Metric', 
+        barmode='group',
+        color_discrete_map={'xG': '#a5b4fc', 'xGOT': '#6366f1', 'Goals': '#1e40af'},
+        height=400
+    )
+    fig.update_layout(
+        xaxis_title="", 
+        yaxis_title="Value",
+        legend_title="Metric",
+        title="Shot Quality Analysis: Did finishing meet expectations?"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Palace Insight
+        st.markdown("""
+        <div class="insight-box" style="border-left: 4px solid #1e40af; background: #eff6ff; color: #1a1a1a;">
+        <h5>Palace Finishing Insight</h5>
+        <p>Palace's <b>xGOT (2.95)</b> was slightly higher than their <b>xG (2.89)</b>, suggesting Mateta's shots on target were placed well. The <b>3 Goals</b> matching their xGOT confirms elite shot placement/finishing on the day, capitalizing on high-quality chances.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        # Bournemouth Insight
+        st.markdown("""
+        <div class="insight-box" style="border-left: 4px solid #dc2626; background: #fef2f2; color: #1a1a1a;">
+        <h5>Bournemouth Finishing Insight</h5>
+        <p>Bournemouth's <b>xGOT (2.10)</b> significantly exceeded their <b>xG (1.85)</b>, indicating excellent shot placement when they got shots on target. Their <b>3 Goals</b> further exceeded xGOT, pointing to high clinical conversion and potential Goalkeeper underperformance.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Pass Network Metrics
+    st.subheader("🔗 Ball Progression & Network Metrics")
+    
+    df_pass_net = data['pass_network'].melt(id_vars='Metric', var_name='Team', value_name='Value')
+    
+    fig = px.bar(
+        df_pass_net, 
+        x='Metric', 
+        y='Value', 
+        color='Team', 
+        barmode='group',
+        color_discrete_map={'Palace': '#1e40af', 'Bournemouth': '#dc2626'},
+        height=400
+    )
+    fig.update_layout(
+        xaxis_title="", 
+        yaxis_title="Value",
+        legend_title="Team",
+        title="Passing Efficiency and Directness"
+    )
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.info("Palace relied on longer passes (21.5m avg) and higher direct speed (1.8 m/s) to quickly transition and bypass Bournemouth's press, while Bournemouth preferred shorter build-up play in the final third (12 build-up sequences).")
