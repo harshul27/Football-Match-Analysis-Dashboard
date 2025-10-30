@@ -1,7 +1,7 @@
 # FK Bodø/Glimt Tactical Evolution Dashboard
 
 An interactive dashboard visualizing FK Bodø/Glimt's tactical evolution from 2022-2025, including their historic Champions League debut.
-Streamlit Link : 
+Streamlit Link : https://bodo-glimt-journey.streamlit.app/
 
 ## Features
 
